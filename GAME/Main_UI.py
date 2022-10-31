@@ -9,10 +9,11 @@ if __name__ == "__main__":
 
     if genericpath.isfile(level0_path):
         etat = Etat.Etat(level0_path)
+        screen = Screen.Screen()
         running = True
 
         while running:
-            deltatime = Screen.vsync()
+            deltatime = screen.deltatime(20)
             dir = [0,0]
 
             for event in pygame.event.get():
@@ -40,14 +41,13 @@ if __name__ == "__main__":
                         dir[1] -= 1
 
             if dir[0] != dir[1]:
-                etat = etat.move(dir)
-                Screen.setdirty = True
+                etat, changed = etat.move(dir)
+                screen.setdirty |= changed
             
-            if Screen.setdirty:
-                Screen.setdirty = False
-                Screen.refresh(etat)
-                # print("rules: ", etat.rules)
-                # print(etat)
+            if screen.setdirty:
+                screen.refresh(etat)
+                print()
+                print(etat)
     else:
         print("no savefile at:", level0_path)
 

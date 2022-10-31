@@ -3,23 +3,25 @@ from enum import IntFlag
 
 class Flags(IntFlag):
     empty = 0
-    BABA = 1 << 0,
-    WALL = 1 << 1,
-    ROCK = 1 << 2,
-    FLAG = 1 << 3,
-    LAVA = 1 << 4,
-    WATER = 1 << 5,
-    IS = 1 << 6,
-    YOU = 1 << 7,
-    SINK = 1 << 8,
-    WIN = 1 << 9,
-    DEFEAT = 1 << 10,
-    baba = 1 << 11,
-    wall = 1 << 12,
-    rock = 1 << 13,
-    flag = 1 << 14,
-    lava = 1 << 15,
-    water = 1 << 16,
+    BABA = 1 << 0
+    WALL = 1 << 1
+    ROCK = 1 << 2
+    FLAG = 1 << 3
+    LAVA = 1 << 4
+    WATER = 1 << 5
+    IS = 1 << 6
+    YOU = 1 << 7
+    SINK = 1 << 8
+    WIN = 1 << 9
+    DEFEAT = 1 << 10
+    PUSH = 1 << 11
+    SOLID = 1 << 12
+    baba = 1 << 13
+    wall = 1 << 14
+    rock = 1 << 15
+    flag = 1 << 16
+    lava = 1 << 17
+    water = 1 << 18
 
     def hasflags(self, flag): # OR
         return self & flag
@@ -27,9 +29,15 @@ class Flags(IntFlag):
     def hasmask(self, mask): # AND
         return self & mask == mask
     
+    def flags(self):
+        if self >= 0:
+            for flag in Flags:
+                if self.hasflags(flag):
+                    yield flag
+    
     def indexes(self):
         if self == 0:
-            return -1
+            yield -1
         else:
             for i in range(17):
                 flag = Flags(1 << i)
@@ -62,12 +70,12 @@ obj2rule = {
 if __name__ == "__main__":
 
     # logflags
-    print()
-    i = 0
-    for x in Flags:
-        if x != Flags.empty:
-            print(x.name+" = 1 << " + str(i))
-            i += 1
+    # print()
+    # i = 0
+    # for x in Flags:
+    #     if x != Flags.empty:
+    #         print(x.name+" = 1 << " + str(i))
+    #         i += 1
 
     # log ruleFlags
     # print()

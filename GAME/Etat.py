@@ -24,6 +24,8 @@ class Etat():
 
     def __str__(self):
         log = ""
+        for rule in self.rules:
+            log += rule[0].name + " is " + rule[1].name + "\n"
         for y in range(self.h):
             for x in range(self.w):
                 log += self.grid[y][x].textcode() + " "
@@ -32,7 +34,9 @@ class Etat():
 
 
     def getRules(self):
-        self.rules.clear()
+        self.rules = {
+            (Flags.WALL, Flags.SOLID)
+        }
         for j in range(self.h):
             for i in range(self.w):
                 if self.grid[j][i].hasflags(Flags.IS):
@@ -40,7 +44,7 @@ class Etat():
                         if j-dir[0] >= 0 and j+dir[0] < self.h-1 and i-dir[1] >= 0 and i+dir[1] < self.w-1:
                             prefixe = self.grid[j-dir[0]][i-dir[1]]
                             suffixe = self.grid[j+dir[0]][i+dir[1]]
-                            if ruleFlags.hasmask(prefixe | suffixe):
+                            if prefixe != 0 and suffixe != 0 and ruleFlags.hasmask(prefixe | suffixe):
                                 self.rules.add((prefixe, suffixe))
 
 
@@ -52,31 +56,41 @@ class Etat():
         return False    
     
 
-    def isInBounds(self,pos):
-        return pos[0]>=0 and pos[0]<self.h and pos[1]>=0 and pos[1]<self.w
+    def isInBounds(self, j, i):
+        return j>=0 and j<self.h and i>=0 and i<self.w
 
 
     def move(self, dir):
         self = self.copy()
+        changed = False
         for j in range(self.h):
             for i in range(self.w):
 
-                # parcours dans le sens contraire de déplacement pour éviter piétinement d'assignation de cases
-                j_,i_ = j,i
-                if dir[0] > 0:
-                    j_ = self.h-j-1
-                if dir[1] > 0:
-                    i_ = self.w-i-1
-                pos2 = [j_+dir[0],i_+dir[1]]
+                def move(j1, i1):
+                    changed = False
+                    j2 = j1 + dir[0]
+                    i2 = i1 + dir[1]
+                    
+                    if self.isInBounds(j2, i2):
+                        mask = self.grid[j1][i1]
+                        mask2 = self.grid[j2][i2]
+                        
+                        for flag in mask.flags():
+                            if flag in obj2rule and (obj2rule[flag], Flags.YOU) in self.rules:
+                                if mask2 == Flags.empty:
+                                    self.grid[j2][i2] |= flag
+                                    self.grid[j1][i1] &= ~flag
+                                    self.getRules()
+                                    changed = True
+                    return changed
                 
-                if self.isInBounds(pos2):
-                    mask = self.grid[j_][i_]
-                    mask2 = self.grid[pos2[0]][pos2[1]]
+                # parcours dans le sens contraire du déplacement pour éviter le piétinement du mouvement des valeurs
+                j1,i1 = j,i
+                if dir[0] > 0:
+                    j1 = self.h-j-1
+                if dir[1] > 0:
+                    i1 = self.w-i-1
 
-                    for flag in obj2rule:
-                        if mask.hasflags(Flags(flag.value)) and (obj2rule[flag],Flags.YOU) in self.rules:
-                            if mask2 == Flags.empty:
-                                self.grid[pos2[0]][pos2[1]] |= flag
-                                self.grid[j_][i_] &= ~flag
-        self.getRules()
-        return self
+                changed |= move(j1, i1)
+
+        return self, changed
