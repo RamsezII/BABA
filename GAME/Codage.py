@@ -53,9 +53,8 @@ class Flags(IntFlag):
                 if self.hasflags(flag):
                     return f"{i:02d}"
         return "??"
-
-
-ruleFlags = Flags.BABA | Flags.WALL | Flags.ROCK | Flags.FLAG | Flags.LAVA | Flags.WATER | Flags.YOU | Flags.SINK | Flags.WIN | Flags.DEFEAT
+    
+ruleFlags = Flags.BABA | Flags.WALL | Flags.ROCK | Flags.FLAG | Flags.LAVA | Flags.WATER | Flags.IS | Flags.YOU | Flags.SINK | Flags.WIN | Flags.DEFEAT | Flags.PUSH | Flags.SOLID
 
 obj2rule = {
     Flags.baba: Flags.BABA,
@@ -66,10 +65,15 @@ obj2rule = {
     Flags.water: Flags.WATER,
 }
 
+defaultRules = {
+    (Flags.WALL, Flags.SOLID),
+    (Flags.WALL, Flags.PUSH),
+}
+
 
 if __name__ == "__main__":
 
-    # logflags
+    # # logflags
     # print()
     # i = 0
     # for x in Flags:
@@ -77,7 +81,7 @@ if __name__ == "__main__":
     #         print(x.name+" = 1 << " + str(i))
     #         i += 1
 
-    # log ruleFlags
+    # # log ruleFlags
     # print()
     # log = ""
     # for x in Flags:

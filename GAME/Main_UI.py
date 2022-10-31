@@ -9,6 +9,7 @@ if __name__ == "__main__":
 
     if genericpath.isfile(level0_path):
         etat = Etat.Etat(level0_path)
+        etats = [etat]
         screen = Screen.Screen()
         running = True
 
@@ -41,10 +42,12 @@ if __name__ == "__main__":
                         dir[1] -= 1
 
             if dir[0] != dir[1]:
-                etat, changed = etat.move(dir)
-                screen.setdirty |= changed
+                etat = etat.move(dir)
+                if etat.changed:
+                    etats.append(etat)
             
-            if screen.setdirty:
+            if etat.changed:
+                etat.changed = False
                 screen.refresh(etat)
                 print()
                 print(etat)

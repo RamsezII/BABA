@@ -14,7 +14,6 @@ class Screen():
         successes, failures = pygame.init()
         print("Initializing pygame: {0} successes and {1} failures.".format(successes, failures))
         self.clock = pygame.time.Clock()
-        self.setdirty = True
 
         load_characters = pygame.image.load("./images/characters.png").convert_alpha()
         load_objects = pygame.image.load("./images/objects.png").convert_alpha()
@@ -52,7 +51,6 @@ class Screen():
 
 
     def refresh(self, etat):
-        self.setdirty = False
         self.screen.fill((0, 0, 0))
         for j in range(etat.h):
             for i in range(etat.w):

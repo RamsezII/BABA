@@ -6,6 +6,7 @@ class Etat():
         file = open(path, 'r')
         lines = file.readlines()
         file.close()
+        self.changed = True
         self.h = len(lines)
         self.grid = []
         for j in range(self.h):
@@ -34,9 +35,7 @@ class Etat():
 
 
     def getRules(self):
-        self.rules = {
-            (Flags.WALL, Flags.SOLID)
-        }
+        self.rules = defaultRules.copy()
         for j in range(self.h):
             for i in range(self.w):
                 if self.grid[j][i].hasflags(Flags.IS):
@@ -56,33 +55,48 @@ class Etat():
         return False    
     
 
+    def checkdefeat(self):
+        return False
+    
+
     def isInBounds(self, j, i):
         return j>=0 and j<self.h and i>=0 and i<self.w
 
 
     def move(self, dir):
         self = self.copy()
-        changed = False
         for j in range(self.h):
             for i in range(self.w):
 
                 def move(j1, i1):
-                    changed = False
                     j2 = j1 + dir[0]
                     i2 = i1 + dir[1]
                     
                     if self.isInBounds(j2, i2):
                         mask = self.grid[j1][i1]
                         mask2 = self.grid[j2][i2]
+
+                        # collision -> empty || flag2 not in SOLID -> move
+                        # push -> flag2 not in PUSH -> push and move
+                        # empty -> move
                         
                         for flag in mask.flags():
                             if flag in obj2rule and (obj2rule[flag], Flags.YOU) in self.rules:
+                                # if PUSH
+                                # if empty or not SOLID
                                 if mask2 == Flags.empty:
                                     self.grid[j2][i2] |= flag
                                     self.grid[j1][i1] &= ~flag
+                                    self.changed = True
+                                else:
+                                    for flag2 in mask2.flags():
+                                        if flag2 in obj2rule and (obj2rule[flag2], Flags.SOLID) not in self.rules:
+                                            self.grid[j2][i2] |= flag
+                                            self.grid[j1][i1] &= ~flag
+                                            self.changed = True
+                                
+                                if self.changed:
                                     self.getRules()
-                                    changed = True
-                    return changed
                 
                 # parcours dans le sens contraire du déplacement pour éviter le piétinement du mouvement des valeurs
                 j1,i1 = j,i
@@ -90,7 +104,7 @@ class Etat():
                     j1 = self.h-j-1
                 if dir[1] > 0:
                     i1 = self.w-i-1
+                
+                move(j1, i1)
 
-                changed |= move(j1, i1)
-
-        return self, changed
+        return self
