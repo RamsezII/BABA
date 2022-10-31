@@ -14,11 +14,10 @@ class Etat():
             self.w = len(splits)
             l = []
             for i in range(self.w):
-                cell = int(splits[i])
-                if cell == 0:
+                if splits[i].startswith(".."):
                     l.append(Flags.Flags(0))
                 else:
-                    l.append(Flags.Flags(1 << (int(Flags.Objs(int(splits[i])))-1)))
+                    l.append(Flags.Flags(1 << int(splits[i])))
             self.grid.append(l)
         self.rules = set()
         self.getRules()
