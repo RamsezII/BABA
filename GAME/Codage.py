@@ -27,6 +27,15 @@ class Flags(IntFlag):
     def hasmask(self, mask): # AND
         return self & mask == mask
     
+    def indexes(self):
+        if self == 0:
+            return -1
+        else:
+            for i in range(17):
+                flag = Flags(1 << i)
+                if self.hasflags(flag):
+                    yield i
+    
     def textcode(self):
         if self == 0:
             return ".."
