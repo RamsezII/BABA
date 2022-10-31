@@ -54,8 +54,9 @@ class Screen():
         self.screen.fill((0, 0, 0))
         for j in range(etat.h):
             for i in range(etat.w):
-                for index in etat.grid[j][i].indexes():
-                    surf = self.subsurfaces[index]
-                    if surf:
-                        self.screen.blit(surf, (i*24, j*24))
+                for flag,index in etat.grid[j][i].flags():
+                    if flag != 0:
+                        surf = self.subsurfaces[index]
+                        if surf:
+                            self.screen.blit(surf, (i*24, j*24))
         pygame.display.update()

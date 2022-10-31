@@ -1,5 +1,6 @@
 from enum import IntFlag
 
+flags_count = 19
 
 class Flags(IntFlag):
     empty = 0
@@ -31,18 +32,16 @@ class Flags(IntFlag):
     
     def flags(self):
         if self >= 0:
-            for flag in Flags:
-                if self.hasflags(flag):
-                    yield flag
-    
-    def indexes(self):
-        if self == 0:
-            yield -1
-        else:
-            for i in range(17):
+            for i in range(19):
                 flag = Flags(1 << i)
-                if self.hasflags(flag):
-                    yield i
+                if self & flag:
+                    yield flag,i
+    
+    # def flags(self):
+    #     if self >= 0:
+    #         for flag in Flags:
+    #             if self.hasflags(flag):
+    #                 yield flag
     
     def textcode(self):
         if self == 0:
@@ -53,21 +52,21 @@ class Flags(IntFlag):
                 if self.hasflags(flag):
                     return f"{i:02d}"
         return "??"
+
+
+words = Flags.BABA | Flags.WALL | Flags.ROCK | Flags.FLAG | Flags.LAVA | Flags.WATER | Flags.IS | Flags.YOU | Flags.SINK | Flags.WIN | Flags.DEFEAT | Flags.PUSH | Flags.SOLID
+first_obj = 13
+
+rule2obj = {
     
-ruleFlags = Flags.BABA | Flags.WALL | Flags.ROCK | Flags.FLAG | Flags.LAVA | Flags.WATER | Flags.IS | Flags.YOU | Flags.SINK | Flags.WIN | Flags.DEFEAT | Flags.PUSH | Flags.SOLID
-
-obj2rule = {
-    Flags.baba: Flags.BABA,
-    Flags.wall: Flags.WALL,
-    Flags.rock: Flags.ROCK,
-    Flags.flag: Flags.FLAG,
-    Flags.lava: Flags.LAVA,
-    Flags.water: Flags.WATER,
 }
-
-defaultRules = {
-    (Flags.WALL, Flags.SOLID),
-    (Flags.WALL, Flags.PUSH),
+obj2rule = {
+    Flags.baba: 0,
+    Flags.wall: 1,
+    Flags.rock: 2,
+    Flags.flag: 3,
+    Flags.lava: 4,
+    Flags.water: 5,
 }
 
 
@@ -80,13 +79,23 @@ if __name__ == "__main__":
     #     if x != Flags.empty:
     #         print(x.name+" = 1 << " + str(i))
     #         i += 1
-
-    # # log ruleFlags
+    
+    # # log obj2word
     # print()
-    # log = ""
     # for x in Flags:
-    #     log += "Flags." + x.name + " | "
-    # print(log)
+    #     print("Flags." + x.name + ": Flags." + x.name + ",")
+
+    # log rules
+    print()
+    log = ""
+    for x in Flags:
+        log += "Flags." + x.name + " | "
+    print(log)
+
+    # # log defaultRules
+    # print()
+    # for i,flag in enumerate(Flags):
+    #     print("Flags.PUSH,   #", i, "| " + flag.name)
 
     print()
     print("FIN")
