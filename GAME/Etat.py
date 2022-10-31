@@ -1,6 +1,5 @@
-from opcode import hasfree
+from Codage import *
 
-import Flags
 
 class Etat():
     def __init__(self, path):
@@ -15,9 +14,9 @@ class Etat():
             l = []
             for i in range(self.w):
                 if splits[i].startswith(".."):
-                    l.append(Flags.Flags(0))
+                    l.append(Flags(0))
                 else:
-                    l.append(Flags.Flags(1 << int(splits[i])))
+                    l.append(Flags(1 << int(splits[i])))
             self.grid.append(l)
         self.rules = set()
         self.getRules()
@@ -25,10 +24,9 @@ class Etat():
 
     def __str__(self):
         log = ""
-        f = "{value:02d} "
         for y in range(self.h):
             for x in range(self.w):
-                log += f.format(value=self.grid[y][x].value)
+                log += self.grid[y][x].textcode() + " "
             log += '\n'
         return log
 
@@ -37,9 +35,13 @@ class Etat():
         self.rules.clear()
         for j in range(self.h):
             for i in range(self.w):
-                val = self.grid[j][i]
-                if val.hasflags_OR(Flags.Flags.is_word):
-                    self.rules.add("BABAisYOU")
+                if self.grid[j][i].hasflags(Flags.IS):
+                    for dir in ((1,0), (0,1)):
+                        if j-dir[0] >= 0 and j+dir[0] < self.h-1 and i-dir[1] >= 0 and i+dir[1] < self.w-1:
+                            prefixe = self.grid[j-dir[0]][i-dir[1]]
+                            suffixe = self.grid[j+dir[0]][i+dir[1]]
+                            if ruleFlags.hasmask(prefixe | suffixe):
+                                self.rules.add((prefixe, suffixe))
 
 
     def copy(self):
@@ -59,6 +61,7 @@ class Etat():
         for j in range(self.h):
             for i in range(self.w):
 
+                # parcours dans le sens contraire de déplacement pour éviter piétinement d'assignation de cases
                 j_,i_ = j,i
                 if dir[0] > 0:
                     j_ = self.h-j-1
@@ -67,10 +70,13 @@ class Etat():
                 pos2 = [j_+dir[0],i_+dir[1]]
                 
                 if self.isInBounds(pos2):
-                    val = self.grid[j_][i_]
-                    val2 = self.grid[pos2[0]][pos2[1]]
-                    if val.hasflags_OR(Flags.Flags.baba_obj) and "BABAisYOU" in self.rules:
-                        if val2 == Flags.Flags.empty:
-                            self.grid[pos2[0]][pos2[1]] |= Flags.Flags.baba_obj
-                            self.grid[j_][i_] &= ~Flags.Flags.baba_obj
+                    mask = self.grid[j_][i_]
+                    mask2 = self.grid[pos2[0]][pos2[1]]
+
+                    for flag in obj2rule:
+                        if mask.hasflags(Flags(flag.value)) and (obj2rule[flag],Flags.YOU) in self.rules:
+                            if mask2 == Flags.empty:
+                                self.grid[pos2[0]][pos2[1]] |= flag
+                                self.grid[j_][i_] &= ~flag
+        self.getRules()
         return self

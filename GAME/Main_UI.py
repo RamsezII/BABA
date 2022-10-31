@@ -46,6 +46,7 @@ if __name__ == "__main__":
             if Screen.setdirty:
                 Screen.setdirty = False
                 Screen.refresh(etat)
+                print("rules: ", etat.rules)
                 print(etat)
     else:
         print("no savefile at:", level0_path)

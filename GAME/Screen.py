@@ -1,6 +1,6 @@
 import pygame
 
-import Flags
+from Codage import Flags
 
 
 screen = pygame.display.set_mode((720, 480))
@@ -30,8 +30,8 @@ def refresh(etat):
         for i in range(etat.w):
             flags = etat.grid[j][i]
             pos = (i*24, j*24)
-            if flags.hasflags_OR(Flags.Flags.wall_obj):
+            if flags.hasflags(Flags.wall):
                 screen.blit(wall_obj, pos)
-            if flags.hasflags_OR(Flags.Flags.baba_obj):
+            if flags.hasflags(Flags.baba):
                 screen.blit(baba_obj, pos)
     pygame.display.update()
