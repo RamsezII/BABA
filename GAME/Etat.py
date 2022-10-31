@@ -14,7 +14,11 @@ class Etat():
             self.w = len(splits)
             l = []
             for i in range(self.w):
-                l.append(Flags.Flags(1 << int(Flags.Objs(int(splits[i])))))
+                cell = int(splits[i])
+                if cell == 0:
+                    l.append(Flags.Flags(0))
+                else:
+                    l.append(Flags.Flags(1 << (int(Flags.Objs(int(splits[i])))-1)))
             self.grid.append(l)
         self.rules = set()
         self.getRules()
