@@ -61,6 +61,8 @@ class Etat():
                                         for suf in suffixe.flags(False):
                                             if suf in words:
                                                 self.rules[word2obj[pref]] |= suf
+                                                if suf in word2obj:
+                                                    print("transformation:", Flags(1 << (word2obj[suf] + first_obj)))
 
 
 
