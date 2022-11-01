@@ -1,8 +1,9 @@
 from Codage import *
+import copy
 
 
 class Etat():
-    def __init__(self, path):
+    def init(self, path):
         file = open(path, 'r')
         lines = file.readlines()
         file.close()
@@ -22,9 +23,9 @@ class Etat():
         self.getRules()
 
 
-    def __str__(self):
-        return self.logRules() + self.logEtat()
-    
+    def clone(self):
+        return copy.deepcopy(self)
+
 
     def logRules(self):
         log = ""
@@ -62,10 +63,6 @@ class Etat():
                                                 self.rules[word2obj[pref]] |= suf
 
 
-    def copy(self):
-        return self
-
-
     def checkwin(self):
         return False    
     
@@ -79,7 +76,6 @@ class Etat():
 
 
     def move(self, dir):
-        self = self.copy()
         for y in range(self.h):
             for x in range(self.w):                
                 # parcours dans le sens contraire du déplacement pour éviter le piétinement du mouvement des valeurs
@@ -87,43 +83,49 @@ class Etat():
                 if dir[0] > 0:
                     y1 = self.h-y-1
                 if dir[1] > 0:
-                    x1 = self.w-x-1                    
-                y2 = y1 + dir[0]
-                x2 = x1 + dir[1]
-                
-                if self.isInBounds(y2, x2):
-                    mask = self.grid[y1][x1]
-                    mask2 = self.grid[y2][x2]
+                    x1 = self.w-x-1     
 
-                    if mask != 0:
-                        for flag,i in mask.flags():
-                            if flag in objects:
-                                if self.rules[i-first_obj] & Flags.YOU:
-                                    move = True
-                                    
-                                    # collision
-                                    for flag,i in mask2.flags():
-                                        if flag in objects:
-                                            rule = self.rules[i-first_obj]
-                                            if rule & Flags.SOLID and not rule & Flags.PUSH:
-                                                move = False
-                                                break
-                                    
-                                    if move:
-                                        # push
+                mask1 = self.grid[y1][x1]
+                if mask1 != 0:               
+                    y2 = y1 + dir[0]
+                    x2 = x1 + dir[1]
+                    
+                    if self.isInBounds(y2, x2):
+                        for flag1,i1 in mask1.flags():
+                            if flag1 in objects and self.rules[i1-first_obj] & Flags.YOU:
+
+                                def move(flag, y1,x1, y2,x2):
+                                    self.grid[y1][x1] &= ~flag
+                                    self.grid[y2][x2] |= flag
+
+                                def push(y2, x2):
+                                    mask2 = self.grid[y2][x2]
+                                    if mask2 != 0:
+                                        # détecter obstacle non déplaçable
                                         for flag2,i2 in mask2.flags():
-                                            if flag2 in words or flag2 in objects and self.rules[i2-first_obj] & Flags.PUSH:
-                                                def push():
-                                                    print("push: " + flag2.name + " in dir:", dir)
-                                                    return True
-                                                move &= push()
+                                            if flag2 in objects:  # seul les objets peuvent être solides
+                                                rule = self.rules[i2-first_obj]
+                                                if rule & Flags.SOLID and not rule & Flags.PUSH:
+                                                    return False
                                         
-                                        if move:
-                                            self.grid[y2][x2] |= flag
-                                            self.grid[y1][x1] &= ~flag
-                                            self.changed = True
-                                    
+                                        # récursivité pour éviter piétinement
+                                        y3, x3 = y2+dir[0], x2+dir[1]
+                                        if not self.isInBounds(y3, x3) or not push(y3, x3):
+                                            return False
+                                        
+                                        # pousser tous les poussables
+                                        for flag2,i2 in mask2.flags():
+                                            if flag2 in words:
+                                                move(flag2, y2,x2, y3,x3)
+                                            elif flag2 in objects:
+                                                rule = self.rules[i2-first_obj]
+                                                if not rule & Flags.YOU and rule & Flags.PUSH:
+                                                    move(flag2, y2,x2, y3,x3)
+                                        
+                                    return True
+
+                                if push(y2, x2):
+                                    move(flag1,y1,x1,y2,x2)
+                                    self.changed = True                                    
         if self.changed:
             self.getRules()
-        
-        return self
