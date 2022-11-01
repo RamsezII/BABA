@@ -68,6 +68,8 @@ if __name__ == "__main__":
                     print("stack:", len(etats))
                     print(etat.logRules())
                     # print(etat.logEtat())
+                    if etat.defeat:
+                        print("DEFEAT")
     else:
         print("no savefile at:", level0_path)
 

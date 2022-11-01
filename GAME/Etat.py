@@ -9,6 +9,7 @@ class Etat():
         file.close()
         self.changed = True
         self.win = False
+        self.defeat = False
         self.h = len(lines)
         self.grid = []
         for j in range(self.h):
@@ -75,7 +76,13 @@ class Etat():
 
 
     def checkdefeat(self):
-        return False
+        for y in range(self.h):
+            for x in range(self.w):
+                for i,flag in self.grid[y][x].flags(True):
+                    if flag in objects and self.rules[i-first_obj] & Flags.YOU:
+                        self.defeat = False
+                        return
+        self.defeat = True
     
 
     def isInBounds(self, j, i):
@@ -145,3 +152,4 @@ class Etat():
 
         if self.changed:
             self.getRules()
+            self.checkdefeat()
