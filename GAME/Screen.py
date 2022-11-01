@@ -13,6 +13,8 @@ class Screen():
         self.screen = pygame.display.set_mode((720, 480))
         successes, failures = pygame.init()
         print("Initializing pygame: {0} successes and {1} failures.".format(successes, failures))
+        # pygame.font.init()
+        self.font = pygame.font.SysFont("Comic Sans MS", 30)
         self.clock = pygame.time.Clock()
 
         pygame.display.set_mode((24*w, 24*h))
@@ -53,7 +55,7 @@ class Screen():
 
 
     def refresh(self, etat):
-        self.screen.fill((0, 0, 0))
+        self.screen.fill(pygame.Color(0, 0, 0))
         for j in range(etat.h):
             for i in range(etat.w):
                 for index,flag in etat.grid[j][i].flags(True):
@@ -61,4 +63,20 @@ class Screen():
                         surf = self.subsurfaces[index]
                         if surf:
                             self.screen.blit(surf, (i*24, j*24))
+        if etat.win or etat.defeat:
+            size = pygame.display.get_window_size()
+            surf = pygame.Surface(size)
+            surf.set_alpha(125)
+            surf.fill(pygame.Color(0,0,0))
+            self.screen.blit(surf, (0, 0))
+            log = ""
+            if etat.defeat:
+                log = "DEFEAT"
+            elif etat.win:
+                log = "WIN!"
+            log = self.font.render(log, False, pygame.Color(255,255,255))
+            logsize = log.get_size()
+            self.screen.blit(log, (0.5*(size[0]-logsize[0]), 0.5*(size[1]-logsize[1])))
+            pass
+        
         pygame.display.update()
