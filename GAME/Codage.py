@@ -4,6 +4,7 @@ flags_count = 19
 
 class Flags(IntFlag):
     empty = 0
+    # words
     BABA = 1 << 0
     WALL = 1 << 1
     ROCK = 1 << 2
@@ -17,12 +18,13 @@ class Flags(IntFlag):
     DEFEAT = 1 << 10
     PUSH = 1 << 11
     SOLID = 1 << 12
-    baba = 1 << 13
-    wall = 1 << 14
-    rock = 1 << 15
-    flag = 1 << 16
-    lava = 1 << 17
-    water = 1 << 18
+    # objects in drawing order
+    wall = 1 << 13
+    lava = 1 << 14
+    water = 1 << 15
+    rock = 1 << 16
+    flag = 1 << 17
+    baba = 1 << 18
 
     def hasflags(self, flag): # OR
         return self & flag
@@ -50,10 +52,8 @@ class Flags(IntFlag):
         if self == 0:
             return ".."
         else:
-            for i in range(17):
-                flag = Flags(1 << i)
-                if self.hasflags(flag):
-                    return f"{i:02d}"
+            for i,_ in self.flags(True):
+                return f"{i:02d}"
         return "??"
 
 
@@ -62,12 +62,12 @@ objects = Flags.baba | Flags.wall | Flags.rock | Flags.flag | Flags.lava | Flags
 first_obj = 13
 
 word2obj = {
-    Flags.BABA: 0,
-    Flags.WALL: 1,
-    Flags.ROCK: 2,
-    Flags.FLAG: 3,
-    Flags.LAVA: 4,
-    Flags.WATER: 5,
+    Flags.WALL: 0,
+    Flags.LAVA: 1,
+    Flags.WATER: 2,
+    Flags.ROCK: 3,
+    Flags.FLAG: 4,
+    Flags.BABA: 5,
 }
 
 

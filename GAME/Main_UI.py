@@ -41,7 +41,7 @@ if __name__ == "__main__":
                             etat = etats.pop()
                             etat.changed = True
                     
-                    # quand l'execution est lente (debug), l'appui de touche répétée a le temps de créer une accumulation
+                    # quand l'execution est lente (debug), l'appui de touche repetee a le temps de creer une accumulation
                     elif not etat.win:
                         if event.key == pygame.K_z:
                             dir[0] = max(-1, dir[0]-1)
@@ -67,7 +67,7 @@ if __name__ == "__main__":
                     screen.refresh(etat)
                     print("stack:", len(etats))
                     print(etat.logRules())
-                    # print(etat.logEtat())
+                    print(etat.logEtat())
                     if etat.defeat:
                         print("DEFEAT")
     else:

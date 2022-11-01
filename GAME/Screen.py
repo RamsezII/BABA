@@ -39,12 +39,12 @@ class Screen():
             load_texts.subsurface(1, 730, 24, 24),   # DEFEAT
             load_texts.subsurface(1, 301, 24, 24),   # PUSH
             load_texts.subsurface(76, 955, 24, 24),   # SOLID
-            load_characters.subsurface(1+25, 1+0*25, 24, 24),   # baba
             load_objects.subsurface(476, 2273, 24, 24),   # wall
-            load_static.subsurface(226, 601, 24, 24),   # rock
-            load_static.subsurface(101, 226, 24, 24),   # flag
             load_tiled.subsurface(476, 901, 24, 24),   # lava
             load_tiled.subsurface(476, 2348, 24, 24),   # water
+            load_static.subsurface(226, 601, 24, 24),   # rock
+            load_static.subsurface(101, 226, 24, 24),   # flag
+            load_characters.subsurface(1+25, 1+0*25, 24, 24),   # baba
         ]
 
 

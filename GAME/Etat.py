@@ -75,7 +75,7 @@ class Etat():
                                                                 self.grid[y2][x2] |= suf_obj
 
 
-    def checkdefeat(self):
+    def checkDefeat(self):
         for y in range(self.h):
             for x in range(self.w):
                 for i,flag in self.grid[y][x].flags(True):
@@ -152,4 +152,4 @@ class Etat():
 
         if self.changed:
             self.getRules()
-            self.checkdefeat()
+            self.checkDefeat()
