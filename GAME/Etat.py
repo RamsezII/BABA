@@ -133,13 +133,10 @@ class Etat():
                                                 move(flag2, y2,x2, y3,x3)
                                             elif flag2 in objects:
                                                 rule = self.rules[i2-first_obj]
-                                                if not rule & Flags.SOLID:
+                                                if not rule & Flags.PUSH:
                                                     return True
-                                                elif not rule & Flags.PUSH:
-                                                    return False
                                                 else:
-                                                    move(flag2, y2,x2, y3,x3)
-                                        
+                                                    move(flag2, y2,x2, y3,x3)                                        
                                     return True
 
                                 if push(y2, x2):
