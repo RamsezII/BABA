@@ -54,7 +54,7 @@ class Screen():
         self.screen.fill((0, 0, 0))
         for j in range(etat.h):
             for i in range(etat.w):
-                for flag,index in etat.grid[j][i].flags():
+                for index,flag in etat.grid[j][i].flags(True):
                     if flag != 0:
                         surf = self.subsurfaces[index]
                         if surf:

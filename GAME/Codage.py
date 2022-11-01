@@ -30,12 +30,15 @@ class Flags(IntFlag):
     def hasmask(self, mask): # AND
         return self & mask == mask
     
-    def flags(self):
+    def flags(self, index):
         if self >= 0:
             for i in range(19):
                 flag = Flags(1 << i)
                 if self & flag:
-                    yield flag,i
+                    if index:
+                        yield i,flag
+                    else:
+                        yield flag
     
     # def flags(self):
     #     if self >= 0:
@@ -94,6 +97,11 @@ if __name__ == "__main__":
     # print()
     # for flag,i in (Flags.LAVA | Flags.PUSH | Flags.baba).flags():
     #     print(i, "|", flag.name)
+
+    # # defaultRules
+    # print()
+    # for i,flag in enumerate((Flags.baba | Flags.wall | Flags.rock | Flags.flag | Flags.lava | Flags.water).flags(False)):
+    #     print("0,  #", i, "|" + flag.name)
 
     print()
     print("FIN")

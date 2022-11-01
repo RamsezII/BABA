@@ -55,8 +55,8 @@ if __name__ == "__main__":
                 etat.changed = False
                 screen.refresh(etat)
                 print("stack:", len(etats))
-                print(etat.logRules())
-                print(etat.logEtat())
+                # print(etat.logRules())
+                # print(etat.logEtat())
     else:
         print("no savefile at:", level0_path)
 

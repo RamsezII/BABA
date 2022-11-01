@@ -56,11 +56,12 @@ class Etat():
                             suffixe = self.grid[y+dir[0]][x+dir[1]]
 
                             if prefixe != 0 and suffixe != 0:
-                                for pref,_ in prefixe.flags():
+                                for i,pref in prefixe.flags(True):
                                     if pref in word2obj:
-                                        for suf,_ in suffixe.flags():
+                                        for suf in suffixe.flags(False):
                                             if suf in words:
                                                 self.rules[word2obj[pref]] |= suf
+
 
 
     def checkwin(self):
@@ -91,7 +92,7 @@ class Etat():
                     x2 = x1 + dir[1]
                     
                     if self.isInBounds(y2, x2):
-                        for flag1,i1 in mask1.flags():
+                        for i1,flag1 in mask1.flags(True):
                             if flag1 in objects and self.rules[i1-first_obj] & Flags.YOU:
 
                                 def move(flag, y1,x1, y2,x2):
@@ -102,7 +103,7 @@ class Etat():
                                     mask2 = self.grid[y2][x2]
                                     if mask2 != 0:
                                         # détecter obstacle non déplaçable
-                                        for flag2,i2 in mask2.flags():
+                                        for i2,flag2 in mask2.flags(True):
                                             if flag2 in objects:  # seul les objets peuvent être solides
                                                 rule = self.rules[i2-first_obj]
                                                 if rule & Flags.SOLID and not rule & Flags.PUSH:
@@ -114,7 +115,7 @@ class Etat():
                                             return False
                                         
                                         # pousser tous les poussables
-                                        for flag2,i2 in mask2.flags():
+                                        for i2,flag2 in mask2.flags(True):
                                             if flag2 in words:
                                                 move(flag2, y2,x2, y3,x3)
                                             elif flag2 in objects:
