@@ -8,6 +8,7 @@ class Etat():
         lines = file.readlines()
         file.close()
         self.changed = True
+        self.win = False
         self.h = len(lines)
         self.grid = []
         for j in range(self.h):
@@ -56,19 +57,22 @@ class Etat():
                             suffixe = self.grid[y+dir[0]][x+dir[1]]
 
                             if prefixe != 0 and suffixe != 0:
-                                for i,pref in prefixe.flags(True):
+                                for pref in prefixe.flags(False):
                                     if pref in word2obj:
                                         for suf in suffixe.flags(False):
                                             if suf in words:
                                                 self.rules[word2obj[pref]] |= suf
+
+                                                # transformation
                                                 if suf in word2obj:
-                                                    print("transformation:", Flags(1 << (word2obj[suf] + first_obj)))
+                                                    pref_obj = Flags(1 << (word2obj[pref]+first_obj))
+                                                    suf_obj = Flags(1 << (word2obj[suf]+first_obj))
+                                                    for y2 in range(self.h):
+                                                        for x2 in range(self.w):
+                                                            if self.grid[y2][x2] & pref_obj:
+                                                                self.grid[y2][x2] &= ~pref_obj
+                                                                self.grid[y2][x2] |= suf_obj
 
-
-
-    def checkwin(self):
-        return False    
-    
 
     def checkdefeat(self):
         return False
@@ -122,13 +126,22 @@ class Etat():
                                                 move(flag2, y2,x2, y3,x3)
                                             elif flag2 in objects:
                                                 rule = self.rules[i2-first_obj]
-                                                if not rule & Flags.YOU and rule & Flags.PUSH:
+                                                if not rule & Flags.SOLID:
+                                                    return True
+                                                elif not rule & Flags.PUSH:
+                                                    return False
+                                                else:
                                                     move(flag2, y2,x2, y3,x3)
                                         
                                     return True
 
                                 if push(y2, x2):
                                     move(flag1,y1,x1,y2,x2)
-                                    self.changed = True                                    
+                                    self.changed = True
+                                    for i2,flag2 in self.grid[y2][x2].flags(True):
+                                        if flag2 in objects and self.rules[i2-first_obj] & Flags.WIN:
+                                            self.win = True
+                                            break
+
         if self.changed:
             self.getRules()

@@ -9,41 +9,43 @@ if __name__ == "__main__":
 
 
 class Screen():
-    def __init__(self):
+    def __init__(self, w, h):
         self.screen = pygame.display.set_mode((720, 480))
         successes, failures = pygame.init()
         print("Initializing pygame: {0} successes and {1} failures.".format(successes, failures))
         self.clock = pygame.time.Clock()
 
+        pygame.display.set_mode((24*w, 24*h))
+        pygame.display.set_icon(pygame.image.load("./images/icon.png"))
+        pygame.display.set_caption("BABA is A*")
+
         load_characters = pygame.image.load("./images/characters.png").convert_alpha()
         load_objects = pygame.image.load("./images/objects.png").convert_alpha()
-        load_texts = pygame.image.load("./images/texts.png")
-        load_static = pygame.image.load("./images/static.png")
+        load_texts = pygame.image.load("./images/texts.png").convert_alpha()
+        load_static = pygame.image.load("./images/static.png").convert_alpha()
+        load_tiled = pygame.image.load("./images/tiled.png").convert_alpha()
 
         self.subsurfaces = [
             load_characters.subsurface(1+0*25, 1+0*25, 24, 24),   # BABA
             load_objects.subsurface(426, 1501, 24, 24),   # WALL
-            None,   # ROCK
+            load_static.subsurface(201, 601, 24, 24),   # ROCK
             load_static.subsurface(76, 226, 24, 24),   # FLAG
-            None,   # LAVA
-            None,   # WATER
+            load_tiled.subsurface(451, 901, 24, 24),   # LAVA
+            load_tiled.subsurface(451, 2348, 24, 24),   # WATER
             load_texts.subsurface(226, 76, 24, 24),   # IS
             load_texts.subsurface(226, 226, 24, 24),   # YOU
-            None,   # SINK
+            load_texts.subsurface(1, 805, 24, 24),   # SINK
             load_texts.subsurface(226, 1123, 24, 24),   # WIN
-            None,   # DEFEAT
-            None,   # PUSH
-            None,   # SOLID
+            load_texts.subsurface(1, 730, 24, 24),   # DEFEAT
+            load_texts.subsurface(1, 301, 24, 24),   # PUSH
+            load_texts.subsurface(76, 955, 24, 24),   # SOLID
             load_characters.subsurface(1+25, 1+0*25, 24, 24),   # baba
             load_objects.subsurface(476, 2273, 24, 24),   # wall
-            None,   # rock
+            load_static.subsurface(226, 601, 24, 24),   # rock
             load_static.subsurface(101, 226, 24, 24),   # flag
-            None,   # lava
-            None,   # water
+            load_tiled.subsurface(476, 901, 24, 24),   # lava
+            load_tiled.subsurface(476, 2348, 24, 24),   # water
         ]
-
-        pygame.display.set_icon(pygame.image.load("./images/icon.png"))
-        pygame.display.set_caption("BABA is A*")
 
 
     def deltatime(self, FPS):
