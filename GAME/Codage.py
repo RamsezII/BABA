@@ -55,18 +55,16 @@ class Flags(IntFlag):
 
 
 words = Flags.BABA | Flags.WALL | Flags.ROCK | Flags.FLAG | Flags.LAVA | Flags.WATER | Flags.IS | Flags.YOU | Flags.SINK | Flags.WIN | Flags.DEFEAT | Flags.PUSH | Flags.SOLID
+objects = Flags.baba | Flags.wall | Flags.rock | Flags.flag | Flags.lava | Flags.water
 first_obj = 13
 
-rule2obj = {
-    
-}
-obj2rule = {
-    Flags.baba: 0,
-    Flags.wall: 1,
-    Flags.rock: 2,
-    Flags.flag: 3,
-    Flags.lava: 4,
-    Flags.water: 5,
+word2obj = {
+    Flags.BABA: 0,
+    Flags.WALL: 1,
+    Flags.ROCK: 2,
+    Flags.FLAG: 3,
+    Flags.LAVA: 4,
+    Flags.WATER: 5,
 }
 
 
@@ -80,22 +78,22 @@ if __name__ == "__main__":
     #         print(x.name+" = 1 << " + str(i))
     #         i += 1
     
-    # # log obj2word
+    # # log rule2obj
     # print()
     # for x in Flags:
     #     print("Flags." + x.name + ": Flags." + x.name + ",")
 
-    # log rules
-    print()
-    log = ""
-    for x in Flags:
-        log += "Flags." + x.name + " | "
-    print(log)
-
-    # # log defaultRules
+    # # log all|
     # print()
-    # for i,flag in enumerate(Flags):
-    #     print("Flags.PUSH,   #", i, "| " + flag.name)
+    # log = ""
+    # for x in Flags:
+    #     log += "Flags." + x.name + " | "
+    # print(log)
+
+    # # test iter
+    # print()
+    # for flag,i in (Flags.LAVA | Flags.PUSH | Flags.baba).flags():
+    #     print(i, "|", flag.name)
 
     print()
     print("FIN")

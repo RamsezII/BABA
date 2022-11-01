@@ -44,7 +44,7 @@ class Etat():
 
 
     def getRules(self):
-        self.rules = 19*[0]
+        self.rules = 6*[0]
         for y in range(self.h):
             for x in range(self.w):
                 if self.grid[y][x].hasflags(Flags.IS):
@@ -55,11 +55,11 @@ class Etat():
                             suffixe = self.grid[y+dir[0]][x+dir[1]]
 
                             if prefixe != 0 and suffixe != 0:
-                                for pref,i in prefixe.flags():
-                                    if pref in words:
+                                for pref,_ in prefixe.flags():
+                                    if pref in word2obj:
                                         for suf,_ in suffixe.flags():
                                             if suf in words:
-                                                self.rules[i] |= suf
+                                                self.rules[word2obj[pref]] |= suf
 
 
     def copy(self):
@@ -95,31 +95,30 @@ class Etat():
                     mask = self.grid[y1][x1]
                     mask2 = self.grid[y2][x2]
 
-                    if mask != 0:                     
-                        move = True
-
-                        # collision
-                        for flag,_ in mask2.flags():
-                            if flag in obj2rule:
-                                rule = self.rules[obj2rule[flag]]
-                                if rule & Flags.SOLID and not rule & Flags.PUSH:
-                                    move = False
-                                    break
-                        
-                        if move:
-                            # push
-                            for flag2,_ in mask2.flags():
-                                if flag2 in words or flag2 in obj2rule and self.rules[obj2rule[flag2]] & Flags.PUSH:
-                                    def push():
-                                        print("push: " + flag2.name + " in dir:", dir)
-                                        return True
-                                    move &= push()
-                            
-                            # move
-                            if move: # move
-                                for flag,i in mask.flags():
-                                    if flag in obj2rule:
-                                        if self.rules[obj2rule[flag]] & Flags.YOU:
+                    if mask != 0:
+                        for flag,i in mask.flags():
+                            if flag in objects:
+                                if self.rules[i-first_obj] & Flags.YOU:
+                                    move = True
+                                    
+                                    # collision
+                                    for flag,i in mask2.flags():
+                                        if flag in objects:
+                                            rule = self.rules[i-first_obj]
+                                            if rule & Flags.SOLID and not rule & Flags.PUSH:
+                                                move = False
+                                                break
+                                    
+                                    if move:
+                                        # push
+                                        for flag2,i2 in mask2.flags():
+                                            if flag2 in words or flag2 in objects and self.rules[i2-first_obj] & Flags.PUSH:
+                                                def push():
+                                                    print("push: " + flag2.name + " in dir:", dir)
+                                                    return True
+                                                move &= push()
+                                        
+                                        if move:
                                             self.grid[y2][x2] |= flag
                                             self.grid[y1][x1] &= ~flag
                                             self.changed = True
