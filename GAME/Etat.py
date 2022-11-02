@@ -63,9 +63,7 @@ class Etat():
                                         for suf in suffixe.flags(False):
                                             if suf in words:
                                                 self.rules[word2obj[pref]] |= suf
-
-                                                # transformation
-                                                if suf in word2obj:
+                                                if suf in word2obj: # transformation
                                                     pref_obj = Flags(1 << (word2obj[pref]+first_obj))
                                                     suf_obj = Flags(1 << (word2obj[suf]+first_obj))
                                                     for y2 in range(self.h):

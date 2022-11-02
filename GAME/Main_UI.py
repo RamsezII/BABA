@@ -5,7 +5,7 @@ import Screen
 import Etat
 
 if __name__ == "__main__":    
-    level0_path = "./levels/level_0.txt"
+    level0_path = "./levels/level_1.txt"
 
     if genericpath.isfile(level0_path):
         etat = Etat.Etat()
@@ -66,7 +66,7 @@ if __name__ == "__main__":
                     etat.changed = False
                     screen.refresh(etat)
                     print("stack:", len(etats))
-                    print(etat.logRules())
+                    # print(etat.logRules())
                     # print(etat.logEtat())
                     if etat.defeat:
                         print("DEFEAT")
