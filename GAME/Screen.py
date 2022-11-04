@@ -70,10 +70,10 @@ class Screen():
             surf.fill(pygame.Color(0,0,0))
             self.screen.blit(surf, (0, 0))
             log = ""
-            if etat.defeat:
-                log = "DEFEAT"
-            elif etat.win:
+            if etat.win:
                 log = "WIN!"
+            elif etat.defeat:
+                log = "DEFEAT"
             log = self.font.render(log, False, pygame.Color(255,255,255))
             logsize = log.get_size()
             self.screen.blit(log, (0.5*(size[0]-logsize[0]), 0.5*(size[1]-logsize[1])))

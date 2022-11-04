@@ -1,11 +1,16 @@
 import genericpath
+import os
 import pygame
 
 import Screen
 import Etat
 
+
+WDIR = os.path.dirname(os.path.abspath(__file__))
+
+
 if __name__ == "__main__":    
-    level0_path = "./levels/level_1.txt"
+    level0_path = "./levels/level_2.txt"
 
     if genericpath.isfile(level0_path):
         etat = Etat.Etat()
@@ -66,12 +71,12 @@ if __name__ == "__main__":
                     etat.changed = False
                     screen.refresh(etat)
                     print("stack:", len(etats))
-                    # print(etat.logRules())
+                    print(etat.logRules())
                     # print(etat.logEtat())
-                    if etat.defeat:
-                        print("DEFEAT")
-                    elif etat.win:
+                    if etat.win:
                         print("WIN!")
+                    elif etat.defeat:
+                        print("DEFEAT")
     else:
         print("no savefile at:", level0_path)
 

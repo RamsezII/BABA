@@ -25,7 +25,7 @@ class Flags(IntFlag):
     rock = 1 << 16
     flag = 1 << 17
     baba = 1 << 18
-
+    
     def hasflags(self, flag): # OR
         return self & flag
 

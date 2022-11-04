@@ -28,14 +28,14 @@ class Etat():
     def clone(self):
         return copy.deepcopy(self)
 
-
+        
     def logRules(self):
         log = ""
         for i,flags in enumerate(self.rules):
             if flags != 0:
                 log += Flags(1 << (i+first_obj)).name + " is " + str(flags) + "\n"
         return log
-    
+
 
     def logEtat(self):
         log = ""
@@ -47,12 +47,12 @@ class Etat():
 
 
     def getRules(self):
-        self.rules = 6*[0]
+        self.rules = 6*[Flags(0)]
         for y in range(self.h):
             for x in range(self.w):
                 if self.grid[y][x].hasflags(Flags.IS):
                     for dir in ((1,0), (0,1)):
-                        if y-dir[0] >= 0 and y+dir[0] < self.h-1 and x-dir[1] >= 0 and x+dir[1] < self.w-1:
+                        if y-dir[0] >= 0 and y+dir[0] < self.h and x-dir[1] >= 0 and x+dir[1] < self.w:
 
                             prefixe = self.grid[y-dir[0]][x-dir[1]]
                             suffixe = self.grid[y+dir[0]][x+dir[1]]
@@ -73,14 +73,19 @@ class Etat():
                                                                 self.grid[y2][x2] |= suf_obj
 
 
-    def checkDefeat(self):
+    def checkWinDefeat(self):
+        self.defeat = True
+        self.win = False
         for y in range(self.h):
             for x in range(self.w):
                 for i,flag in self.grid[y][x].flags(True):
-                    if flag in objects and self.rules[i-first_obj] & Flags.YOU:
-                        self.defeat = False
-                        return
-        self.defeat = True
+                    if flag in objects:
+                        rule = self.rules[i-first_obj]
+                        if rule & Flags.YOU:
+                            self.defeat = False
+                            if rule & Flags.WIN:
+                                self.win = True
+                                return
     
 
     def isInBounds(self, j, i):
@@ -140,11 +145,7 @@ class Etat():
                                 if push(y2, x2):
                                     move(flag1,y1,x1,y2,x2)
                                     self.changed = True
-                                    for i2,flag2 in self.grid[y2][x2].flags(True):
-                                        if flag2 in objects and self.rules[i2-first_obj] & Flags.WIN:
-                                            self.win = True
-                                            break
 
         if self.changed:
             self.getRules()
-            self.checkDefeat()
+            self.checkWinDefeat()
