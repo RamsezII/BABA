@@ -47,7 +47,7 @@ class Etat():
 
 
     def getRules(self):
-        self.rules = 6*[Flags(0)]
+        self.rules = 6*[0]
         for y in range(self.h):
             for x in range(self.w):
                 if self.grid[y][x].hasflags(Flags.IS):
