@@ -10,13 +10,13 @@ WDIR = os.path.dirname(os.path.abspath(__file__))
 
 
 if __name__ == "__main__":    
-    level0_path = "./levels/level_2.txt"
+    level0_path = "./levels/level_1.txt"
 
     if genericpath.isfile(level0_path):
         etat = Etat.Etat()
         etat.init(level0_path)
         etats = []
-        screen = Screen.Screen(etat.w, etat.h)
+        screen = Screen.Screen(etat.width, etat.height)
         running = True
 
         while running:

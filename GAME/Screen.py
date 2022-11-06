@@ -3,11 +3,6 @@ import pygame
 from Codage import Flags
 
 
-if __name__ == "__main__":
-    for x in Flags:
-        print("None,   # " + x.name)
-
-
 class Screen():
     def __init__(self, w, h):
         self.screen = pygame.display.set_mode((720, 480))
@@ -56,8 +51,8 @@ class Screen():
 
     def refresh(self, etat):
         self.screen.fill(pygame.Color(0, 0, 0))
-        for j in range(etat.h):
-            for i in range(etat.w):
+        for j in range(etat.height):
+            for i in range(etat.width):
                 for index,flag in etat.grid[j][i].flags(True):
                     if flag != 0:
                         surf = self.subsurfaces[index]
@@ -80,3 +75,8 @@ class Screen():
             pass
         
         pygame.display.update()
+
+
+# if __name__ == "__main__":
+#     for x in Flags:
+#         print("None,   # " + x.name)

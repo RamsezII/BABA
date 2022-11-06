@@ -42,12 +42,6 @@ class Flags(IntFlag):
                     else:
                         yield flag
     
-    # def flags(self):
-    #     if self >= 0:
-    #         for flag in Flags:
-    #             if self.hasflags(flag):
-    #                 yield flag
-    
     def textcode(self):
         if self == 0:
             return ".."

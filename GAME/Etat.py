@@ -10,13 +10,13 @@ class Etat():
         self.changed = True
         self.win = False
         self.defeat = False
-        self.h = len(lines)
+        self.height = len(lines)
         self.grid = []
-        for j in range(self.h):
+        for j in range(self.height):
             splits = lines[j].split(' ')
-            self.w = len(splits)
+            self.width = len(splits)
             l = []
-            for i in range(self.w):
+            for i in range(self.width):
                 if splits[i].startswith(".."):
                     l.append(Flags(0))
                 else:
@@ -39,20 +39,22 @@ class Etat():
 
     def logEtat(self):
         log = ""
-        for y in range(self.h):
-            for x in range(self.w):
+        for y in range(self.height):
+            for x in range(self.width):
                 log += self.grid[y][x].textcode() + " "
             log += '\n'
         return log
 
 
     def getRules(self):
+        # un bitmask par objet (6 au total). si "BABA IS YOU" est visible dans le niveau, le flag 'YOU' dans le bitmask de 'baba' dans 'self.rules' sera à 1
+        # dans le cas d'une transformation, par exemple "BABA IS ROCK", toutes les cases sont parcourues et chaque case où le flag 'baba' est à 1 est mis à 0 et le flag 'rock' est mis à 1
         self.rules = 6*[0]
-        for y in range(self.h):
-            for x in range(self.w):
+        for y in range(self.height):
+            for x in range(self.width):
                 if self.grid[y][x].hasflags(Flags.IS):
                     for dir in ((1,0), (0,1)):
-                        if y-dir[0] >= 0 and y+dir[0] < self.h and x-dir[1] >= 0 and x+dir[1] < self.w:
+                        if y-dir[0] >= 0 and y+dir[0] < self.height and x-dir[1] >= 0 and x+dir[1] < self.width:
 
                             prefixe = self.grid[y-dir[0]][x-dir[1]]
                             suffixe = self.grid[y+dir[0]][x+dir[1]]
@@ -63,21 +65,25 @@ class Etat():
                                         for suf in suffixe.flags(False):
                                             if suf in words:
                                                 self.rules[word2obj[pref]] |= suf
-                                                if suf in word2obj: # transformation
+
+                                                # si suffixe désigne aussi un objet, c'est une loi de transformation
+                                                if suf in word2obj:
                                                     pref_obj = Flags(1 << (word2obj[pref]+first_obj))
                                                     suf_obj = Flags(1 << (word2obj[suf]+first_obj))
-                                                    for y2 in range(self.h):
-                                                        for x2 in range(self.w):
+                                                    for y2 in range(self.height):
+                                                        for x2 in range(self.width):
                                                             if self.grid[y2][x2] & pref_obj:
                                                                 self.grid[y2][x2] &= ~pref_obj
                                                                 self.grid[y2][x2] |= suf_obj
 
 
     def checkWinDefeat(self):
+        # on gagne si un des flags représentant les objets d'une case, a son correspondant dans 'self.rules' marqué comme 'YOU' et 'WIN'
+        # on perd si aucune case n'a d'objet correspondant dans 'self.rules' marqué comme 'YOU'
         self.defeat = True
         self.win = False
-        for y in range(self.h):
-            for x in range(self.w):
+        for y in range(self.height):
+            for x in range(self.width):
                 for i,flag in self.grid[y][x].flags(True):
                     if flag in objects:
                         rule = self.rules[i-first_obj]
@@ -89,18 +95,18 @@ class Etat():
     
 
     def isInBounds(self, j, i):
-        return j>=0 and j<self.h and i>=0 and i<self.w
+        return j>=0 and j<self.height and i>=0 and i<self.width
 
 
     def move(self, dir):
-        for y in range(self.h):
-            for x in range(self.w):                
+        for y in range(self.height):
+            for x in range(self.width):                
                 # parcours dans le sens contraire du déplacement pour éviter le piétinement du mouvement des valeurs
                 y1,x1 = y,x
                 if dir[0] > 0:
-                    y1 = self.h-y-1
+                    y1 = self.height-y-1
                 if dir[1] > 0:
-                    x1 = self.w-x-1     
+                    x1 = self.width-x-1     
 
                 mask1 = self.grid[y1][x1]
                 if mask1 != 0:               
