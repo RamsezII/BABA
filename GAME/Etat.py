@@ -84,14 +84,19 @@ class Etat():
         self.win = False
         for y in range(self.height):
             for x in range(self.width):
+                you = False
+                win = False
                 for i,flag in self.grid[y][x].flags(True):
                     if flag in objects:
                         rule = self.rules[i-first_obj]
                         if rule & Flags.YOU:
+                            you = True
                             self.defeat = False
-                            if rule & Flags.WIN:
-                                self.win = True
-                                return
+                        if rule & Flags.WIN:
+                            win = True
+                if you and win:
+                    self.win = True
+                    return
     
 
     def isInBounds(self, j, i):
