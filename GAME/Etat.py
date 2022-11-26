@@ -3,13 +3,13 @@ import copy
 
 
 class Etat():
-    def init(self, path):
-        file = open(path, 'r')
-        lines = file.readlines()
-        file.close()
+    def __init__(self):
         self.changed = True
         self.win = False
         self.defeat = False
+
+
+    def readtext(self, lines):
         self.height = len(lines)
         self.grid = []
         for j in range(self.height):
@@ -160,3 +160,5 @@ class Etat():
         if self.changed:
             self.getRules()
             self.checkWinDefeat()
+        
+        return self.changed

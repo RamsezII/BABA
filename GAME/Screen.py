@@ -4,7 +4,7 @@ from Codage import Flags
 
 
 class Screen():
-    def __init__(self, w, h):
+    def __init__(self, main):
         self.screen = pygame.display.set_mode((720, 480))
         successes, failures = pygame.init()
         print("Initializing pygame: {0} successes and {1} failures.".format(successes, failures))
@@ -12,7 +12,7 @@ class Screen():
         self.font = pygame.font.SysFont("Comic Sans MS", 30)
         self.clock = pygame.time.Clock()
 
-        pygame.display.set_mode((24*w, 24*h))
+        pygame.display.set_mode((24*main.etat.width, 24*main.etat.height))
         pygame.display.set_icon(pygame.image.load("./images/icon.png"))
         pygame.display.set_caption("BABA is A*")
 
