@@ -1,18 +1,18 @@
+import math
 import pygame
 
 import Main
 import Screen
 
-import euristiques
-
 
 if __name__ == "__main__":    
-    main = Main("./levels/level_IA_01.txt")
+    # fps = int(input("fps: "))
+    # fps = 15
+    main = Main.Main("./levels/level_IA_01.txt")
     screen = Screen.Screen(main)
-    fps = int(input("fps: "))
     
     while main.running:
-        deltatime = screen.deltatime(10)
+        # deltatime = screen.deltatime(fps)
 
         for event in pygame.event.get():
             e = event.type
@@ -32,18 +32,29 @@ if __name__ == "__main__":
                         print("quit!")
                         running = False                        
         
-        if main.running:
+        if main.running and not main.etat.win:
             succs = main.successeurs()
-            succs.sort(key=euristiques.euristique_target)
-            
-            if len(succs) > 1:
+            count = len(succs)
+            if count == 0:
+                print("NO SUCCS")
+                break
+            elif count == 1:
                 main.etat = succs[0]
+            else:
+                eur_min = math.inf
+                next = None
+                for x in succs:
+                    eur = x.manhattan()
+                    if eur < eur_min:
+                        eur_min = eur
+                        next = x
+                main.apply(next)
             
             if main.etat.changed:
                 main.etat.changed = False
                 screen.refresh(main.etat)
                 print("stack:", len(main.etats))
-                print(main.etat.logRules())
+                # print(main.etat.logRules())
                 # print(etat.logEtat())
 
                 if main.etat.win:

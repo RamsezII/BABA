@@ -53,7 +53,7 @@ class Screen():
         self.screen.fill(pygame.Color(0, 0, 0))
         for j in range(etat.height):
             for i in range(etat.width):
-                for index,flag in etat.grid[j][i].flags(True):
+                for index,flag in etat.grid[j][i].flags():
                     if flag != 0:
                         surf = self.subsurfaces[index]
                         if surf:

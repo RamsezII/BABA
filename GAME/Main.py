@@ -1,6 +1,5 @@
 import genericpath
 import os
-
 import Etat
 
 
@@ -33,6 +32,11 @@ class Main():
         return self.etat.changed
     
 
+    def apply(self, etat):
+        self.etats.append(self.etat)
+        self.etat = etat
+    
+
     def rewind(self):
         if len(self.etats) != 0:
             self.etat = self.etats.pop()
@@ -46,6 +50,8 @@ class Main():
             etat = self.etat.clone()
             if etat.move(dir):
                 succ.append(etat)
-        if len(succ) > 1:
-            succ.sort()
         return succ
+
+
+if __name__ == "__main__":
+    print("FIN")

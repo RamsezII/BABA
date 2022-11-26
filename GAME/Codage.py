@@ -32,15 +32,12 @@ class Flags(IntFlag):
     def hasmask(self, mask): # AND
         return self & mask == mask
     
-    def flags(self, index):
+    def flags(self):
         if self >= 0:
             for i in range(19):
                 flag = Flags(1 << i)
                 if self & flag:
-                    if index:
-                        yield i,flag
-                    else:
-                        yield flag
+                    yield i,flag
     
     def textcode(self):
         if self == 0:

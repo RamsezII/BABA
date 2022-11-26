@@ -49,7 +49,7 @@ class Etat():
     def getRules(self):
         # un bitmask par objet (6 au total). si "BABA IS YOU" est visible dans le niveau, le flag 'YOU' dans le bitmask de 'baba' dans 'self.rules' sera à 1
         # dans le cas d'une transformation, par exemple "BABA IS ROCK", toutes les cases sont parcourues et chaque case où le flag 'baba' est à 1 est mis à 0 et le flag 'rock' est mis à 1
-        self.rules = 6*[0]
+        self.rules = 6*[Flags(0)]
         for y in range(self.height):
             for x in range(self.width):
                 if self.grid[y][x].hasflags(Flags.IS):
@@ -60,9 +60,9 @@ class Etat():
                             suffixe = self.grid[y+dir[0]][x+dir[1]]
 
                             if prefixe != 0 and suffixe != 0:
-                                for pref in prefixe.flags(False):
+                                for _,pref in prefixe.flags():
                                     if pref in word2obj:
-                                        for suf in suffixe.flags(False):
+                                        for _,suf in suffixe.flags():
                                             if suf in words:
                                                 self.rules[word2obj[pref]] |= suf
 
@@ -86,7 +86,7 @@ class Etat():
             for x in range(self.width):
                 you = False
                 win = False
-                for i,flag in self.grid[y][x].flags(True):
+                for i,flag in self.grid[y][x].flags():
                     if flag in objects:
                         rule = self.rules[i-first_obj]
                         if rule & Flags.YOU:
@@ -119,7 +119,7 @@ class Etat():
                     x2 = x1 + dir[1]
                     
                     if self.isInBounds(y2, x2):
-                        for i1,flag1 in mask1.flags(True):
+                        for i1,flag1 in mask1.flags():
                             if flag1 in objects and self.rules[i1-first_obj] & Flags.YOU:
 
                                 def move(flag, y1,x1, y2,x2):
@@ -130,7 +130,7 @@ class Etat():
                                     mask2 = self.grid[y2][x2]
                                     if mask2 != 0:
                                         # détecter obstacle non déplaçable
-                                        for i2,flag2 in mask2.flags(True):
+                                        for i2,flag2 in mask2.flags():
                                             if flag2 in objects:  # seul les objets peuvent être solides
                                                 rule = self.rules[i2-first_obj]
                                                 if rule & Flags.SOLID and not rule & Flags.PUSH:
@@ -142,7 +142,7 @@ class Etat():
                                             return False
                                         
                                         # pousser tous les poussables
-                                        for i2,flag2 in mask2.flags(True):
+                                        for i2,flag2 in mask2.flags():
                                             if flag2 in words:
                                                 move(flag2, y2,x2, y3,x3)
                                             elif flag2 in objects:
@@ -162,3 +162,27 @@ class Etat():
             self.checkWinDefeat()
         
         return self.changed
+
+
+    def manhattan(self):
+        wins = set()
+        yous = set()
+        for y in range(self.height):
+            for x in range(self.width):
+                pos = (y,x)
+                flags = self.grid[y][x]
+                for i1,flag in flags.flags():
+                    if flag in objects:
+                        rules = self.rules[i1-first_obj]
+                        if rules.hasflags(Flags.WIN):
+                            wins.add(pos)
+                        if rules.hasflags(Flags.YOU):
+                            yous.add(pos)
+
+        man = self.height+self.width
+        for win in wins:
+            for you in yous:
+                dist = abs(win[0]-you[0])+abs(win[1]-you[1])
+                if dist < man:
+                    man = dist
+        return man
