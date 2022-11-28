@@ -1,0 +1,4 @@
+-Si il n'y rien d'autres que des objets marqués comme WIN, et des objets marqués comme YOU. 
+L'euristique donne la distance de Manhattan entre le couple YOU/WIN le plus proche.
+
+-L'execution est très lente car la plupart des taches demandent un parcours de toutes les cases, et de tous les bits de chaque cases

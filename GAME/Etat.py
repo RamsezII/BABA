@@ -4,7 +4,6 @@ import copy
 
 class Etat():
     def __init__(self):
-        self.changed = True
         self.win = False
         self.defeat = False
 
@@ -27,6 +26,13 @@ class Etat():
 
     def clone(self):
         return copy.deepcopy(self)
+    
+
+    def __eq__(self, other):
+        for y in range(self.height):
+            if self.grid[y] != other.grid[y]:
+                return False
+        return True
 
         
     def logRules(self):
@@ -129,39 +135,37 @@ class Etat():
                                 def push(y2, x2):
                                     mask2 = self.grid[y2][x2]
                                     if mask2 != 0:
+                                        obstacles = False
                                         # détecter obstacle non déplaçable
                                         for i2,flag2 in mask2.flags():
-                                            if flag2 in objects:  # seul les objets peuvent être solides
-                                                rule = self.rules[i2-first_obj]
-                                                if rule & Flags.SOLID and not rule & Flags.PUSH:
-                                                    return False
-                                        
-                                        # récursivité pour éviter piétinement
-                                        y3, x3 = y2+dir[0], x2+dir[1]
-                                        if not self.isInBounds(y3, x3) or not push(y3, x3):
-                                            return False
-                                        
-                                        # pousser tous les poussables
-                                        for i2,flag2 in mask2.flags():
                                             if flag2 in words:
-                                                move(flag2, y2,x2, y3,x3)
-                                            elif flag2 in objects:
+                                                obstacles = True
+                                            elif flag2 in objects:  # seul les objets peuvent être solides
                                                 rule = self.rules[i2-first_obj]
-                                                if not rule & Flags.PUSH:
-                                                    return True
-                                                else:
-                                                    move(flag2, y2,x2, y3,x3)                                        
+                                                if rule & Flags.PUSH:
+                                                    obstacles = True
+                                                elif rule & Flags.SOLID:
+                                                    return False
+                                                                                            
+                                        if obstacles:                                        
+                                            # récursivité pour éviter piétinement (push des cases suivantes avant push immédiat)
+                                            y3, x3 = y2+dir[0], x2+dir[1]
+                                            if not self.isInBounds(y3, x3) or not push(y3, x3):
+                                                return False
+                                            
+                                            # pousser tous les poussables
+                                            for i2,flag2 in mask2.flags():
+                                                if flag2 in words:
+                                                    move(flag2, y2,x2, y3,x3)
+                                                elif flag2 in objects:
+                                                    rule = self.rules[i2-first_obj]
+                                                    move(flag2, y2,x2, y3,x3)
                                     return True
 
                                 if push(y2, x2):
                                     move(flag1,y1,x1,y2,x2)
-                                    self.changed = True
-
-        if self.changed:
-            self.getRules()
-            self.checkWinDefeat()
-        
-        return self.changed
+        self.getRules()
+        self.checkWinDefeat()
 
 
     def manhattan(self):
@@ -182,7 +186,9 @@ class Etat():
         man = self.height+self.width
         for win in wins:
             for you in yous:
-                dist = abs(win[0]-you[0])+abs(win[1]-you[1])
+                h = abs(win[0]-you[0])
+                w = abs(win[1]-you[1])
+                dist = pow(h*h + w*w, 0.5)
                 if dist < man:
                     man = dist
         return man

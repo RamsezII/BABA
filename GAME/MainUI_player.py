@@ -13,12 +13,9 @@ if __name__ == "__main__":
         dir = [0,0]
 
         for event in pygame.event.get():
-            e = event.type
-
             if event.type == pygame.QUIT:
                 main.running = False
                 break
-
             elif event.type == pygame.KEYDOWN:
                 # passer en mode terminal
                 if event.key == pygame.K_p:
@@ -29,11 +26,9 @@ if __name__ == "__main__":
                     elif command == "quit":
                         print("quit!")
                         running = False
-
                 # rewind
                 elif event.key == pygame.K_r:
-                    main.rewind()
-                
+                    main.rewind()                
                 elif not main.etat.win:
                     # min et max pour eviter accumulation
                     if event.key == pygame.K_z:
@@ -49,8 +44,8 @@ if __name__ == "__main__":
             if dir[0] != dir[1]:
                 main.move(dir)
             
-            if main.etat.changed:
-                main.etat.changed = False
+            if main.changed:
+                main.changed = False
                 screen.refresh(main.etat)
                 print("stack:", len(main.etats))
                 print(main.etat.logRules())
