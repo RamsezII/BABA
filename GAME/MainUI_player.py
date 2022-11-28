@@ -1,17 +1,16 @@
 import pygame
 
 import Main
-import Screen
+import UI
 
 
 if __name__ == "__main__":    
     main = Main.Main("level_1.txt")
-    screen = Screen.Screen(main)
+    screen = UI.Screen(main)
 
     while main.running:
         deltatime = screen.deltatime(10)
-        dir = [0,0]
-
+        dir = 0
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 main.running = False
@@ -30,18 +29,17 @@ if __name__ == "__main__":
                 elif event.key == pygame.K_r:
                     main.rewind()                
                 elif not main.etat.win:
-                    # min et max pour eviter accumulation
                     if event.key == pygame.K_z:
-                        dir[0] = max(-1, dir[0]-1)
+                        dir = -main.etat.width
                     elif event.key == pygame.K_d:
-                        dir[1] = min(1, dir[1]+1)
+                        dir = 1
                     elif event.key == pygame.K_s:
-                        dir[0] = min(1, dir[0]+1)
+                        dir = main.etat.width
                     elif event.key == pygame.K_q:
-                        dir[1] = max(-1, dir[1]-1)
+                        dir = -1
         
         if main.running:
-            if dir[0] != dir[1]:
+            if dir != 0:
                 main.move(dir)
             
             if main.changed:

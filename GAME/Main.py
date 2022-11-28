@@ -49,13 +49,11 @@ class Main():
 
     def successeurs(self):
         succ = []
-        for dir in up_right_down_left:
+        for dir in (-self.etat.width, 1, self.etat.width, -1):
             etat = self.etat.clone()
             etat.move(dir)
             if etat != self.etat and etat not in self.tried:
-                print("succs:", dir)
                 succ.append(etat)
-        print()
         return succ
 
 

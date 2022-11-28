@@ -14,14 +14,17 @@ class Etat():
         for j in range(self.height):
             splits = lines[j].split(' ')
             self.width = len(splits)
-            l = []
             for i in range(self.width):
                 if splits[i].startswith(".."):
-                    l.append(Flags(0))
+                    self.grid.append(Flags(0))
                 else:
-                    l.append(Flags(1 << int(splits[i])))
-            self.grid.append(l)
+                    self.grid.append(Flags(1 << int(splits[i])))
+        self.count = self.height*self.width
         self.getRules()
+    
+
+    def isInBounds(self, k):
+        return k >= 0 and k < self.count
 
 
     def clone(self):
@@ -29,26 +32,23 @@ class Etat():
     
 
     def __eq__(self, other):
-        for y in range(self.height):
-            if self.grid[y] != other.grid[y]:
-                return False
-        return True
+        return self.grid == other.grid
 
         
     def logRules(self):
         log = ""
-        for i,flags in enumerate(self.rules):
+        for f,flags in enumerate(self.rules):
             if flags != 0:
-                log += Flags(1 << (i+first_obj)).name + " is " + str(flags) + "\n"
+                log += Flags(1 << (f+first_obj)).name + " is " + str(flags) + "\n"
         return log
 
 
     def logEtat(self):
         log = ""
-        for y in range(self.height):
-            for x in range(self.width):
-                log += self.grid[y][x].textcode() + " "
-            log += '\n'
+        for k in range(self.count):
+            log += self.grid[k].textcode() + " "
+            if k % self.width == 0:
+                log += '\n'
         return log
 
 
@@ -56,31 +56,27 @@ class Etat():
         # un bitmask par objet (6 au total). si "BABA IS YOU" est visible dans le niveau, le flag 'YOU' dans le bitmask de 'baba' dans 'self.rules' sera à 1
         # dans le cas d'une transformation, par exemple "BABA IS ROCK", toutes les cases sont parcourues et chaque case où le flag 'baba' est à 1 est mis à 0 et le flag 'rock' est mis à 1
         self.rules = 6*[Flags(0)]
-        for y in range(self.height):
-            for x in range(self.width):
-                if self.grid[y][x].hasflags(Flags.IS):
-                    for dir in ((1,0), (0,1)):
-                        if y-dir[0] >= 0 and y+dir[0] < self.height and x-dir[1] >= 0 and x+dir[1] < self.width:
+        for k in range(self.count):
+            if self.grid[k].hasflags(Flags.IS):
+                for dir in (self.width, 1):  # les 2 sens de lectures: vers le bas et vers la droite
+                    if self.isInBounds(k-dir) + self.isInBounds(k+dir):
+                        prefixe = self.grid[k-dir]
+                        suffixe = self.grid[k+dir]
 
-                            prefixe = self.grid[y-dir[0]][x-dir[1]]
-                            suffixe = self.grid[y+dir[0]][x+dir[1]]
-
-                            if prefixe != 0 and suffixe != 0:
-                                for _,pref in prefixe.flags():
-                                    if pref in word2obj:
-                                        for _,suf in suffixe.flags():
-                                            if suf in words:
-                                                self.rules[word2obj[pref]] |= suf
-
-                                                # si suffixe désigne aussi un objet, c'est une loi de transformation
-                                                if suf in word2obj:
-                                                    pref_obj = Flags(1 << (word2obj[pref]+first_obj))
-                                                    suf_obj = Flags(1 << (word2obj[suf]+first_obj))
-                                                    for y2 in range(self.height):
-                                                        for x2 in range(self.width):
-                                                            if self.grid[y2][x2] & pref_obj:
-                                                                self.grid[y2][x2] &= ~pref_obj
-                                                                self.grid[y2][x2] |= suf_obj
+                        if prefixe != 0 and suffixe != 0:
+                            for _,pref in prefixe.flags():
+                                if pref in word2obj:
+                                    for _,suf in suffixe.flags():
+                                        if suf in words:
+                                            self.rules[word2obj[pref]] |= suf
+                                            # si suffixe désigne aussi un objet, c'est une loi de transformation
+                                            if suf in word2obj:
+                                                pref_obj = Flags(1 << (word2obj[pref]+first_obj))
+                                                suf_obj = Flags(1 << (word2obj[suf]+first_obj))
+                                                for k2 in range(self.count):
+                                                    if self.grid[k2] & pref_obj:
+                                                        self.grid[k2] &= ~pref_obj
+                                                        self.grid[k2] |= suf_obj
 
 
     def checkWinDefeat(self):
@@ -88,82 +84,68 @@ class Etat():
         # on perd si aucune case n'a d'objet correspondant dans 'self.rules' marqué comme 'YOU'
         self.defeat = True
         self.win = False
-        for y in range(self.height):
-            for x in range(self.width):
-                you = False
-                win = False
-                for i,flag in self.grid[y][x].flags():
-                    if flag in objects:
-                        rule = self.rules[i-first_obj]
-                        if rule & Flags.YOU:
-                            you = True
-                            self.defeat = False
-                        if rule & Flags.WIN:
-                            win = True
-                if you and win:
-                    self.win = True
-                    return
+        for k in range(self.count):
+            you = False
+            win = False
+            for f,flag in self.grid[k].flags():
+                if flag in objects:
+                    rule = self.rules[f-first_obj]
+                    if rule & Flags.YOU:
+                        you = True
+                        self.defeat = False
+                    if rule & Flags.WIN:
+                        win = True
+            if you and win:
+                self.win = True
+                return
     
 
-    def isInBounds(self, j, i):
-        return j>=0 and j<self.height and i>=0 and i<self.width
-
-
     def move(self, dir):
-        for y in range(self.height):
-            for x in range(self.width):                
-                # parcours dans le sens contraire du déplacement pour éviter le piétinement du mouvement des valeurs
-                y1,x1 = y,x
-                if dir[0] > 0:
-                    y1 = self.height-y-1
-                if dir[1] > 0:
-                    x1 = self.width-x-1     
+        for k_ in range(self.count):
+            k = k_
+            if dir > 0:
+                k = self.count-k
+            if self.isInBounds(k+dir):
+                mask1 = self.grid[k]
+                if mask1 != 0:
+                    for f1,flag1 in mask1.flags():
+                        if flag1 in objects and self.rules[f1-first_obj] & Flags.YOU:
+                            def move(flag, k):
+                                self.grid[k] &= ~flag
+                                self.grid[k+dir] |= flag
 
-                mask1 = self.grid[y1][x1]
-                if mask1 != 0:               
-                    y2 = y1 + dir[0]
-                    x2 = x1 + dir[1]
-                    
-                    if self.isInBounds(y2, x2):
-                        for i1,flag1 in mask1.flags():
-                            if flag1 in objects and self.rules[i1-first_obj] & Flags.YOU:
-
-                                def move(flag, y1,x1, y2,x2):
-                                    self.grid[y1][x1] &= ~flag
-                                    self.grid[y2][x2] |= flag
-
-                                def push(y2, x2):
-                                    mask2 = self.grid[y2][x2]
-                                    if mask2 != 0:
-                                        obstacles = False
-                                        # détecter obstacle non déplaçable
+                            def push(k):
+                                mask2 = self.grid[k]
+                                if mask2 != 0:
+                                    obstacles = False
+                                    # détecter obstacle non déplaçable
+                                    for i2,flag2 in mask2.flags():
+                                        if flag2 in words:
+                                            obstacles = True
+                                        elif flag2 in objects:  # seul les objets peuvent être solides
+                                            rule = self.rules[i2-first_obj]
+                                            if rule & Flags.PUSH:
+                                                obstacles = True
+                                            elif rule & Flags.SOLID:
+                                                return False
+                                                                                        
+                                    if obstacles:                                        
+                                        # récursivité pour éviter piétinement (push des cases suivantes avant push immédiat)
+                                        k2 = k+dir
+                                        if not self.isInBounds(k2) or not push(k2):
+                                            return False
+                                        
+                                        # pousser tous les poussables
                                         for i2,flag2 in mask2.flags():
                                             if flag2 in words:
-                                                obstacles = True
-                                            elif flag2 in objects:  # seul les objets peuvent être solides
+                                                move(flag2, k)
+                                            elif flag2 in objects:
                                                 rule = self.rules[i2-first_obj]
-                                                if rule & Flags.PUSH:
-                                                    obstacles = True
-                                                elif rule & Flags.SOLID:
-                                                    return False
-                                                                                            
-                                        if obstacles:                                        
-                                            # récursivité pour éviter piétinement (push des cases suivantes avant push immédiat)
-                                            y3, x3 = y2+dir[0], x2+dir[1]
-                                            if not self.isInBounds(y3, x3) or not push(y3, x3):
-                                                return False
-                                            
-                                            # pousser tous les poussables
-                                            for i2,flag2 in mask2.flags():
-                                                if flag2 in words:
-                                                    move(flag2, y2,x2, y3,x3)
-                                                elif flag2 in objects:
-                                                    rule = self.rules[i2-first_obj]
-                                                    move(flag2, y2,x2, y3,x3)
-                                    return True
+                                                move(flag2, k)
+                                return True
 
-                                if push(y2, x2):
-                                    move(flag1,y1,x1,y2,x2)
+                            if push(k+dir):
+                                move(flag1,k)
         self.getRules()
         self.checkWinDefeat()
 
@@ -172,9 +154,10 @@ class Etat():
         wins = set()
         yous = set()
         for y in range(self.height):
+            y2 = y*self.width
             for x in range(self.width):
+                flags = self.grid[y2+x]
                 pos = (y,x)
-                flags = self.grid[y][x]
                 for i1,flag in flags.flags():
                     if flag in objects:
                         rules = self.rules[i1-first_obj]

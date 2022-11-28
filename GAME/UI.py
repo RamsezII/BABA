@@ -55,8 +55,9 @@ class Screen():
     def refresh(self, etat):
         self.screen.fill(pygame.Color(0, 0, 0))
         for j in range(etat.height):
+            j2 = j*etat.width
             for i in range(etat.width):
-                for index,flag in etat.grid[j][i].flags():
+                for index,flag in etat.grid[j2+i].flags():
                     if flag != 0:
                         surf = self.subsurfaces[index]
                         if surf:

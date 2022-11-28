@@ -2,12 +2,11 @@ import math
 import pygame
 
 import Main
-import Screen
-
+import UI
 
 if __name__ == "__main__":    
     main = Main.Main("level_IA_01.txt")
-    screen = Screen.Screen(main)
+    screen = UI.Screen(main)
     
     while main.running:
         for event in pygame.event.get():
@@ -49,6 +48,5 @@ if __name__ == "__main__":
                     print("WIN!")
                 elif main.etat.defeat:
                     print("DEFEAT")
-        print()
 
     print("FIN")
