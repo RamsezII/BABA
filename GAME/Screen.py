@@ -1,3 +1,4 @@
+import os
 import pygame
 
 from Codage import Flags
@@ -12,15 +13,17 @@ class Screen():
         self.font = pygame.font.SysFont("Comic Sans MS", 30)
         self.clock = pygame.time.Clock()
 
+        images_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "images")
+
         pygame.display.set_mode((24*main.etat.width, 24*main.etat.height))
-        pygame.display.set_icon(pygame.image.load("./images/icon.png"))
+        pygame.display.set_icon(pygame.image.load(os.path.join(images_path, "icon.png")))
         pygame.display.set_caption("BABA is A*")
 
-        load_characters = pygame.image.load("./images/characters.png").convert_alpha()
-        load_objects = pygame.image.load("./images/objects.png").convert_alpha()
-        load_texts = pygame.image.load("./images/texts.png").convert_alpha()
-        load_static = pygame.image.load("./images/static.png").convert_alpha()
-        load_tiled = pygame.image.load("./images/tiled.png").convert_alpha()
+        load_characters = pygame.image.load(os.path.join(images_path, "characters.png")).convert_alpha()
+        load_objects = pygame.image.load(os.path.join(images_path, "objects.png")).convert_alpha()
+        load_texts = pygame.image.load(os.path.join(images_path, "texts.png")).convert_alpha()
+        load_static = pygame.image.load(os.path.join(images_path, "static.png")).convert_alpha()
+        load_tiled = pygame.image.load(os.path.join(images_path, "tiled.png")).convert_alpha()
 
         self.subsurfaces = [
             load_characters.subsurface(1+0*25, 1+0*25, 24, 24),   # BABA

@@ -6,7 +6,7 @@ import Screen
 
 
 if __name__ == "__main__":    
-    main = Main.Main("./levels/level_IA_01.txt")
+    main = Main.Main("level_IA_01.txt")
     screen = Screen.Screen(main)
     
     while main.running:

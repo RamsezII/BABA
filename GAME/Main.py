@@ -1,27 +1,22 @@
-import genericpath
-import os
+import os.path
+
 import Etat
 
 
-WDIR = os.path.dirname(os.path.abspath(__file__))
 up_right_down_left = [(0,-1),(1,0),(0,1),(-1,0)]
 
 
 class Main():
-    def __init__(self, levelpath):
-        if not genericpath.isfile(levelpath):
-            self.running = False
-            self.changed = False
-        else:
-            file = open(levelpath, 'r')
-            lines = file.readlines()
-            file.close()
-            self.etat = Etat.Etat()
-            self.etat.readtext(lines)
-            self.etats = []
-            self.tried = [self.etat]
-            self.running = True
-            self.changed = True
+    def __init__(self, levelname):
+        file = open(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "levels", levelname), 'r')
+        lines = file.readlines()
+        file.close()
+        self.etat = Etat.Etat()
+        self.etat.readtext(lines)
+        self.etats = []
+        self.tried = [self.etat]
+        self.running = True
+        self.changed = True
     
     
     def move(self, dir):
