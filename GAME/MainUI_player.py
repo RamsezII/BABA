@@ -9,7 +9,7 @@ if __name__ == "__main__":
     screen = UI.Screen(main)
 
     while main.running:
-        deltatime = screen.deltatime(10)
+        deltatime = screen.deltatime(30)
         dir = 0
         for event in pygame.event.get():
             if event.type == pygame.QUIT:

@@ -2,3 +2,7 @@
 L'euristique donne la distance de Manhattan entre le couple YOU/WIN le plus proche.
 
 -L'execution est très lente car la plupart des taches demandent un parcours de toutes les cases, et de tous les bits de chaque cases
+
+-grille a une dimension
+
+-peutetre garder position des YOU pour que "move", appelé par "successeurs", évite de les chercher
