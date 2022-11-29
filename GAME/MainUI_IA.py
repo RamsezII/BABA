@@ -1,4 +1,5 @@
 import math
+import time
 import pygame
 
 import Main
@@ -8,6 +9,8 @@ if __name__ == "__main__":
     main = Main.Main("level_IA_01.txt")
     screen = UI.Screen(main)
     
+    t0 = time.time()
+
     while main.running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -42,10 +45,12 @@ if __name__ == "__main__":
                 screen.refresh(main.etat)
                 # print("stack:", len(main.etats))
                 # print(main.etat.logRules())
-                # print(etat.logEtat())
+                # print(main.etat.logEtat())
 
                 if main.etat.win:
                     print("WIN!")
+                    t1 = time.time()
+                    print("time:", t1-t0)
                 elif main.etat.defeat:
                     print("DEFEAT")
 

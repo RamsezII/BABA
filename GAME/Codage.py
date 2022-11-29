@@ -43,7 +43,7 @@ class Flags(IntFlag):
         if self == 0:
             return ".."
         else:
-            for i,_ in self.flags(True):
+            for i,_ in self.flags():
                 return f"{i:02d}"
         return "??"
 

@@ -155,13 +155,18 @@ class Etat():
                 self.deplace(you[1],k, dir)
         self.getRules()
         self.checkWinDefeat()
+    
+
+    def euristique(self):
+        # y a-t-il un 'you' et un 'win' clair, si oui -> 2A* 
+        pass
 
 
     def manhattan(self):
         wins = set()
         yous = set()
         for you in self.yous:
-            yous.add((you[0]//self.width,you[0]%self.width))
+            yous.add((you[0]//self.width, you[0]%self.width))
         for win in self.wins:
             wins.add((win//self.width, win%self.width))
 

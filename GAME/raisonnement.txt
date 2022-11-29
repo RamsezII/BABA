@@ -5,4 +5,26 @@ L'euristique donne la distance de Manhattan entre le couple YOU/WIN le plus proc
 
 -grille a une dimension
 
--peutetre garder position des YOU pour que "move", appelé par "successeurs", évite de les chercher
+-ne pas évaluer les bits non concernés accélère de beaucoup le code car ces évaluations sont généralement contenues dans des boucles imbriquées
+
+-garder position des YOU pour que "move", appelé par "successeurs", évite de les chercher
+
+-oublier les raisonnements de "joueur", c'est au boulot de l'IA de tenter des inputs et jauger le résultat
+
+
+--  Comment jauger les états:
+    -   dans le cas d'un état avec des you et des win clairs c'est l'hypothénuse de la plus courte distance de couple you/win
+    -   repérer tous les mots non isolés:
+        -   explorer leurs combinaisons possibles sous formes d'abre dont aucune branche ne contient
+            de moment où personne n'est 'YOU' -> au moins un controllable
+        -   les noter selon les hypothénuses successives des déplacements qu'ils nécessitent
+
+
+
+
+-- A faire:
+    - squeezer le nombre d'itérations partout où c'est possible
+    - utiliser 2A* pour détecter l'isolement
+    - test de collision permet de reconnaître les lois immutables d'un état:
+        - dans un coin de map
+        - en longement d'un mur sans virage

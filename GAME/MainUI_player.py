@@ -1,3 +1,4 @@
+import time
 import pygame
 
 import Main
@@ -44,9 +45,12 @@ if __name__ == "__main__":
             
             if main.changed:
                 main.changed = False
+                t0 = time.time()
                 screen.refresh(main.etat)
-                print("stack:", len(main.etats))
-                print(main.etat.logRules())
+                t1 = time.time()
+                print("dtime:", t1-t0)
+                # print("stack:", len(main.etats))
+                # print(main.etat.logRules())
                 # print(etat.logEtat())
 
                 if main.etat.win:
