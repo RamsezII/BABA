@@ -40,7 +40,7 @@ if __name__ == "__main__":
             if main.changed:
                 main.changed = False
                 screen.refresh(main.etat)
-                print("stack:", len(main.etats))
+                # print("stack:", len(main.etats))
                 # print(main.etat.logRules())
                 # print(etat.logEtat())
 

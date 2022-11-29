@@ -89,11 +89,12 @@ class Etat():
         self.win = False
         self.yous.clear()
         self.wins.clear()
-        for k in range(self.count):
+        for k,flags in enumerate(self.grid):
             you = False
             win = False
-            for f,flag in self.grid[k].flags():
-                if flag in objects:
+            for f in range(13,19):
+                flag = Flags(1 << f)
+                if flags & flag:
                     rule = self.rules[f-first_obj]
                     if rule & Flags.YOU:
                         you = True
@@ -141,18 +142,17 @@ class Etat():
                         self.deplace(flag2, k, dir)
         return True
 
+
     def move(self, dir):
-        for k_ in range(self.count):
-            k = k_
+        count = len(self.yous)
+        for i in range(count):
             if dir > 0:
-                k = self.count-k
-            if self.isInBounds(k+dir):
-                mask1 = self.grid[k]
-                if mask1 != 0:
-                    for f1,flag1 in mask1.flags():
-                        if flag1 in objects and self.rules[f1-first_obj] & Flags.YOU:
-                            if self.push(k+dir, dir):
-                                self.deplace(flag1,k, dir)
+                you = self.yous[count-i-1]
+            else:
+                you = self.yous[i]
+            k = you[0]
+            if self.isInBounds(k+dir) and self.push(k+dir, dir):
+                self.deplace(you[1],k, dir)
         self.getRules()
         self.checkWinDefeat()
 
