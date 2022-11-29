@@ -20,7 +20,10 @@ class Etat():
                 else:
                     self.grid.append(Flags(1 << int(splits[i])))
         self.count = self.height*self.width
+        self.yous = []
+        self.wins = set()
         self.getRules()
+        self.checkWinDefeat()
     
 
     def isInBounds(self, k):
@@ -84,6 +87,8 @@ class Etat():
         # on perd si aucune case n'a d'objet correspondant dans 'self.rules' marqué comme 'YOU'
         self.defeat = True
         self.win = False
+        self.yous.clear()
+        self.wins.clear()
         for k in range(self.count):
             you = False
             win = False
@@ -93,12 +98,48 @@ class Etat():
                     if rule & Flags.YOU:
                         you = True
                         self.defeat = False
+                        self.yous.append((k,flag))
                     if rule & Flags.WIN:
                         win = True
+                        self.wins.add(k)
             if you and win:
                 self.win = True
-                return
+                break
     
+
+    def deplace(self, flag, k, dir):
+        self.grid[k] &= ~flag
+        self.grid[k+dir] |= flag
+
+
+    def push(self, k, dir):
+        mask2 = self.grid[k]
+        if mask2 != 0:
+            obstacles = False
+            # détecter obstacle non déplaçable
+            for i2,flag2 in mask2.flags():
+                if flag2 in words:
+                    obstacles = True
+                elif flag2 in objects:  # seul les objets peuvent être solides
+                    rule = self.rules[i2-first_obj]
+                    if rule & Flags.PUSH:
+                        obstacles = True
+                    elif rule & Flags.SOLID:
+                        return False                                                                                        
+            if obstacles:                                        
+                # récursivité pour éviter piétinement (push des cases suivantes avant push immédiat)
+                k2 = k+dir
+                if not self.isInBounds(k2) or not self.push(k2, dir):
+                    return False
+                
+                # pousser tous les poussables
+                for i2,flag2 in mask2.flags():
+                    if flag2 in words:
+                        self.deplace(flag2, k, dir)
+                    elif flag2 in objects:
+                        rule = self.rules[i2-first_obj]
+                        self.deplace(flag2, k, dir)
+        return True
 
     def move(self, dir):
         for k_ in range(self.count):
@@ -110,42 +151,8 @@ class Etat():
                 if mask1 != 0:
                     for f1,flag1 in mask1.flags():
                         if flag1 in objects and self.rules[f1-first_obj] & Flags.YOU:
-                            def move(flag, k):
-                                self.grid[k] &= ~flag
-                                self.grid[k+dir] |= flag
-
-                            def push(k):
-                                mask2 = self.grid[k]
-                                if mask2 != 0:
-                                    obstacles = False
-                                    # détecter obstacle non déplaçable
-                                    for i2,flag2 in mask2.flags():
-                                        if flag2 in words:
-                                            obstacles = True
-                                        elif flag2 in objects:  # seul les objets peuvent être solides
-                                            rule = self.rules[i2-first_obj]
-                                            if rule & Flags.PUSH:
-                                                obstacles = True
-                                            elif rule & Flags.SOLID:
-                                                return False
-                                                                                        
-                                    if obstacles:                                        
-                                        # récursivité pour éviter piétinement (push des cases suivantes avant push immédiat)
-                                        k2 = k+dir
-                                        if not self.isInBounds(k2) or not push(k2):
-                                            return False
-                                        
-                                        # pousser tous les poussables
-                                        for i2,flag2 in mask2.flags():
-                                            if flag2 in words:
-                                                move(flag2, k)
-                                            elif flag2 in objects:
-                                                rule = self.rules[i2-first_obj]
-                                                move(flag2, k)
-                                return True
-
-                            if push(k+dir):
-                                move(flag1,k)
+                            if self.push(k+dir, dir):
+                                self.deplace(flag1,k, dir)
         self.getRules()
         self.checkWinDefeat()
 
@@ -153,18 +160,10 @@ class Etat():
     def manhattan(self):
         wins = set()
         yous = set()
-        for y in range(self.height):
-            y2 = y*self.width
-            for x in range(self.width):
-                flags = self.grid[y2+x]
-                pos = (y,x)
-                for i1,flag in flags.flags():
-                    if flag in objects:
-                        rules = self.rules[i1-first_obj]
-                        if rules.hasflags(Flags.WIN):
-                            wins.add(pos)
-                        if rules.hasflags(Flags.YOU):
-                            yous.add(pos)
+        for you in self.yous:
+            yous.add((you[0]//self.width,you[0]%self.width))
+        for win in self.wins:
+            wins.add((win//self.width, win%self.width))
 
         man = self.height+self.width
         for win in wins:
