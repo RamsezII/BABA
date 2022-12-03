@@ -1,0 +1,18 @@
+Algorithme A∗
+
+sommetsOuverts ← {s0}; 
+sommetsFermes ← ∅ ;
+
+répéter jusqu’à sommetsOuverts = ∅ ou s ∈ F;
+
+    s ← arg mins∈sommetsOuverts g(s) + h(s) (prendre min h(s) en cas d’égalité) ;
+    sommetsOuverts ← sommetsOuverts\{s};
+
+    si s ̸∈ F alors
+        pour tout z ∈ succ(s) tel que z ̸∈ sommetsFermes faire
+            g(z) ← min(g(z), g(s) + c(s, z)) ;
+            sommetsOuverts ← sommetsOuverts∪{z} ;
+
+    sommetsFermes ← sommetsFermes∪{s} ;
+    
+retourner le chemin trouvé
