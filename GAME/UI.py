@@ -2,10 +2,17 @@ import os
 import pygame
 
 import Codage
+    
+
+def getQuit():
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            return True
+    return False
 
 
 class Screen():
-    def __init__(self, main):
+    def __init__(self, etat):
         self.screen = pygame.display.set_mode((720, 480))
         successes, failures = pygame.init()
         print("Initializing pygame: {0} successes and {1} failures.".format(successes, failures))
@@ -15,7 +22,7 @@ class Screen():
 
         images_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "images")
 
-        pygame.display.set_mode((24*main.etat.width, 24*main.etat.height))
+        pygame.display.set_mode((24*etat.width, 24*etat.height))
         pygame.display.set_icon(pygame.image.load(os.path.join(images_path, "icon.png")))
         pygame.display.set_caption("BABA is A*")
 
@@ -50,6 +57,13 @@ class Screen():
 
     def deltatime(self, FPS):
         return self.clock.tick(FPS) / 1000
+    
+
+    def showSolution(self, etat, fps):
+        if etat.parent:
+            self.showSolution(etat.parent, fps)
+            self.deltatime(fps)
+        self.refresh(etat)
 
 
     def refresh(self, etat):
@@ -75,9 +89,7 @@ class Screen():
                 log = "DEFEAT"
             log = self.font.render(log, False, pygame.Color(255,255,255))
             logsize = log.get_size()
-            self.screen.blit(log, (0.5*(size[0]-logsize[0]), 0.5*(size[1]-logsize[1])))
-            pass
-        
+            self.screen.blit(log, (0.5*(size[0]-logsize[0]), 0.5*(size[1]-logsize[1])))   
         pygame.display.update()
 
 

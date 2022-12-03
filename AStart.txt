@@ -11,8 +11,9 @@ répéter jusqu’à sommetsOuverts = ∅ ou s ∈ F;
     si s ̸∈ F alors
         pour tout z ∈ succ(s) tel que z ̸∈ sommetsFermes faire
             g(z) ← min(g(z), g(s) + c(s, z)) ;
-            sommetsOuverts ← sommetsOuverts∪{z} ;
-
-    sommetsFermes ← sommetsFermes∪{s} ;
+            sommetsOuverts ← sommetsOuverts ∪ {z} ;
+        fin
+        sommetsFermes ← sommetsFermes ∪ {s} ;
+    fin
     
 retourner le chemin trouvé

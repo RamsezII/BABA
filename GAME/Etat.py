@@ -5,8 +5,18 @@ import copy
 
 class Etat():
     def __init__(self):
+        self.changed = True
         self.win = False
         self.defeat = False
+        self.parent = None
+    
+
+    def pullChange(self):
+        if self.changed:
+            self.changed = False
+            return True
+        else:
+            return False
 
 
     def readtext(self, lines):
@@ -21,11 +31,31 @@ class Etat():
                 else:
                     self.grid.append(Flags(1 << int(splits[i])))
         self.count = self.height*self.width
+        self.eur = 0
         self.yous = []
         self.wins = set()
         self.getRules()
         self.checkWinDefeat()
-    
+        
+
+    def __lt__(self, other):
+        return self.eur < other.eur
+
+    def __le__(self, other):
+        return self.eur <= other.eur
+
+    def __gt__(self, other):
+        return self.eur > other.eur
+
+    def __ge__(self, other):
+        return self.eur >= other.eur
+
+    def __eq__(self, other):
+        return self.eur == other.eur
+
+    def __ne__(self, other):
+        return self.eur != other.eur
+
 
     def isInBounds(self, k):
         return k >= 0 and k < self.count
@@ -109,6 +139,7 @@ class Etat():
     def deplace(self, flag, k, dir):
         self.grid[k] &= ~flag
         self.grid[k+dir] |= flag
+        self.changed = True
 
 
     def push(self, k, dir):
@@ -149,26 +180,3 @@ class Etat():
                 self.deplace(you[1],k_, dir)
         self.getRules()
         self.checkWinDefeat()
-    
-
-    def euristique(self):
-        return self.manhattan()
-
-
-    def manhattan(self):
-        wins = set()
-        yous = set()
-        for you in self.yous:
-            yous.add((you[0]//self.width, you[0]%self.width))
-        for win in self.wins:
-            wins.add((win//self.width, win%self.width))
-
-        man = self.height+self.width
-        for win in wins:
-            for you in yous:
-                h = abs(win[0]-you[0])
-                w = abs(win[1]-you[1])
-                dist = pow(h*h + w*w, 0.5)
-                if dist < man:
-                    man = dist
-        return man
