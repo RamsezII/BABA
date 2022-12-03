@@ -1,3 +1,4 @@
+import time
 from Codage import *
 import copy
 
@@ -153,7 +154,11 @@ class Etat():
             k = you[0]
             if self.isInBounds(k+dir) and self.push(k+dir, dir):
                 self.deplace(you[1],k, dir)
+        print("rules...")
+        t0_r = time.time()
         self.getRules()
+        t1_r = time.time()
+        print("rules time: " + str(t1_r-t0_r))
         self.checkWinDefeat()
     
 

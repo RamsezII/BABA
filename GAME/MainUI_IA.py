@@ -8,17 +8,21 @@ import UI
 if __name__ == "__main__":    
     main = Main.Main("level_IA_01.txt")
     screen = UI.Screen(main)
+    fps = 10
     
-    t0 = time.time()
-
     while main.running:
+        t0_loop = time.time()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 main.running = False
                 break                     
         
         if main.running and not main.etat.win:
+            # print("successeurs...")
+            # t0_succs = time.time()
             succs = main.successeurs()
+            # t1_succs = time.time()
+            # print("successeurs time: " + str(t1_succs-t0_succs))
             count = len(succs)
             if count == 0:
                 print("rewind")
@@ -49,9 +53,10 @@ if __name__ == "__main__":
 
                 if main.etat.win:
                     print("WIN!")
-                    t1 = time.time()
-                    print("time:", t1-t0)
                 elif main.etat.defeat:
                     print("DEFEAT")
-
+        
+        screen.deltatime(fps)
+        t1_loop = time.time()
+        
     print("FIN")

@@ -10,7 +10,6 @@ if __name__ == "__main__":
     screen = UI.Screen(main)
 
     while main.running:
-        deltatime = screen.deltatime(30)
         dir = 0
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -41,14 +40,15 @@ if __name__ == "__main__":
         
         if main.running:
             if dir != 0:
+                print("move...")
+                t0_move = time.time()
                 main.move(dir)
+                t1_move = time.time()
+                print("move time: " + str(t1_move-t0_move) + '\n')
             
             if main.changed:
                 main.changed = False
-                t0 = time.time()
                 screen.refresh(main.etat)
-                t1 = time.time()
-                print("dtime:", t1-t0)
                 # print("stack:", len(main.etats))
                 # print(main.etat.logRules())
                 # print(etat.logEtat())
@@ -57,5 +57,7 @@ if __name__ == "__main__":
                     print("WIN!")
                 elif main.etat.defeat:
                     print("DEFEAT")
+        
+        deltatime = screen.deltatime(30)
 
     print("FIN")
