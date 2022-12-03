@@ -32,9 +32,9 @@ class Flags(IntFlag):
     def hasmask(self, mask): # AND
         return self & mask == mask
     
-    def flags(self):
+    def flags(self, mini, maxi):
         if self >= 0:
-            for i in range(19):
+            for i in range(mini, maxi):
                 flag = Flags(1 << i)
                 if self & flag:
                     yield i,flag
@@ -43,7 +43,7 @@ class Flags(IntFlag):
         if self == 0:
             return ".."
         else:
-            for i,_ in self.flags():
+            for i,_ in self.flags(0, last_all):
                 return f"{i:02d}"
         return "??"
 
@@ -51,6 +51,7 @@ class Flags(IntFlag):
 words = Flags.BABA | Flags.WALL | Flags.ROCK | Flags.FLAG | Flags.LAVA | Flags.WATER | Flags.IS | Flags.YOU | Flags.SINK | Flags.WIN | Flags.DEFEAT | Flags.PUSH | Flags.SOLID
 objects = Flags.baba | Flags.wall | Flags.rock | Flags.flag | Flags.lava | Flags.water
 first_obj = 13
+last_all = 19
 
 word2obj = {
     Flags.WALL: 0,

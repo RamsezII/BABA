@@ -8,6 +8,7 @@ import UI
 if __name__ == "__main__":    
     main = Main.Main("level_1.txt")
     screen = UI.Screen(main)
+    fps = 30
 
     while main.running:
         dir = 0
@@ -58,6 +59,6 @@ if __name__ == "__main__":
                 elif main.etat.defeat:
                     print("DEFEAT")
         
-        deltatime = screen.deltatime(30)
+        deltatime = screen.deltatime(fps)
 
     print("FIN")

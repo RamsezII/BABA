@@ -1,4 +1,5 @@
 import os.path
+import time
 
 import Etat
 
@@ -48,13 +49,13 @@ class Main():
     
 
     def successeurs(self):
-        succ = []
+        succs = []
         for dir in (-self.etat.width, 1, self.etat.width, -1):
             etat = self.etat.clone()
             etat.move(dir)
             if etat != self.etat and etat not in self.tried:
-                succ.append(etat)
-        return succ
+                succs.append(etat)
+        return succs
 
 
 if __name__ == "__main__":

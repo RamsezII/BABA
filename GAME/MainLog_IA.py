@@ -1,21 +1,16 @@
 import math
 import time
-import pygame
 
 import Main
-import UI
 
 if __name__ == "__main__":    
     main = Main.Main("level_IA_01.txt")
-    screen = UI.Screen(main)
     fps = 0
+
+    print(main.etat.logEtat())
+    t0_main = time.time()
     
     while main.running:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                main.running = False
-                break                     
-        
         if main.running and not main.etat.win:
             succs = main.successeurs()
             count = len(succs)
@@ -41,17 +36,18 @@ if __name__ == "__main__":
             
             if main.changed:
                 main.changed = False
-                screen.refresh(main.etat)
                 # print("stack:", len(main.etats))
                 # print(main.etat.logRules())
                 # print(main.etat.logEtat())
 
                 if main.etat.win:
                     print("WIN!")
+                    break
                 elif main.etat.defeat:
                     print("DEFEAT")
-        
-        if fps != 0:
-            screen.deltatime(fps)
-        
+                    break
+    
+    print(main.etat.logEtat())
+    t1_main = time.time()
+    print("main time " + str(t1_main-t0_main))
     print("FIN")

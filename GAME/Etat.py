@@ -51,7 +51,7 @@ class Etat():
         log = ""
         for k in range(self.count):
             log += self.grid[k].textcode() + " "
-            if k % self.width == 0:
+            if (k+1) % self.width == 0:
                 log += '\n'
         return log
 
@@ -61,26 +61,25 @@ class Etat():
         # dans le cas d'une transformation, par exemple "BABA IS ROCK", toutes les cases sont parcourues et chaque case où le flag 'baba' est à 1 est mis à 0 et le flag 'rock' est mis à 1
         self.rules = 6*[Flags(0)]
         for k in range(self.count):
-            if self.grid[k].hasflags(Flags.IS):
+            if Flags.IS in self.grid[k]:
                 for dir in (self.width, 1):  # les 2 sens de lectures: vers le bas et vers la droite
                     if self.isInBounds(k-dir) + self.isInBounds(k+dir):
-                        prefixe = self.grid[k-dir]
-                        suffixe = self.grid[k+dir]
+                        prefixes = self.grid[k-dir]
+                        suffixes = self.grid[k+dir]
 
-                        if prefixe != 0 and suffixe != 0:
-                            for _,pref in prefixe.flags():
-                                if pref in word2obj:
-                                    for _,suf in suffixe.flags():
-                                        if suf in words:
-                                            self.rules[word2obj[pref]] |= suf
-                                            # si suffixe désigne aussi un objet, c'est une loi de transformation
-                                            if suf in word2obj:
-                                                pref_obj = Flags(1 << (word2obj[pref]+first_obj))
-                                                suf_obj = Flags(1 << (word2obj[suf]+first_obj))
-                                                for k2 in range(self.count):
-                                                    if self.grid[k2] & pref_obj:
-                                                        self.grid[k2] &= ~pref_obj
-                                                        self.grid[k2] |= suf_obj
+                        if prefixes * suffixes != 0:
+                            for pref in word2obj:
+                                if pref in prefixes:
+                                    for _,suf in suffixes.flags(0, first_obj):
+                                        self.rules[word2obj[pref]] |= suf
+                                        # si suffixe désigne aussi un objet, c'est une loi de transformation
+                                        if suf in word2obj:
+                                            pref_obj = Flags(1 << (word2obj[pref]+first_obj))
+                                            suf_obj = Flags(1 << (word2obj[suf]+first_obj))
+                                            for k2 in range(self.count):
+                                                if self.grid[k2] & pref_obj:
+                                                    self.grid[k2] &= ~pref_obj
+                                                    self.grid[k2] |= suf_obj
 
 
     def checkWinDefeat(self):
@@ -93,17 +92,15 @@ class Etat():
         for k,flags in enumerate(self.grid):
             you = False
             win = False
-            for f in range(13,19):
-                flag = Flags(1 << f)
-                if flags & flag:
-                    rule = self.rules[f-first_obj]
-                    if rule & Flags.YOU:
-                        you = True
-                        self.defeat = False
-                        self.yous.append((k,flag))
-                    if rule & Flags.WIN:
-                        win = True
-                        self.wins.add(k)
+            for i,flag in flags.flags(first_obj, last_all):
+                rule = self.rules[i-first_obj]
+                if Flags.YOU in rule:
+                    you = True
+                    self.defeat = False
+                    self.yous.append((k,flag))
+                if Flags.WIN in rule:
+                    win = True
+                    self.wins.add(k)
             if you and win:
                 self.win = True
                 break
@@ -119,10 +116,10 @@ class Etat():
         if mask2 != 0:
             obstacles = False
             # détecter obstacle non déplaçable
-            for i2,flag2 in mask2.flags():
-                if flag2 in words:
+            for i2,flag2 in mask2.flags(0, last_all):
+                if i2 < first_obj:  # words
                     obstacles = True
-                elif flag2 in objects:  # seul les objets peuvent être solides
+                else:  # objects
                     rule = self.rules[i2-first_obj]
                     if rule & Flags.PUSH:
                         obstacles = True
@@ -132,39 +129,30 @@ class Etat():
                 # récursivité pour éviter piétinement (push des cases suivantes avant push immédiat)
                 k2 = k+dir
                 if not self.isInBounds(k2) or not self.push(k2, dir):
-                    return False
-                
-                # pousser tous les poussables
-                for i2,flag2 in mask2.flags():
-                    if flag2 in words:
-                        self.deplace(flag2, k, dir)
-                    elif flag2 in objects:
-                        rule = self.rules[i2-first_obj]
-                        self.deplace(flag2, k, dir)
+                    return False                
+                # pousser cette case
+                for i2,flag2 in mask2.flags(0, last_all):
+                    self.deplace(flag2, k, dir)
         return True
 
 
     def move(self, dir):
         count = len(self.yous)
-        for i in range(count):
+        for k in range(count):
+            # inverser ordre de parcours selon sens de deplacement
             if dir > 0:
-                you = self.yous[count-i-1]
+                you = self.yous[count-k-1]
             else:
-                you = self.yous[i]
-            k = you[0]
-            if self.isInBounds(k+dir) and self.push(k+dir, dir):
-                self.deplace(you[1],k, dir)
-        print("rules...")
-        t0_r = time.time()
+                you = self.yous[k]
+            k_ = you[0]
+            if self.isInBounds(k_+dir) and self.push(k_+dir, dir):
+                self.deplace(you[1],k_, dir)
         self.getRules()
-        t1_r = time.time()
-        print("rules time: " + str(t1_r-t0_r))
         self.checkWinDefeat()
     
 
     def euristique(self):
-        # y a-t-il un 'you' et un 'win' clair, si oui -> 2A* 
-        pass
+        return self.manhattan()
 
 
     def manhattan(self):
