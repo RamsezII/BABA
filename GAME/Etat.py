@@ -9,6 +9,7 @@ class Etat():
         self.win = False
         self.defeat = False
         self.parent = None
+        self.dir = 0
     
 
     def pullChange(self):
@@ -84,7 +85,7 @@ class Etat():
             if (k+1) % self.width == 0:
                 log += '\n'
         return log
-
+    
 
     def getRules(self):
         # un bitmask par objet (6 au total). si "BABA IS YOU" est visible dans le niveau, le flag 'YOU' dans le bitmask de 'baba' dans 'self.rules' sera à 1
@@ -93,7 +94,7 @@ class Etat():
         for k in range(self.count):
             if Flags.IS in self.grid[k]:
                 for dir in (self.width, 1):  # les 2 sens de lectures: vers le bas et vers la droite
-                    if self.isInBounds(k-dir) + self.isInBounds(k+dir):
+                    if self.isInBounds(k-dir) and self.isInBounds(k+dir):
                         prefixes = self.grid[k-dir]
                         suffixes = self.grid[k+dir]
 
@@ -168,6 +169,19 @@ class Etat():
 
 
     def move(self, dir):
+        self.dir = dir
+
+        if dir == 1:
+            dir = -self.width
+        elif dir == 2:
+            dir = 1
+        elif dir == 3:
+            dir = self.width
+        elif dir == 4:
+            dir = -1
+        else:
+            print("ERROR: " + str(dir))
+            
         count = len(self.yous)
         for k in range(count):
             # inverser ordre de parcours selon sens de deplacement

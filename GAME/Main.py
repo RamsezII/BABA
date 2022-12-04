@@ -50,7 +50,7 @@ class Main():
 
     def successeurs(self):
         succs = []
-        for dir in (-self.etat.width, 1, self.etat.width, -1):
+        for dir in range(1, 5):
             etat = self.etat.clone()
             etat.move(dir)
             if etat != self.etat and etat not in self.tried:

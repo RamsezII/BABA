@@ -57,13 +57,6 @@ class Screen():
 
     def deltatime(self, FPS):
         return self.clock.tick(FPS) / 1000
-    
-
-    def showSolution(self, etat, fps):
-        if etat.parent:
-            self.showSolution(etat.parent, fps)
-            self.deltatime(fps)
-        self.refresh(etat)
 
 
     def refresh(self, etat):

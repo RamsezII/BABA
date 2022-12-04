@@ -1,3 +1,5 @@
-for x in None:
-    print(x)
-print("FIN")
+import sys
+
+
+for arg in sys.argv:
+    print(arg)
