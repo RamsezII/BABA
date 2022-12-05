@@ -7,7 +7,7 @@ import UI
 
 if __name__ == "__main__":    
     main = Main.Main("level_1.txt")
-    screen = UI.Screen(main)
+    screen = UI.Screen(main.etat)
     fps = 30
 
     while main.running:
@@ -31,13 +31,13 @@ if __name__ == "__main__":
                     main.rewind()                
                 elif not main.etat.win:
                     if event.key == pygame.K_z:
-                        dir = -main.etat.width
-                    elif event.key == pygame.K_d:
                         dir = 1
+                    elif event.key == pygame.K_d:
+                        dir = 2
                     elif event.key == pygame.K_s:
-                        dir = main.etat.width
+                        dir = 3
                     elif event.key == pygame.K_q:
-                        dir = -1
+                        dir = 4
         
         if main.running:
             if dir != 0:

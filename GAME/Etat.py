@@ -63,7 +63,12 @@ class Etat():
 
 
     def clone(self):
-        return copy.deepcopy(self)
+        # eviter a 'deepcopy' de copier 'parent'
+        parent = self.parent
+        self.parent = None
+        clone = copy.deepcopy(self)
+        clone.parent = self.parent = parent
+        return clone
     
 
     def __eq__(self, other):

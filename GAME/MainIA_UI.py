@@ -5,6 +5,8 @@ import time
 
 import Etat
 import euristiques
+import UI
+import ReadIA
 
 
 dir_name = os.path.dirname(os.path.abspath(__file__))
@@ -13,9 +15,8 @@ dirs = ["up", "right", "down", "left"]
 
 class AStar():
     def __init__(self, levelname, ui):
-        self.levelname = os.path.join(os.path.dirname(dir_name), "levels", levelname)
-        self.savepath = os.path.join(os.path.dirname(dir_name), "IA_solutions", levelname)
-        file = open(self.levelname, 'r')
+        self.levelname = levelname
+        file = open(os.path.join(os.path.dirname(dir_name), "levels", levelname), 'r')
         lines = file.readlines()
         file.close()
         self.ouverts = sortedcontainers.sortedlist.SortedList()
@@ -41,12 +42,21 @@ class AStar():
     
 
     def mainLoop(self):
+        screen = UI.Screen(self.ouverts[0])
+
         print("A*...")
-        t0_main = time.time()
+        t0 = time.time()
         t_next = time.time()+1
         loopcount = 0
+
         while len(self.ouverts) != 0:
             courant = self.ouverts.pop(0)
+
+            screen.refresh(courant)
+            if UI.getQuit():
+                print("interrupt")
+                return
+
             if courant.win:
                 print("WIN!")
                 break
@@ -58,7 +68,7 @@ class AStar():
                     etat = courant.clone()
                     etat.move(dir)
                     if etat.pullChange() and etat not in self.ouverts and etat not in self.fermes:
-                        etat.eur = courant.eur + euristiques.euristique(etat)
+                        etat.eur = euristiques.euristique(etat)
                         etat.parent = courant
                         self.ouverts.add(etat)
             self.fermes.append(courant)
@@ -67,15 +77,17 @@ class AStar():
             t_loop = time.time()
             if t_loop > t_next:
                 t_next += 1
-                print("iterations: " + str(loopcount))
+                print("operations: " + str(loopcount))
                 loopcount = 0
 
-        t1_main = time.time()
-        print("A* time: " + str(t1_main-t0_main) + "\nsaving solution...")
-        file = open(self.savepath, 'w')
+        t1 = time.time()
+        print("A* time: " + str(t1-t0) + "\nsaving solution...")
+        savepath = os.path.join(os.path.dirname(dir_name), "IA_solutions", self.levelname)
+        file = open(savepath, 'w')
         self.saveIA(courant, file)
         file.close()
-        print("saved solution in: " + self.savepath)
+        print("saved solution in: " + savepath)
+        ReadIA.run(self.levelname)
 
 
 if __name__ == "__main__":
