@@ -46,11 +46,11 @@ class AStar():
 
         print("A*...")
         t0 = time.time()
-        t_next = time.time()+1
-        loopcount = 0
+        iterations = 0
 
         while len(self.ouverts) != 0:
             courant = self.ouverts.pop(0)
+            iterations += 1
 
             screen.refresh(courant)
             if UI.getQuit():
@@ -73,15 +73,10 @@ class AStar():
                         self.ouverts.add(etat)
             self.fermes.append(courant)
 
-            loopcount += 1
-            t_loop = time.time()
-            if t_loop > t_next:
-                t_next += 1
-                print("operations: " + str(loopcount))
-                loopcount = 0
-
         t1 = time.time()
-        print("A* time: " + str(t1-t0) + "\nsaving solution...")
+        print("A* time: " + str(t1-t0))
+        print("iterations: " + str(iterations))
+        print("saving solution...")
         savepath = os.path.join(os.path.dirname(dir_name), "IA_solutions", self.levelname)
         file = open(savepath, 'w')
         self.saveIA(courant, file)
