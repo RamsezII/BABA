@@ -31,6 +31,7 @@ class Etat():
                     self.grid.append(Flags(0))
                 else:
                     self.grid.append(Flags(1 << int(splits[i])))
+        self.dirs = (-self.height, 1, self.height, -1)
         self.count = self.height*self.width
         self.eur = 0
         self.yous = []
