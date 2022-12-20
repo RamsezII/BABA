@@ -6,7 +6,7 @@ import UI
 
 
 if __name__ == "__main__":    
-    main = Main.Main("level_1.txt")
+    main = Main.Main("level_3.txt")
     screen = UI.Screen(main.etat)
     fps = 30
 

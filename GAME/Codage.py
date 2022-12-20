@@ -1,10 +1,29 @@
-from enum import IntFlag
+from enum import IntEnum, IntFlag
 
-flags_count = 19
+class BABAb(IntEnum):
+    BABA = 0
+    WALL = 1
+    ROCK = 2
+    FLAG = 3
+    LAVA = 4
+    WATER = 5
+    IS = 6
+    YOU = 7
+    SINK = 8
+    WIN = 9
+    DEFEAT = 10
+    PUSH = 11
+    SOLID = 12
+    wall = first_obj = 13
+    lava = 14
+    water = 15
+    rock = 16
+    flag = 17
+    baba = 18
+    last_all = 19
 
-class Flags(IntFlag):
-    empty = 0
-    # words
+class BABAf(IntFlag):
+    none = 0
     BABA = 1 << 0
     WALL = 1 << 1
     ROCK = 1 << 2
@@ -18,7 +37,6 @@ class Flags(IntFlag):
     DEFEAT = 1 << 10
     PUSH = 1 << 11
     SOLID = 1 << 12
-    # objects in drawing order
     wall = 1 << 13
     lava = 1 << 14
     water = 1 << 15
@@ -35,7 +53,7 @@ class Flags(IntFlag):
     def flags(self, mini, maxi):
         if self >= 0:
             for i in range(mini, maxi):
-                flag = Flags(1 << i)
+                flag = BABAf(1 << i)
                 if self & flag:
                     yield i,flag
     
@@ -43,57 +61,29 @@ class Flags(IntFlag):
         if self == 0:
             return ".."
         else:
-            for i,_ in self.flags(0, last_all):
+            for i,_ in self.flags(0, _last_):
                 return f"{i:02d}"
         return "??"
 
 
-words = Flags.BABA | Flags.WALL | Flags.ROCK | Flags.FLAG | Flags.LAVA | Flags.WATER | Flags.IS | Flags.YOU | Flags.SINK | Flags.WIN | Flags.DEFEAT | Flags.PUSH | Flags.SOLID
-objects = Flags.baba | Flags.wall | Flags.rock | Flags.flag | Flags.lava | Flags.water
-first_obj = 13
-last_all = 19
+words_mask = BABAf((1<<BABAb.first_obj)-1)
+objects_mask = words_mask ^ BABAf((1<<BABAb.last_all)-1)
 
 word2obj = {
-    Flags.WALL: 0,
-    Flags.LAVA: 1,
-    Flags.WATER: 2,
-    Flags.ROCK: 3,
-    Flags.FLAG: 4,
-    Flags.BABA: 5,
+    BABAf.WALL: 0,
+    BABAf.LAVA: 1,
+    BABAf.WATER: 2,
+    BABAf.ROCK: 3,
+    BABAf.FLAG: 4,
+    BABAf.BABA: 5,
 }
 
 
 if __name__ == "__main__":
 
-    # # logflags
-    # print()
-    # i = 0
-    # for x in Flags:
-    #     if x != Flags.empty:
-    #         print(x.name+" = 1 << " + str(i))
-    #         i += 1
-    
-    # # log rule2obj
-    # print()
-    # for x in Flags:
-    #     print("Flags." + x.name + ": Flags." + x.name + ",")
-
-    # # log all|
-    # print()
-    # log = ""
-    # for x in Flags:
-    #     log += "Flags." + x.name + " | "
-    # print(log)
-
-    # # test iter
-    # print()
-    # for flag,i in (Flags.LAVA | Flags.PUSH | Flags.baba).flags():
-    #     print(i, "|", flag.name)
-
-    # # defaultRules
-    # print()
-    # for i,flag in enumerate((Flags.baba | Flags.wall | Flags.rock | Flags.flag | Flags.lava | Flags.water).flags(False)):
-    #     print("0,  #", i, "|" + flag.name)
+    # log BABAf from BABAb
+    # for i in range(BABAb.last_all):
+        # print((str(BABAb(i))+" = 1 << "+str(i))[6:])
 
     print()
     print("FIN")

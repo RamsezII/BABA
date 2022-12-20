@@ -10,6 +10,7 @@ class Etat():
         self.defeat = False
         self.parent = None
         self.dir = 0
+        self.collisionMask = BABAf.none
     
 
     def pullChange(self):
@@ -28,9 +29,9 @@ class Etat():
             self.width = len(splits)
             for i in range(self.width):
                 if splits[i].startswith(".."):
-                    self.grid.append(Flags(0))
+                    self.grid.append(BABAf.none)
                 else:
-                    self.grid.append(Flags(1 << int(splits[i])))
+                    self.grid.append(BABAf(1 << int(splits[i])))
         self.dirs = (-self.height, 1, self.height, -1)
         self.count = self.height*self.width
         self.eur = 0
@@ -80,7 +81,7 @@ class Etat():
         log = ""
         for f,flags in enumerate(self.rules):
             if flags != 0:
-                log += Flags(1 << (f+first_obj)).name + " is " + str(flags) + "\n"
+                log += BABAf(1 << (f+BABAb.first_obj)).name + " is " + str(flags) + "\n"
         return log
 
 
@@ -96,27 +97,33 @@ class Etat():
     def getRules(self):
         # un bitmask par objet (6 au total). si "BABA IS YOU" est visible dans le niveau, le flag 'YOU' dans le bitmask de 'baba' dans 'self.rules' sera à 1
         # dans le cas d'une transformation, par exemple "BABA IS ROCK", toutes les cases sont parcourues et chaque case où le flag 'baba' est à 1 est mis à 0 et le flag 'rock' est mis à 1
-        self.rules = 6*[Flags(0)]
+        self.rules = 6*[BABAf.none]
         for k in range(self.count):
-            if Flags.IS in self.grid[k]:
+            if BABAf.IS in self.grid[k]:
                 for dir in (self.width, 1):  # les 2 sens de lectures: vers le bas et vers la droite
                     if self.isInBounds(k-dir) and self.isInBounds(k+dir):
                         prefixes = self.grid[k-dir]
                         suffixes = self.grid[k+dir]
-
-                        if prefixes * suffixes != 0:
+                        if prefixes * suffixes != 0 and prefixes & words_mask and suffixes & words_mask:
                             for pref in word2obj:
                                 if pref in prefixes:
-                                    for _,suf in suffixes.flags(0, first_obj):
+                                    for _,suf in suffixes.flags(0, BABAb.first_obj):
                                         self.rules[word2obj[pref]] |= suf
                                         # si suffixe désigne aussi un objet, c'est une loi de transformation
                                         if suf in word2obj:
-                                            pref_obj = Flags(1 << (word2obj[pref]+first_obj))
-                                            suf_obj = Flags(1 << (word2obj[suf]+first_obj))
+                                            pref_obj = BABAf(1 << (word2obj[pref]+BABAb.first_obj))
+                                            suf_obj = BABAf(1 << (word2obj[suf]+BABAb.first_obj))
                                             for k2 in range(self.count):
                                                 if self.grid[k2] & pref_obj:
                                                     self.grid[k2] &= ~pref_obj
-                                                    self.grid[k2] |= suf_obj
+                                                    self.grid[k2] |= suf_obj        
+        self.collisionMask = BABAf.none
+        for i,rule in enumerate(self.rules):
+            # print(BABAf(i+BABAb.first_obj))
+            print(BABAf(i))
+            if rule & BABAf.SOLID:
+                self.collisionMask |= BABAf(BABAb.first_obj + i)
+        # print("collisionMask:", self.collisionMask)
 
 
     def checkWinDefeat(self):
@@ -129,13 +136,13 @@ class Etat():
         for k,flags in enumerate(self.grid):
             you = False
             win = False
-            for i,flag in flags.flags(first_obj, last_all):
-                rule = self.rules[i-first_obj]
-                if Flags.YOU in rule:
+            for i,flag in flags.flags(BABAb.first_obj, BABAb.last_all):
+                rule = self.rules[i-BABAb.first_obj]
+                if BABAf.YOU in rule:
                     you = True
                     self.defeat = False
                     self.yous.append((k,flag))
-                if Flags.WIN in rule:
+                if BABAf.WIN in rule:
                     win = True
                     self.wins.add(k)
             if you and win:
@@ -154,14 +161,14 @@ class Etat():
         if mask2 != 0:
             obstacles = False
             # détecter obstacle non déplaçable
-            for i2,flag2 in mask2.flags(0, last_all):
-                if i2 < first_obj:  # words
+            for i2,flag2 in mask2.flags(0, BABAb.last_all):
+                if i2 < BABAb.first_obj:  # words
                     obstacles = True
                 else:  # objects
-                    rule = self.rules[i2-first_obj]
-                    if rule & Flags.PUSH:
+                    rule = self.rules[i2-BABAb.first_obj]
+                    if rule & BABAf.PUSH:
                         obstacles = True
-                    elif rule & Flags.SOLID:
+                    elif rule & BABAf.SOLID:
                         return False                                                                                        
             if obstacles:                                        
                 # récursivité pour éviter piétinement (push des cases suivantes avant push immédiat)
@@ -169,7 +176,7 @@ class Etat():
                 if not self.isInBounds(k2) or not self.push(k2, dir):
                     return False                
                 # pousser cette case
-                for i2,flag2 in mask2.flags(0, last_all):
+                for i2,flag2 in mask2.flags(0, BABAb.last_all):
                     self.deplace(flag2, k, dir)
         return True
 

@@ -64,7 +64,7 @@ class Screen():
         for j in range(etat.height):
             j2 = j*etat.width
             for i in range(etat.width):
-                for index,flag in etat.grid[j2+i].flags(0, Codage.last_all):
+                for index,flag in etat.grid[j2+i].flags(0, Codage.BABAb.last_all):
                     if flag != 0:
                         surf = self.subsurfaces[index]
                         if surf:
