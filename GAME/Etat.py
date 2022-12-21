@@ -94,6 +94,10 @@ class Etat():
         return log
     
 
+    def isInBounds_yx(self, y, x):
+        return y>=0 and y<self.height and x>=0 and x<self.width
+    
+
     def getRules(self):
         # un bitmask par objet (6 au total). si "BABA IS YOU" est visible dans le niveau, le flag 'YOU' dans le bitmask de 'baba' dans 'self.rules' sera à 1
         # dans le cas d'une transformation, par exemple "BABA IS ROCK", toutes les cases sont parcourues et chaque case où le flag 'baba' est à 1 est mis à 0 et le flag 'rock' est mis à 1
@@ -119,11 +123,8 @@ class Etat():
                                                     self.grid[k2] |= suf_obj        
         self.collisionMask = BABAf.none
         for i,rule in enumerate(self.rules):
-            # print(BABAf(i+BABAb.first_obj))
-            print(BABAf(i))
             if rule & BABAf.SOLID:
-                self.collisionMask |= BABAf(BABAb.first_obj + i)
-        # print("collisionMask:", self.collisionMask)
+                self.collisionMask |= BABAf(1 << (BABAb.first_obj + i))
 
 
     def checkWinDefeat(self):

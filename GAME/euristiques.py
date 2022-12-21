@@ -2,25 +2,23 @@ import sortedcontainers.sortedset
 
 
 def euristique(etat):
-    return manhattan2(etat)
+    return distances(etat)
 
-def manhattan(self):
-    wins = set()
-    yous = set()
-    for you in self.yous:
-        yous.add((you[0]//self.width, you[0]%self.width))
+
+def distances(self):
+    self.distances = self.width*self.height*()
     for win in self.wins:
-        wins.add((win//self.width, win%self.width))
+        fifo = list(self.grid[0])
+        while len(fifo)
+        for i,flags in self.grid:
+            if flags & self.collisionMask:
+                self.distances = -1
+            y,x = i//self.height,i%self.width
+            for dir in self.dirs_yxi:
+                if self.isInBounds_yx(y+dir[0][0],x+dir[0][1]):
+                    flags2 = self.grid[dir[1]]
 
-    man = self.height+self.width
-    for win in wins:
-        for you in yous:
-            h = abs(win[0]-you[0])
-            w = abs(win[1]-you[1])
-            dist = pow(h*h + w*w, 0.5)
-            if dist < man:
-                man = dist
-    return man
+
 
 def manhattan2(self):
     wins = set()
@@ -44,4 +42,23 @@ def manhattan2(self):
         man += x * (count-i)
     man /= count*(count+1)/2
     
+    return man
+
+
+def manhattan(self):
+    wins = set()
+    yous = set()
+    for you in self.yous:
+        yous.add((you[0]//self.width, you[0]%self.width))
+    for win in self.wins:
+        wins.add((win//self.width, win%self.width))
+
+    man = self.height+self.width
+    for win in wins:
+        for you in yous:
+            h = abs(win[0]-you[0])
+            w = abs(win[1]-you[1])
+            dist = pow(h*h + w*w, 0.5)
+            if dist < man:
+                man = dist
     return man
