@@ -1,8 +1,8 @@
 import os
 import pygame
 
-import Codage
-    
+from Etat.Codage import *
+
 
 def getQuit():
     for event in pygame.event.get():
@@ -22,7 +22,7 @@ class Screen():
 
         images_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "images")
 
-        pygame.display.set_mode((24*etat.width, 24*etat.height))
+        pygame.display.set_mode((24*etat.w, 24*etat.h))
         pygame.display.set_icon(pygame.image.load(os.path.join(images_path, "icon.png")))
         pygame.display.set_caption("BABA is A*")
 
@@ -61,10 +61,10 @@ class Screen():
 
     def refresh(self, etat):
         self.screen.fill(pygame.Color(0, 0, 0))
-        for j in range(etat.height):
-            j2 = j*etat.width
-            for i in range(etat.width):
-                for index,flag in etat.grid[j2+i].flags(0, Codage.BABAb.last_all):
+        for j in range(etat.h):
+            j2 = j*etat.w
+            for i in range(etat.w):
+                for index,flag in etat.grid[j2+i].flags(0, BABAb.last_all):
                     if flag != 0:
                         surf = self.subsurfaces[index]
                         if surf:

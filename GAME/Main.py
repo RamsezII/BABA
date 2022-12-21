@@ -1,7 +1,9 @@
 import os.path
 import time
 
-import Etat
+import Etat.Etat
+import Etat.Move
+import Etat.ReadText
 
 
 up_right_down_left = [(0,-1),(1,0),(0,1),(-1,0)]
@@ -12,8 +14,8 @@ class Main():
         file = open(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "levels", levelname), 'r')
         lines = file.readlines()
         file.close()
-        self.etat = Etat.Etat()
-        self.etat.readtext(lines)
+        self.etat = Etat.Etat.Etat()
+        Etat.ReadText.readtext(self.etat, lines)
         self.etats = []
         self.tried = [self.etat]
         self.running = True
@@ -24,7 +26,7 @@ class Main():
         etat = self.etat
         self.etats.append(etat)
         etat = etat.clone()
-        etat.move(dir)
+        Etat.Move.move(etat,dir)
         if etat == self.etat:
             self.etats.pop()
         else:

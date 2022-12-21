@@ -5,21 +5,6 @@ def euristique(etat):
     return distances(etat)
 
 
-def distances(self):
-    self.distances = self.width*self.height*()
-    for win in self.wins:
-        fifo = list(self.grid[0])
-        while len(fifo)
-        for i,flags in self.grid:
-            if flags & self.collisionMask:
-                self.distances = -1
-            y,x = i//self.height,i%self.width
-            for dir in self.dirs_yxi:
-                if self.isInBounds_yx(y+dir[0][0],x+dir[0][1]):
-                    flags2 = self.grid[dir[1]]
-
-
-
 def manhattan2(self):
     wins = set()
     yous = set()
