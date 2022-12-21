@@ -1,6 +1,6 @@
-import Etat.GetRules
-import Etat.CheckWinDefeat
-from Etat.Codage import *
+import _CORE_.GetRules
+import _CORE_.CheckWinDefeat
+from _CORE_.Data import *
 
 
 def readtext(self, lines):
@@ -21,5 +21,5 @@ def readtext(self, lines):
     self.eur = 0
     self.yous = []
     self.wins = set()
-    Etat.GetRules.getRules(self)
-    Etat.CheckWinDefeat.checkWinDefeat(self)
+    _CORE_.GetRules.getRules(self)
+    _CORE_.CheckWinDefeat.checkWinDefeat(self)

@@ -1,7 +1,7 @@
 import os
 import pygame
 
-from Etat.Codage import *
+from _CORE_.Data import *
 
 
 def getQuit():
@@ -20,7 +20,11 @@ class Screen():
         self.font = pygame.font.SysFont("Comic Sans MS", 30)
         self.clock = pygame.time.Clock()
 
-        images_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "images")
+        images_path = os.path.abspath((__file__))
+        images_path = os.path.dirname(images_path)
+        images_path = os.path.dirname(images_path)
+        images_path = os.path.dirname(images_path)
+        images_path = os.path.join(images_path, "images")
 
         pygame.display.set_mode((24*etat.w, 24*etat.h))
         pygame.display.set_icon(pygame.image.load(os.path.join(images_path, "icon.png")))

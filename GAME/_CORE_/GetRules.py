@@ -1,4 +1,4 @@
-from Etat.Codage import *
+from _CORE_.Data import *
 
 
 def getRules(self):
