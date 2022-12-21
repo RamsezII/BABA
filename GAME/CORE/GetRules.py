@@ -1,4 +1,4 @@
-from _CORE_.Data import *
+from CORE.Data import *
 
 
 def getRules(self):

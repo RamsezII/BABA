@@ -1,5 +1,5 @@
 import time
-from _CORE_.Data import *
+from CORE.Data import *
 import copy
 
 
@@ -19,6 +19,10 @@ class Etat():
             return True
         else:
             return False
+
+    
+    def __str__(self):
+        print("test")
         
 
     def __lt__(self, other):

@@ -3,9 +3,11 @@ import sys
 import sortedcontainers.sortedlist
 import time
 
-import Etat
-import euristiques
-import UI
+import CORE.Etat
+import CORE.Move
+import CORE.ReadText
+import IA.Euristiques
+import UI.UI_pygame
 import ReadIA
 
 
@@ -20,8 +22,8 @@ class AStar():
         lines = file.readlines()
         file.close()
         self.ouverts = sortedcontainers.sortedlist.SortedList()
-        courant = Etat.Etat()
-        courant.readtext(lines)
+        courant = CORE.Etat.Etat()
+        CORE.ReadText.readtext(courant, lines)
         self.ouverts.add(courant)
         self.fermes = []
         self.ui = ui
@@ -42,7 +44,7 @@ class AStar():
     
 
     def mainLoop(self):
-        screen = UI.Screen(self.ouverts[0])
+        screen = UI.UI_pygame.Screen(self.ouverts[0])
 
         print("A*...")
         t0 = time.time()
@@ -53,7 +55,7 @@ class AStar():
             iterations += 1
 
             screen.refresh(courant)
-            if UI.getQuit():
+            if UI.UI_pygame.getQuit():
                 print("interrupt")
                 return
 
@@ -66,9 +68,9 @@ class AStar():
             else:
                 for dir in range(1, 5):
                     etat = courant.clone()
-                    etat.move(dir)
+                    CORE.Move.move(etat, dir)
                     if etat.pullChange() and etat not in self.ouverts and etat not in self.fermes:
-                        etat.eur = euristiques.euristique(etat)
+                        etat.eur = IA.Euristiques.euristique(etat)
                         etat.parent = courant
                         self.ouverts.add(etat)
             self.fermes.append(courant)

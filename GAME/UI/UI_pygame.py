@@ -1,7 +1,7 @@
 import os
 import pygame
 
-from _CORE_.Data import *
+from CORE.Data import *
 
 
 def getQuit():

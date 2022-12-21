@@ -3,8 +3,9 @@ import sys
 import sortedcontainers.sortedlist
 import time
 
-import Etat
-import euristiques
+import CORE.Etat
+import CORE.ReadText
+import IA.Euristiques
 
 
 dir_name = os.path.dirname(os.path.abspath(__file__))
@@ -20,7 +21,7 @@ class AStar():
         file.close()
         self.ouverts = sortedcontainers.sortedlist.SortedList()
         courant = Etat.Etat()
-        courant.readtext(lines)
+        ReadText(courant, lines)
         self.ouverts.add(courant)
         self.fermes = []
         self.ui = ui

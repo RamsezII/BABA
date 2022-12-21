@@ -1,7 +1,7 @@
 import os
 import sys
 
-import Etat
+import CORE.Etat
 import MainIA
 import UI
 

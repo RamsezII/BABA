@@ -1,9 +1,9 @@
 import os.path
 import time
 
-import _CORE_.Etat
-import _CORE_.Move
-import _CORE_.ReadText
+import CORE.Etat
+import CORE.Move
+import CORE.ReadText
 
 class Main():
     def __init__(self, levelname):
@@ -16,8 +16,8 @@ class Main():
         file = open(levelpath, 'r')
         lines = file.readlines()
         file.close()
-        self.etat = _CORE_.Etat.Etat()
-        _CORE_.ReadText.readtext(self.etat, lines)
+        self.etat = CORE.Etat.Etat()
+        CORE.ReadText.readtext(self.etat, lines)
         self.etats = []
         self.tried = [self.etat]
         self.running = True
@@ -28,7 +28,7 @@ class Main():
         etat = self.etat
         self.etats.append(etat)
         etat = etat.clone()
-        _CORE_.Move.move(etat,dir)
+        CORE.Move.move(etat,dir)
         if etat == self.etat:
             self.etats.pop()
         else:

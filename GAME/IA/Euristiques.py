@@ -5,6 +5,10 @@ def euristique(etat):
     return distances(etat)
 
 
+def distances(etat):
+    pass
+
+
 def manhattan2(self):
     wins = set()
     yous = set()

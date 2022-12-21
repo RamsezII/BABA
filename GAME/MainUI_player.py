@@ -1,13 +1,13 @@
 import time
 import pygame
 
-import _CORE_.Main
-import _GUI_.GUI_pygame
+import CORE.Main
+import UI.UI_pygame
 
 
 if __name__ == "__main__":
-    main = _CORE_.Main.Main("level_3.txt")
-    screen = _GUI_.GUI_pygame.Screen(main.etat)
+    main = CORE.Main.Main("level_3.txt")
+    screen = UI.UI_pygame.Screen(main.etat)
     fps = 30
 
     while main.running:

@@ -1,6 +1,6 @@
-import _CORE_.GetRules
-import _CORE_.CheckWinDefeat
-from _CORE_.Data import *
+import CORE.GetRules
+import CORE.CheckWinDefeat
+from CORE.Data import *
 
 
 def readtext(self, lines):
@@ -21,5 +21,5 @@ def readtext(self, lines):
     self.eur = 0
     self.yous = []
     self.wins = set()
-    _CORE_.GetRules.getRules(self)
-    _CORE_.CheckWinDefeat.checkWinDefeat(self)
+    CORE.GetRules.getRules(self)
+    CORE.CheckWinDefeat.checkWinDefeat(self)
