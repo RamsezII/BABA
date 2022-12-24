@@ -61,7 +61,7 @@ class BABAf(IntFlag):
         if self == 0:
             return ".."
         else:
-            for i,_ in self.flags(0, _last_):
+            for i,_ in self.flags(0, BABAb.last_all):
                 return f"{i:02d}"
         return "??"
 

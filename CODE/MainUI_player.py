@@ -8,13 +8,15 @@ from UTIL.YXI import yxi
 
 
 if __name__ == "__main__":
-    etat = Etat("level_3.txt")
+    etat = Etat("small.txt")
+    etat.logEtat()
     screen = Screen(etat)
     fps = 30
     running = changed = True
 
     while running:
-        dir_yxi = yxi()
+        dir_yxi: yxi = yxi(0,0,0)
+        dirflag = False
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
@@ -24,18 +26,19 @@ if __name__ == "__main__":
                     if etat.parent:
                         etat = etat.parent
                         changed = True
-                elif not etat.win:
+                elif not (dirflag or etat.win or etat.defeat):
+                    dirflag = True
+                    if event.key == pygame.K_q:
+                        dir_yxi += Etat.dirs_yxi[0]
+                    if event.key == pygame.K_d:
+                        dir_yxi += Etat.dirs_yxi[1]
                     if event.key == pygame.K_z:
-                        dir_yxi = Etat.dirs_yxi[0]
-                    elif event.key == pygame.K_d:
-                        dir_yxi = Etat.dirs_yxi[1]
-                    elif event.key == pygame.K_s:
-                        dir_yxi = Etat.dirs_yxi[2]
-                    elif event.key == pygame.K_q:
-                        dir_yxi = Etat.dirs_yxi[3]
+                        dir_yxi += Etat.dirs_yxi[2]
+                    if event.key == pygame.K_s:
+                        dir_yxi += Etat.dirs_yxi[3]
         
         if running:
-            if not dir_yxi.iszero():
+            if not (etat.win or etat.defeat or dir_yxi.iszero()):
                 print("move...")
                 t0_move = time.time()
                 clone = etat.clone()
@@ -47,10 +50,9 @@ if __name__ == "__main__":
                     etat = clone
             
             if etat.pullChange():
+                etat.logRules()
+                etat.logEtat()
                 screen.refresh(etat)
-                # print("stack:", len(main.etats))
-                # print(main.etat.logRules())
-                # print(etat.logEtat())
 
                 if etat.win:
                     print("WIN!")

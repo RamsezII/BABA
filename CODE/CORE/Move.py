@@ -43,5 +43,5 @@ def move(self, dir):
         k_ = you[0]
         if self.isInBounds(k_+dir) and push(self, k_+dir, dir):
             deplace(self, you[1],k_, dir)
-    getRules(self)
-    checkWinDefeat(self)
+    self.getRules()
+    self.checkWinDefeat()
