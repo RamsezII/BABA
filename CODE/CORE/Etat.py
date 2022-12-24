@@ -5,18 +5,24 @@ from CORE.Data import *
 from UTIL.Path import getlines
 from UTIL.YXI import yxi
 
+
+class You():
+    def __init__(self, pos, flag):
+        self.pos = pos
+        self.flag = flag
+
+
 class Etat():
     yxi_left, yxi_right = yxi(0,-1,-1), yxi(0,1,1)
     yxi_up: yxi = yxi(0,0,0)
     yxi_down: yxi = yxi(0,0,0)
-    # yxi_dirs = [yxi(0,0,0)]
     h = w = count = 0
 
     def __init__(self, levelname):
         self.changed = True
         self.win = False
         self.defeat = False
-        self.parent: Etat = None
+        self.parent = self
         self.m_cols = BABAf.none
         self.grid = [BABAf.none]
 
@@ -35,9 +41,8 @@ class Etat():
                     self.grid.append(BABAf(1 << int(splits[i])))
 
         Etat.count = Etat.h*Etat.w
-        Etat.up_yxi = yxi(-1,0,-Etat.w)
-        Etat.down_yxi = yxi(1,0,Etat.w)
-        # Etat.yxi_dirs = [Etat.up_yxi, Etat.down_yxi, Etat.yxi_left, Etat.yxi_right]
+        Etat.yxi_up = yxi(-1,0,-Etat.w)
+        Etat.yxi_down = yxi(1,0,Etat.w)
 
         self.rules = 6*[BABAf.none]    
         self.getRules()
@@ -84,6 +89,10 @@ class Etat():
         print(log)
 
 
+    def isInBounds(self, yxi):
+        return isInBounds(yxi)
+
+
     def getRules(self):
         # un bitmask par objet (6 au total). si "BABA IS YOU" est visible dans le niveau, le flag 'YOU' dans le bitmask de 'baba' dans 'self.rules' sera à 1
         # dans le cas d'une transformation, par exemple "BABA IS ROCK", toutes les cases sont parcourues et chaque case où le flag 'baba' est à 1 est mis à 0 et le flag 'rock' est mis à 1
@@ -128,12 +137,13 @@ class Etat():
         for k,flags in enumerate(self.grid):
             you = False
             win = False
+            pos = i2yxi(k)
             for i,flag in flags.flags(BABAb.first_obj, BABAb.last_obj):
                 rule = self.rules[i-BABAb.first_obj]
                 if rule & BABAf.YOU:
                     you = True
                     self.defeat = False
-                    self.yous.append((k,flag))
+                    self.yous.append(You(pos,flag))
                 if rule & BABAf.WIN:
                     win = True
                     self.wins.add(k)

@@ -1,4 +1,3 @@
-import time
 import pygame
 
 from CORE.Etat import Etat
@@ -8,11 +7,11 @@ from UTIL.YXI import yxi
 
 
 if __name__ == "__main__":
-    etat = Etat("small.txt")
+    etat = Etat("level_3.txt")
     etat.logEtat()
     screen = Screen(etat)
     fps = 30
-    running = changed = True
+    running = True
 
     while running:
         dir_yxi: yxi = yxi(0,0,0)
@@ -25,7 +24,7 @@ if __name__ == "__main__":
                 if event.key == pygame.K_r:
                     if etat.parent:
                         etat = etat.parent
-                        changed = True
+                        etat.changed = True
                 elif not (dirflag or etat.win or etat.defeat):
                     dirflag = True
                     if event.key == pygame.K_z:
@@ -39,12 +38,8 @@ if __name__ == "__main__":
         
         if running:
             if not (etat.win or etat.defeat or dir_yxi.iszero()):
-                print("move...")
-                t0_move = time.time()
                 clone = etat.clone()
                 move(clone, dir_yxi)
-                t1_move = time.time()
-                print("move time: " + str(t1_move-t0_move) + '\n')
                 if clone.changed:
                     clone.parent = etat
                     etat = clone
