@@ -28,14 +28,14 @@ if __name__ == "__main__":
                         changed = True
                 elif not (dirflag or etat.win or etat.defeat):
                     dirflag = True
-                    if event.key == pygame.K_q:
-                        dir_yxi += Etat.dirs_yxi[0]
-                    if event.key == pygame.K_d:
-                        dir_yxi += Etat.dirs_yxi[1]
                     if event.key == pygame.K_z:
-                        dir_yxi += Etat.dirs_yxi[2]
+                        dir_yxi += Etat.yxi_up
+                    if event.key == pygame.K_d:
+                        dir_yxi += Etat.yxi_right
                     if event.key == pygame.K_s:
-                        dir_yxi += Etat.dirs_yxi[3]
+                        dir_yxi += Etat.yxi_down
+                    if event.key == pygame.K_q:
+                        dir_yxi += Etat.yxi_left
         
         if running:
             if not (etat.win or etat.defeat or dir_yxi.iszero()):

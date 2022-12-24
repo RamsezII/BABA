@@ -6,10 +6,10 @@ from UTIL.Path import getlines
 from UTIL.YXI import yxi
 
 class Etat():
-    yxi_left, yxi_right = yxi(-1,0,-1), yxi(1,0,1)
-    yxi_up: yxi
-    yxi_down: yxi
-    yxi_dirs = [yxi(0,0,0)]
+    yxi_left, yxi_right = yxi(0,-1,-1), yxi(0,1,1)
+    yxi_up: yxi = yxi(0,0,0)
+    yxi_down: yxi = yxi(0,0,0)
+    # yxi_dirs = [yxi(0,0,0)]
     h = w = count = 0
 
     def __init__(self, levelname):
@@ -37,7 +37,7 @@ class Etat():
         Etat.count = Etat.h*Etat.w
         Etat.up_yxi = yxi(-1,0,-Etat.w)
         Etat.down_yxi = yxi(1,0,Etat.w)
-        Etat.yxi_dirs = [Etat.up_yxi, Etat.down_yxi, Etat.yxi_left, Etat.yxi_right]
+        # Etat.yxi_dirs = [Etat.up_yxi, Etat.down_yxi, Etat.yxi_left, Etat.yxi_right]
 
         self.rules = 6*[BABAf.none]    
         self.getRules()
@@ -92,9 +92,9 @@ class Etat():
         for k in range(self.count):
             if self.grid[k] & BABAf.IS:
                 pos_k = i2yxi(k)
-                for dir_i in range(0,2):
-                    pos_a = pos_k + Etat.yxi_dirs[dir_i]
-                    pos_b = pos_k + Etat.yxi_dirs[1+dir_i]
+                for dir in (Etat.yxi_right, Etat.yxi_down):
+                    pos_a = pos_k + -dir
+                    pos_b = pos_k + dir
                     if isInBounds(pos_a) and isInBounds(pos_b):
                         prefs = self.grid[pos_a.i]
                         suffs = self.grid[pos_b.i]
