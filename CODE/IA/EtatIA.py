@@ -1,12 +1,33 @@
 import math
 
-import Etat
+import CORE.Etat
 
 
-class EtatIA(Etat.Etat):
-    def __init__(self):
+class EtatIA(CORE.Etat.Etat):
+    def __init__(self, levelname):
+        super().__init__(levelname)
         self.parent = None
-        self.getDistances()
+        self.eur = math.inf
+
+
+    def __lt__(self, other):
+        return self.eur < other.eur
+
+    def __le__(self, other):
+        return self.eur <= other.eur
+
+    def __gt__(self, other):
+        return self.eur > other.eur
+
+    def __ge__(self, other):
+        return self.eur >= other.eur
+
+    def __eq__(self, other):
+        return self.eur == other.eur
+
+    def __ne__(self, other):
+        return self.eur != other.eur
+
 
     def getDistances(self):
         self.dists = self.count*[math.inf]

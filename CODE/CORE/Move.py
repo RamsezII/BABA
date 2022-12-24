@@ -1,6 +1,4 @@
-import CODE.Etat
-from CODE.Data import *
-    
+from CORE.Data import *
 
 def deplace(self, flag, k, dir):
     self.grid[k] &= ~flag
@@ -35,18 +33,6 @@ def push(self, k, dir):
 
 def move(self, dir):
     self.dir = dir
-
-    if dir == 1:
-        dir = -self.w
-    elif dir == 2:
-        dir = 1
-    elif dir == 3:
-        dir = self.w
-    elif dir == 4:
-        dir = -1
-    else:
-        print("ERROR: " + str(dir))
-        
     count = len(self.yous)
     for k in range(count):
         # inverser ordre de parcours selon sens de deplacement
@@ -57,5 +43,5 @@ def move(self, dir):
         k_ = you[0]
         if self.isInBounds(k_+dir) and push(self, k_+dir, dir):
             deplace(self, you[1],k_, dir)
-    CODE.GetRules.getRules(self)
-    CODE.CheckWinDefeat.checkWinDefeat(self)
+    getRules(self)
+    checkWinDefeat(self)

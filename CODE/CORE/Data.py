@@ -1,7 +1,7 @@
 from enum import IntEnum, IntFlag
 
 class BABAb(IntEnum):
-    BABA = 0
+    BABA = first_all = first_word = 0
     WALL = 1
     ROCK = 2
     FLAG = 3
@@ -14,13 +14,13 @@ class BABAb(IntEnum):
     DEFEAT = 10
     PUSH = 11
     SOLID = 12
-    wall = first_obj = 13
+    wall = last_word = first_obj = 13
     lava = 14
     water = 15
     rock = 16
     flag = 17
     baba = 18
-    last_all = 19
+    last_all = last_obj = 19
 
 class BABAf(IntFlag):
     none = 0

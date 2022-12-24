@@ -1,7 +1,7 @@
 import os
 import pygame
 
-from CODE.Data import *
+from CORE.Data import *
 
 
 def getQuit():
@@ -21,6 +21,7 @@ class Screen():
         self.clock = pygame.time.Clock()
 
         images_path = os.path.abspath((__file__))
+        images_path = os.path.dirname(images_path)
         images_path = os.path.dirname(images_path)
         images_path = os.path.dirname(images_path)
         images_path = os.path.join(images_path, "images")
