@@ -1,5 +1,5 @@
-import CORE.Etat
-from CORE.Data import *
+import CODE.Etat
+from CODE.Data import *
     
 
 def deplace(self, flag, k, dir):
@@ -57,5 +57,5 @@ def move(self, dir):
         k_ = you[0]
         if self.isInBounds(k_+dir) and push(self, k_+dir, dir):
             deplace(self, you[1],k_, dir)
-    CORE.GetRules.getRules(self)
-    CORE.CheckWinDefeat.checkWinDefeat(self)
+    CODE.GetRules.getRules(self)
+    CODE.CheckWinDefeat.checkWinDefeat(self)
