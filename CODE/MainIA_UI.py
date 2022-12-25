@@ -1,30 +1,23 @@
-import os
-import sortedcontainers.sortedlist
+import os.path
+from sortedcontainers.sortedlist import SortedList
 import time
 
-import CORE.Move
-import CORE.ReadText
-import IA.Euristiques
-import IA.EtatIA
-import UI.UI_pygame
+from CORE.Etat import Etat
+from CORE.Move import move
+from IA.Euristiques import euristique
+from IA.EtatIA import EtatIA
 import ReadIA
+from UI.UI_pygame import *
 
 
 def RunIA_UI(levelname):
-    dir_name = os.path.dirname(os.path.abspath(__file__))
-    file = open(os.path.join(os.path.dirname(dir_name), "levels", levelname), 'r')
-    lines = file.readlines()
-    file.close()
+    etat = EtatIA(levelname)
+    screen = Screen(etat)
+    fps = 5
 
-    etat = IA.EtatIA.EtatIA()
-    CORE.ReadText.readtext(etat, lines)
-
-    ouverts = sortedcontainers.sortedlist.SortedList()
+    ouverts = SortedList()
     ouverts.add(etat)
-
     fermes = []
-
-    screen = UI.UI_pygame.Screen(ouverts[0])
 
     print("A*...")
     t0 = time.time()
@@ -32,11 +25,12 @@ def RunIA_UI(levelname):
     courant = None
 
     while len(ouverts) != 0:
+        screen.deltatime(fps)
         courant = ouverts.pop(0)
         iterations += 1
 
         screen.refresh(courant)
-        if UI.UI_pygame.getQuit():
+        if getQuit():
             print("interrupt")
             return
 
@@ -47,13 +41,17 @@ def RunIA_UI(levelname):
             print("DEFEAT")
             break
         else:
-            for dir in range(1, 5):
+            for i,dir in enumerate(Etat.yxi_dirs):
                 etat = courant.clone()
-                CORE.Move.move(etat, dir)
-                if etat.pullChange() and etat not in ouverts and etat not in fermes:
-                    etat.eur = IA.Euristiques.euristique(etat)
-                    etat.parent = courant
-                    ouverts.add(etat)
+                move(etat, dir)
+                if etat.pullChange():
+                    if etat.needPaths:
+                        etat.getDistances()
+                    if etat not in ouverts and etat not in fermes:
+                        etat.dir_i = i
+                        etat.eur = euristique(etat)
+                        etat.parent = courant
+                        ouverts.add(etat)
         fermes.append(courant)
 
     t1 = time.time()
@@ -62,22 +60,15 @@ def RunIA_UI(levelname):
     
     if courant:
         print("saving solution...")
-        dirs = ("up", "right", "down", "left")
-        savepath = os.path.join(os.path.dirname(dir_name), "IA_solutions", levelname)
-
-        file = open(savepath, 'w')        
-
-        def saveIA(etat):
-            if etat.parent:
-                saveIA(etat.parent)
-            if etat.dir != 0:
-                file.write(dirs[etat.dir-1] + '\n')
-        saveIA(courant)
-        
+        savelines = []
+        while courant.parent:
+            savelines.append(EtatIA.dirs[courant.dir_i])
+            courant = courant.parent
+        savepath = os.path.join("IA_solutions", levelname)
+        file = open(savepath, 'w')
+        file.writelines(savelines)        
         file.close()
-
         print("saved solution in: " + savepath)
-        ReadIA.run(levelname)
     else:
         print("ERROR")
     
@@ -88,9 +79,10 @@ if __name__ == "__main__":
     # argv = sys.argv
     # args = len(argv)
     # if args <= 1:
-    #     filename = input("level name: ")
+    #     levelname = input("level name: ")
     # else:
-    #     filename = argv[1]
-    filename = "level_IA_03.txt"
-    RunIA_UI(filename)
+    #     levelname = argv[1]
+    levelname = "level_IA_03.txt"
+    RunIA_UI(levelname)    
+    # ReadIA.run(levelname)
     print("FIN")

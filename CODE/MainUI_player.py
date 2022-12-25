@@ -45,8 +45,8 @@ if __name__ == "__main__":
                     etat = clone
             
             if etat.pullChange():
-                etat.logRules()
-                etat.logEtat()
+                # etat.logRules()
+                # etat.logEtat()
                 screen.refresh(etat)
 
                 if etat.win:

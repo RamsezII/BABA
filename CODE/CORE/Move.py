@@ -15,6 +15,7 @@ def push(self, pos, dir):
         for i,_ in flags.flags(0, BABAb.last_all):
             if i < BABAb.first_obj:  # words
                 obstacles = True
+                self.needRules = True
             else:  # objects
                 rule = self.rules[i-BABAb.first_obj]
                 if rule & BABAf.PUSH:
@@ -26,22 +27,26 @@ def push(self, pos, dir):
             pos2 = pos+dir
             if not self.isInBounds(pos2) or not push(self, pos2, dir):
                 return False                
-            # pousser cette case
+            # pousser cette case (donc recalcul des chemins)
+            self.needPaths = False
             for _,flag in flags.flags(0, BABAb.last_all):
                 deplace(self, flag, pos.i, dir.i)
     return True
 
 
-def move(self, dir):
+def move(self, dir):    
+    self.needRules = False
+    self.needPaths = False
     self.dir = dir
     count = len(self.yous)
     for k in range(count):
         # inverser ordre de parcours selon sens de deplacement
-        if dir.y > 0:
+        if dir.i > 0:
             you = self.yous[count-k-1]
         else:
             you = self.yous[k]
         if self.isInBounds(you.pos+dir) and push(self, you.pos+dir, dir):
-            deplace(self, you.flag, you.pos.i, dir.i)
-    self.getRules()
-    self.checkWinDefeat()
+            deplace(self, you.flag, you.pos.i, dir.i)    
+    if self.needRules:
+        self.getRules()
+        self.checkWinDefeat()

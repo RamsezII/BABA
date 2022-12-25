@@ -1,21 +1,15 @@
 import os
-import sys
 import sortedcontainers.sortedlist
 import time
 
-import CORE.Etat
-import CORE.ReadText
-import IA.Euristiques
 
-
-dir_name = os.path.dirname(os.path.abspath(__file__))
 dirs = ["up", "right", "down", "left"]
 
 
 class AStar():
     def __init__(self, levelname, ui):
-        self.levelname = os.path.join(os.path.dirname(dir_name), "levels", levelname)
-        self.savepath = os.path.join(os.path.dirname(dir_name), "IA_solutions", levelname)
+        self.levelname = os.path.join("levels", levelname)
+        self.savepath = os.path.join("IA_solutions", levelname)
         file = open(self.levelname, 'r')
         lines = file.readlines()
         file.close()

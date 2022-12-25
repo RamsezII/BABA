@@ -6,7 +6,15 @@ def euristique(etat):
 
 
 def distances(etat):
-    pass
+    dists = sortedcontainers.sortedset.SortedSet()
+    for you in etat.yous:
+        dists.add(etat.dists[you.pos.i])
+    count = len(dists)    
+    man = 0
+    for i,dist in enumerate(dists):
+        man += dist * (count-i)
+    man /= count*(count+1)/2    
+    return man
 
 
 def manhattan2(self):

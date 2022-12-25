@@ -13,16 +13,18 @@ class You():
 
 
 class Etat():
-    yxi_left, yxi_right = yxi(0,-1,-1), yxi(0,1,1)
+    yxi_left = yxi(0,-1,-1)
+    yxi_right = yxi(0,1,1)
     yxi_up: yxi = yxi(0,0,0)
     yxi_down: yxi = yxi(0,0,0)
+    yxi_dirs = (yxi(0,0,0))
     h = w = count = 0
 
     def __init__(self, levelname):
         self.changed = True
         self.win = False
         self.defeat = False
-        self.parent = self
+        self.parent: Etat = None
         self.m_cols = BABAf.none
         self.grid = [BABAf.none]
 
@@ -43,6 +45,7 @@ class Etat():
         Etat.count = Etat.h*Etat.w
         Etat.yxi_up = yxi(-1,0,-Etat.w)
         Etat.yxi_down = yxi(1,0,Etat.w)
+        Etat.yxi_dirs = (Etat.yxi_up, Etat.yxi_down, Etat.yxi_left, Etat.yxi_right)
 
         self.rules = 6*[BABAf.none]    
         self.getRules()
@@ -146,7 +149,7 @@ class Etat():
                     self.yous.append(You(pos,flag))
                 if rule & BABAf.WIN:
                     win = True
-                    self.wins.add(k)
+                    self.wins.add(pos)
             if you and win:
                 self.win = True
                 break
