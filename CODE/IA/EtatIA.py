@@ -31,6 +31,7 @@ class EtatIA(Etat):
 
 
     def getDistances(self):
+        self.m_get &= ~GETf.getPaths
         self.dists = self.count*[math.inf]
         depth = 1
         nexts = self.wins.copy()

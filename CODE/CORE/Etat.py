@@ -6,6 +6,14 @@ from UTIL.Path import getlines
 from UTIL.YXI import yxi
 
 
+class GETf(IntFlag):
+    none = 0
+    getWins = 1 << 0
+    getYous = 1 << 1
+    getRules = 1 << 2
+    getPaths = 1 << 3
+    
+
 class You():
     def __init__(self, pos, flag):
         self.pos = pos
@@ -25,7 +33,8 @@ class Etat():
         self.win = False
         self.defeat = False
         self.parent: Etat = None
-        self.m_cols = BABAf.none
+        self.m_cols = self.m_yous = BABAf.none
+        self.m_get = GETf.none
         self.grid = [BABAf.none]
 
         levelpath = joinpath("levels", levelname)
@@ -97,6 +106,7 @@ class Etat():
 
 
     def getRules(self):
+        self.m_get &= ~GETf.getRules
         # un bitmask par objet (6 au total). si "BABA IS YOU" est visible dans le niveau, le flag 'YOU' dans le bitmask de 'baba' dans 'self.rules' sera à 1
         # dans le cas d'une transformation, par exemple "BABA IS ROCK", toutes les cases sont parcourues et chaque case où le flag 'baba' est à 1 est mis à 0 et le flag 'rock' est mis à 1
         oldrules = self.rules.copy()
@@ -124,13 +134,16 @@ class Etat():
                                                     self.grid[k2] &= ~pref_obj
                                                     self.grid[k2] |= suf_obj
         if oldrules != self.rules:
-            self.m_cols = BABAf.none
+            self.m_cols = self.m_yous = BABAf.none
             for i,rule in enumerate(self.rules):
                 if rule & BABAf.SOLID:
-                    self.m_cols |= BABAf(1 << (BABAb.first_obj + i))
+                    self.m_cols |= BABAf(1 << (i+BABAb.first_obj))
+                if rule & BABAf.YOU:
+                    self.m_yous |= (1 << (i+BABAb.first_obj))
 
 
     def checkWinDefeat(self):
+        self.m_get &= ~(GETf.getYous | GETf.getWins)
         # on gagne si un des flags représentant les objets d'une case, a son correspondant dans 'self.rules' marqué comme 'YOU' et 'WIN'
         # on perd si aucune case n'a d'objet correspondant dans 'self.rules' marqué comme 'YOU'
         self.defeat = True
@@ -153,6 +166,16 @@ class Etat():
             if you and win:
                 self.win = True
                 break
+    
+
+    def getYous(self):
+        self.yous.clear()
+        for k,flags in enumerate(self.grid):
+            if flags & self.m_yous:
+                for i,flag in flags.flags(BABAb.first_obj, BABAb.last_obj):
+                    self.yous.append(You(i2yxi(k),flag))
+
+
 
 
 def i2yxi(i):
