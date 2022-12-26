@@ -3,8 +3,6 @@ import math
 from CORE.Etat import *
 
 class EtatIA(Etat):
-    dirs = ("up", "down", "left", "right")
-
     def __init__(self, levelname):
         super().__init__(levelname)
         self.eur = math.inf
@@ -23,26 +21,34 @@ class EtatIA(Etat):
     def __ge__(self, other):
         return self.eur >= other.eur
 
-    def __eq__(self, other):
-        return self.eur == other.eur
-
     def __ne__(self, other):
         return self.eur != other.eur
+    
+
+    def logDistances(self):
+        for j in range(Etat.h):
+            log = ""
+            for i in range(Etat.w):
+                log += "{:^5}".format(self.dists[yx2yxi(j,i).i])
+            print(log)
+    
+
+    def logYousDistances(self):
+        for you in self.yous:
+            print("{} | {}".format(you, self.dists[you.pos.i]))
 
 
     def getDistances(self):
         self.m_get &= ~GETf.getPaths
         self.dists = self.count*[math.inf]
-        depth = 1
+        depth = 0
         nexts = self.wins.copy()
         while len(nexts)!=0:
             nexts2 = set()
             for n in nexts:
                 if self.dists[n.i] == math.inf:
-                    if self.grid[n.i] & self.m_cols:
-                        self.dists[n.i] = -1
-                    else:
-                        self.dists[n.i] = depth
+                    self.dists[n.i] = depth
+                    if self.grid[n.i] & self.m_cols == 0:
                         for dir in Etat.yxi_dirs:
                             n2 = n+dir
                             if self.isInBounds(n2) and self.dists[n2.i] == math.inf:

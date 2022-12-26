@@ -2,7 +2,7 @@ import copy
 from os.path import join as joinpath
 
 from CORE.Data import *
-from UTIL.Path import getlines
+from UTIL.Path import *
 from UTIL.YXI import yxi
 
 
@@ -18,6 +18,9 @@ class You():
     def __init__(self, pos, flag):
         self.pos = pos
         self.flag = flag
+    
+    def __repr__(self):
+        return "{} | {}".format(self.pos, self.flag)
 
 
 class Etat():
@@ -37,7 +40,7 @@ class Etat():
         self.m_get = GETf.none
         self.grid = [BABAf.none]
 
-        levelpath = joinpath("levels", levelname)
+        levelpath = os.path.join(rootpath(), "levels", levelname)
         lines = getlines(levelpath)
 
         Etat.h = len(lines)
@@ -74,7 +77,7 @@ class Etat():
 
     def clone(self):
         parent = self.parent
-        self.parent: Etat
+        self.parent: Etat = None
         clone = copy.deepcopy(self)
         clone.parent = self.parent = parent
         return clone

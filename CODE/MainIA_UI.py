@@ -6,10 +6,26 @@ from CORE.Etat import *
 from CORE.Move import move
 from IA.Euristiques import euristique
 from IA.EtatIA import EtatIA
+from IA.ReadIA import readIA
+from IA.SaveIA import saveIA
 from UI.UI_pygame import *
+from UTIL.Path import *
+from UTIL.SysArgs import sysArgs
 
 
-def RunIA_UI(levelname):
+if __name__ == "__main__":
+    args = sysArgs("-fps", "-level")
+
+    if "-fps" in args:
+        fps = int(args["-fps"])
+    else:
+        fps = 0
+    
+    if "-level" in args:
+        levelname = args["-level"]
+    else:
+        levelname = input("level: ")
+
     etat = EtatIA(levelname)
     screen = Screen(etat)
 
@@ -20,68 +36,46 @@ def RunIA_UI(levelname):
     print("A*...")
     t0 = time.time()
     iterations = 0
-    courant = None
+    courant: EtatIA = None
 
-    # fps = 5
     while len(ouverts) != 0:
-        # screen.deltatime(fps)
+        if fps != 0:
+            screen.deltatime(fps)
+        
         courant = ouverts.pop(0)
+        fermes.append(courant)
         iterations += 1
-
         screen.refresh(courant)
+
         if getQuit():
             print("interrupt")
-            return
-
-        if courant.win:
+            break
+        elif courant.win:
             print("WIN!")
             break
         elif courant.defeat:
             print("DEFEAT")
             break
         else:
-            for i,dir in enumerate(Etat.yxi_dirs):
+            for dir in Etat.yxi_dirs:
                 etat = courant.clone()
                 move(etat, dir)
                 if etat.pullChange():
                     if etat.m_get & GETf.getPaths:
                         etat.getDistances()
                     if etat not in ouverts and etat not in fermes:
-                        etat.dir_i = i
+                        etat.dir = dir
                         etat.eur = euristique(etat)
                         etat.parent = courant
                         ouverts.add(etat)
-        fermes.append(courant)
 
     t1 = time.time()
     print("A* time: " + str(t1-t0))
     print("iterations: " + str(iterations))
     
     if courant:
-        print("saving solution...")
-        savelines = []
-        while courant.parent:
-            savelines.append(EtatIA.dirs[courant.dir_i])
-            courant = courant.parent
-        savepath = os.path.join("IA_solutions", levelname)
-        file = open(savepath, 'w')
-        file.writelines(savelines)        
-        file.close()
-        print("saved solution in: " + savepath)
+        saveIA(courant, levelname)
     else:
         print("ERROR")
-    
 
-
-
-if __name__ == "__main__":
-    # argv = sys.argv
-    # args = len(argv)
-    # if args <= 1:
-    #     levelname = input("level name: ")
-    # else:
-    #     levelname = argv[1]
-    levelname = "level_IA_03.txt"
-    RunIA_UI(levelname)    
-    # ReadIA.run(levelname)
     print("FIN")

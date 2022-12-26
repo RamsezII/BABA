@@ -1,11 +1,19 @@
+import math
 import sortedcontainers.sortedset
 
 
 def euristique(etat):
-    return distances(etat)
+    return distances_min(etat)
 
 
-def distances(etat):
+def distances_min(etat):
+    dist = math.inf
+    for you in etat.yous:
+        dist = min(dist, etat.dists[you.pos.i])
+    return dist
+
+
+def distances_moy(etat):
     dists = sortedcontainers.sortedset.SortedSet()
     for you in etat.yous:
         dists.add(etat.dists[you.pos.i])

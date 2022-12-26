@@ -7,7 +7,7 @@ class yxi():
         self.i = i
     
     def __repr__(self) -> str:
-        return "(y: " + str(self.y) + ", x: " + str(self.x) + ", i: " + str(self.i) + ")"
+        return "{: } {: }".format(self.y, self.x)
         
     def __add__(self, o):
         return yxi(self.y+o.y, self.x+o.x, self.i+o.i)

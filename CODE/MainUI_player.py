@@ -2,13 +2,13 @@ import pygame
 
 from CORE.Etat import Etat
 from CORE.Move import move
+from IA.EtatIA import EtatIA
 from UI.UI_pygame import Screen
 from UTIL.YXI import yxi
 
 
 if __name__ == "__main__":
-    etat = Etat("level_3.txt")
-    etat.logEtat()
+    etat = EtatIA("level_3.txt")
     screen = Screen(etat)
     fps = 30
     running = True
@@ -48,6 +48,8 @@ if __name__ == "__main__":
                 # etat.logRules()
                 # etat.logEtat()
                 screen.refresh(etat)
+                # etat.getDistances()
+                # etat.logYousDistances()
 
                 if etat.win:
                     print("WIN!")
@@ -55,5 +57,4 @@ if __name__ == "__main__":
                     print("DEFEAT")
         
         deltatime = screen.deltatime(fps)
-
     print("FIN")
