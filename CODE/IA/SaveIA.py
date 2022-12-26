@@ -12,10 +12,7 @@ def saveIA(etat, levelname):
     savelines.reverse()
 
     savepath = os.path.join(rootpath(), "IA_solutions", levelname)
-    print("saving solution in {}...".format(savepath))
-
     file = open(savepath, 'w')
     file.writelines(savelines)        
-    file.close()
-    
+    file.close()    
     print("saved solution in: " + savepath)
