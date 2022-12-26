@@ -1,6 +1,6 @@
 import math
 
-from CORE.Etat import Etat
+from CORE.Etat import *
 
 class EtatIA(Etat):
     dirs = ("up", "down", "left", "right")

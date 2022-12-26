@@ -2,18 +2,16 @@ import os.path
 from sortedcontainers.sortedlist import SortedList
 import time
 
-from CORE.Etat import Etat
+from CORE.Etat import *
 from CORE.Move import move
 from IA.Euristiques import euristique
 from IA.EtatIA import EtatIA
-import ReadIA
 from UI.UI_pygame import *
 
 
 def RunIA_UI(levelname):
     etat = EtatIA(levelname)
     screen = Screen(etat)
-    fps = 5
 
     ouverts = SortedList()
     ouverts.add(etat)
@@ -24,8 +22,9 @@ def RunIA_UI(levelname):
     iterations = 0
     courant = None
 
+    # fps = 5
     while len(ouverts) != 0:
-        screen.deltatime(fps)
+        # screen.deltatime(fps)
         courant = ouverts.pop(0)
         iterations += 1
 
@@ -45,7 +44,7 @@ def RunIA_UI(levelname):
                 etat = courant.clone()
                 move(etat, dir)
                 if etat.pullChange():
-                    if etat.needPaths:
+                    if etat.m_get & GETf.getPaths:
                         etat.getDistances()
                     if etat not in ouverts and etat not in fermes:
                         etat.dir_i = i
