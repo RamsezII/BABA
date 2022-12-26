@@ -1,22 +1,22 @@
-right
-right
-right
-right
-right
-right
-right
-right
-right
-right
-right
-right
-right
-left
-left
-down
-up
-left
-up
-right
-up
-right
+ 0  1
+ 0  1
+ 0  1
+ 0  1
+ 0  1
+ 0  1
+ 0  1
+ 1  0
+ 1  0
+ 0  1
+ 0  1
+ 0  1
+-1  0
+-1  0
+-1  0
+-1  0
+-1  0
+-1  0
+ 0 -1
+ 0 -1
+ 0 -1
+ 1  0

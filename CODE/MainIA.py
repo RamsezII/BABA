@@ -56,8 +56,7 @@ if __name__ == "__main__":
             t01 = t02
 
     t1 = time.time()
-    print("A* time: " + str(t1-t0))
-    print("iterations: " + str(iterations))
+    print("total iterations: {} | total time: {}".format(iterations, t1-t0))
     
     if courant:
         saveIA(courant, levelname)
