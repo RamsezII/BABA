@@ -13,7 +13,7 @@ L'euristique donne la distance de Manhattan entre le couple YOU/WIN le plus proc
 
 
 --  Comment jauger les états:
-    -   dans le cas d'un état avec des you et des win clairs c'est l'hypothénuse de la plus courte distance de couple you/win
+    -   dans le cas d'un état avec des you et des win clairs c'est la moyenne pondérée de la plus courte distance de couple you/win
     -   repérer tous les mots non isolés:
         -   explorer leurs combinaisons possibles sous formes d'abre dont aucune branche ne contient
             de moment où personne n'est 'YOU' -> au moins un controllable
