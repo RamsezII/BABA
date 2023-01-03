@@ -2,7 +2,7 @@ import math
 import sortedcontainers.sortedset
 
 
-def euristique(etat):
+def heuristique(etat):
     return distances_min(etat)
 
 

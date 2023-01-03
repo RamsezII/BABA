@@ -4,9 +4,9 @@ import time
 
 from CORE.Etat import *
 from CORE.Move import move
-from IA.Euristiques import euristique
+from IA.Heuristiques import heuristique
 from IA.EtatIA import EtatIA
-from IA.ReadIA import readIA
+from ReadIA import readIA
 from IA.SaveIA import saveIA
 from UI.UI_pygame import *
 from UTIL.Path import *
@@ -65,7 +65,7 @@ if __name__ == "__main__":
                         etat.getDistances()
                     if etat not in ouverts and etat not in fermes:
                         etat.dir = dir
-                        etat.eur = euristique(etat)
+                        etat.eur = heuristique(etat)
                         etat.parent = courant
                         ouverts.add(etat)
 

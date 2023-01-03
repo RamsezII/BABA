@@ -1,5 +1,6 @@
 import pygame
 
+from UTIL.SysArgs import sysArgs
 from CORE.Etat import Etat
 from CORE.Move import move
 from IA.EtatIA import EtatIA
@@ -8,7 +9,19 @@ from UTIL.YXI import yxi
 
 
 if __name__ == "__main__":
-    etat = EtatIA("level_3.txt")
+    args = sysArgs("-fps", "-level")
+
+    if "-fps" in args:
+        fps = int(args["-fps"])
+    else:
+        fps = 0
+    
+    if "-level" in args:
+        levelname = args["-level"]
+    else:
+        levelname = input("level: ")
+
+    etat = EtatIA(levelname)
     screen = Screen(etat)
     fps = 30
     running = True
