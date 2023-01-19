@@ -2,6 +2,16 @@ pour jouer au jeu (besoin de pygame):
 python MainUI_player.py -level level_3.txt
 (avec level_3.txt le nom d'un niveau présent dans le dossier 'levels')
 
+Pour les utilisateur de IDE:
+dans le "Script path" vous mettez : votre_nom\...\BABA\CODE\MainUI_player.py (ou MainIA_UI)
+pour le Working Directory : votre_nom\...\BABA
+et lors de l'execution, dans la console ,vous pouvez choisir le niveau que vous souhaitez
+
+exemple : level_2.txt
+
+
+
+
 pour lancer le jeu en mode IA:
 (la solution sera sauvegardée dans le dossier 'IA_solutions')
 -avec interface:
