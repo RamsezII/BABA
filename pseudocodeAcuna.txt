@@ -1,0 +1,46 @@
+Pseudo-Code BABA Heuristique Arbres des lois : 
+
+Dans le niveau 2 :
+
+Nous avons PAS de WIN CLAIR, donc nous devons le former
+
+1er etape :
+Nous allons essayer de  coller le IS et le WIN 
+Sauf que nous avons pas ACCEES a la "piéce" pour faire ces deplacementse
+
+Car il y a une loi STOP qui nous empeche d'y acceder
+Nous regardons si nous avons ACCEES pour detruire cette loi 
+Afin d'avoir acces a l'autre pieces
+
+Si Oui alors on bouge un element de cette loi.
+
+2eme étape:
+
+Nous avons acces a la piece avec les lois IS et WIN
+Nous les mettons ensemble pour former "IS WIN"
+
+3eme etape:
+
+Il nous reste a trouver l'objet pour avoir un WIN CLAIR
+
+Nous avons 3 choix D'objet:
+    -BABA
+    -WALL
+    -FLAG
+
+Pour chaque objet on regarde si il ya deja cette objet dans le niveau
+
+Par exemple : 
+    -Est ce que on voir un objet BABA dans le niveau ? 
+        Non, donc on passe a l'objet suivant
+
+    -Est ce que on voit un objet WALL sur le niveau ? 
+        Oui, on en voit un
+            -le Probleme est que WALL est suivi d'un YOU, donc cela nous menerez a une defaite
+              donc on passe a l'objet suivant
+    -Est ce que on voit un objet FLAG dans le niveau ?
+        Oui, on en voit
+            -suivi d'un you ? Non
+            -Alors on déplace l'objet FLAG, pour former "FLAG IS WIN"
+
+Nous avons maintenant creer un "WIN CLAIR" qui est "FLAG IS WIN"

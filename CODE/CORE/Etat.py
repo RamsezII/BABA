@@ -3,7 +3,7 @@ from os.path import join as joinpath
 
 from CORE.Data import *
 from UTIL.Path import *
-from UTIL.YXI import yxi
+from UTIL.YXI import YXI
 
 
 class GETf(IntFlag):
@@ -24,11 +24,11 @@ class You():
 
 
 class Etat():
-    yxi_left = yxi(0,-1,-1)
-    yxi_right = yxi(0,1,1)
-    yxi_up: yxi = yxi(0,0,0)
-    yxi_down: yxi = yxi(0,0,0)
-    yxi_dirs = (yxi(0,0,0))
+    yxi_left = YXI(0,-1,-1)
+    yxi_right = YXI(0,1,1)
+    yxi_up: YXI = YXI(0,0,0)
+    yxi_down: YXI = YXI(0,0,0)
+    yxi_dirs = (YXI(0,0,0))
     h = w = count = 0
 
     def __init__(self, levelname):
@@ -55,8 +55,8 @@ class Etat():
                     self.grid.append(BABAf(1 << int(splits[i])))
 
         Etat.count = Etat.h*Etat.w
-        Etat.yxi_up = yxi(-1,0,-Etat.w)
-        Etat.yxi_down = yxi(1,0,Etat.w)
+        Etat.yxi_up = YXI(-1,0,-Etat.w)
+        Etat.yxi_down = YXI(1,0,Etat.w)
         Etat.yxi_dirs = (Etat.yxi_up, Etat.yxi_down, Etat.yxi_left, Etat.yxi_right)
 
         self.rules = 6*[BABAf.none]    
@@ -65,6 +65,11 @@ class Etat():
         self.yous = []
         self.wins = set()
         self.checkWinDefeat()
+    
+
+    def __iter__(self):
+        for i in range(self.count):
+            yield (i2yxi(i),self.grid[i])
     
 
     def pullChange(self):
@@ -182,10 +187,10 @@ class Etat():
 
 
 def i2yxi(i):
-    return yxi(i // Etat.w, i % Etat.w, i)
+    return YXI(i // Etat.w, i % Etat.w, i)
 
 def yx2yxi(y,x):
-    return yxi(y, x, y*Etat.w + x)
+    return YXI(y, x, y*Etat.w + x)
 
 def isInBounds(yxi):
     return yxi.y>=0 and yxi.x<Etat.w and yxi.y<Etat.h and yxi.x>=0

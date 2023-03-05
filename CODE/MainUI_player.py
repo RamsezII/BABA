@@ -5,7 +5,7 @@ from CORE.Etat import Etat
 from CORE.Move import move
 from IA.EtatIA import EtatIA
 from UI.UI_pygame import Screen
-from UTIL.YXI import yxi
+from UTIL.YXI import YXI
 
 
 if __name__ == "__main__":
@@ -27,7 +27,7 @@ if __name__ == "__main__":
     running = True
 
     while running:
-        dir_yxi: yxi = yxi(0,0,0)
+        dir_yxi: YXI = YXI(0,0,0)
         dirflag = False
         for event in pygame.event.get():
             if event.type == pygame.QUIT:

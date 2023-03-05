@@ -4,7 +4,7 @@ import time
 from CORE.Etat import *
 from CORE.Move import move
 from IA.EtatIA import EtatIA
-from IA.Heuristiques import heuristique
+from IA.Heuristiques.Distances import heuristique
 from IA.SaveIA import saveIA
 from UTIL.SysArgs import sysArgs
 
@@ -46,7 +46,7 @@ if __name__ == "__main__":
                         etat.getDistances()
                     if etat not in ouverts and etat not in fermes:
                         etat.dir = dir
-                        etat.eur = heuristique(etat)
+                        etat.eur = etat.heuristique()
                         etat.parent = courant
                         ouverts.add(etat)
         iterations += 1

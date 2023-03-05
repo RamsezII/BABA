@@ -1,0 +1,18 @@
+Tableau de distances
+
+- Lectures et usages :
+    - Connaissance de tous les plus courts chemins vers une case cible.
+    - Possibilité d'identifier tout ce qui est atteignable depuis les cases du joueur. Notamment en cas d'enfermement, avec quoi est-il enfermé.
+    - Possibilité de combiner les tableaux de distances de plusieurs cibles (en lisant la valeur minimum de chaque case)
+
+- L'algorithme se déroule de la manière suivante : 
+    1 - départ d'une case
+    2 - ajout de ses voisines dans un premier ensemble (toutes directions sauf: objets solides, limites du niveau, cases visitées)
+    3 - parcours des cases ajoutées dans le premier ensemble
+    4 - ajout de leurs voisines valides dans un nouvel ensemble
+    5 - l'ancien ensemble devient le nouvel ensemble
+    6 - retour en étape 3
+    7 - arrêt quand plus aucun voisin non-visité n'est valide
+
+- Chaque case étant visitée soit jamais soit une seule fois, la complexité de cet algo est linéaire dans le pire cas, et proche de constante quand la cible (case de départ) s'avère étroitement enfermée.
+- Si on commence l'algo par remplir nos cases de la valeur infinie, les cases qui sont restées infinies après l'exécution sont les cases inatteignables depuis la cible.

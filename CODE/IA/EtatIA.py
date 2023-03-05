@@ -6,6 +6,7 @@ class EtatIA(Etat):
     def __init__(self, levelname):
         super().__init__(levelname)
         self.eur = math.inf
+        self.cout = 0
         self.getDistances()
 
 
@@ -35,7 +36,7 @@ class EtatIA(Etat):
 
     def logYousDistances(self):
         for you in self.yous:
-            print("{} | {}".format(you, self.dists[you.pos.i]))
+            print(you, '|', self.dists[you.pos.i])
 
 
     def getDistances(self):
@@ -44,10 +45,13 @@ class EtatIA(Etat):
         depth = 0
         nexts = self.wins.copy()
         while len(nexts)!=0:
+            # ouverts
             nexts2 = set()
+            # parcours des départs (wins)
             for n in nexts:
                 if self.dists[n.i] == math.inf:
                     self.dists[n.i] = depth
+                    # si pas de collision, parcours et ajout des voisins aux prochaines cases à parcourir dans un ensemble pour éviter duplicat
                     if self.grid[n.i] & self.m_cols == 0:
                         for dir in Etat.yxi_dirs:
                             n2 = n+dir
@@ -55,41 +59,20 @@ class EtatIA(Etat):
                                 nexts2.add(n2)
             depth += 1
             nexts = nexts2
+    
 
+    def getLawTree(self):
+        pass
 
-    def getDistances_OLD(self):
-        self.dists = self.count*[math.inf]
-        for win in self.wins:
-            visits = self.count*[False]
-            visits[win.i] = True
-            depth = 0
-            nexts = set()
-            nexts.add(win.i)
-            while len(nexts)!=0:
-                nexts2 = set()
-                for n in nexts:
-                    if self.grid[n] & self.m_cols:
-                        self.dists[n] = -1
-                    else:
-                        self.dists[n] = min(depth, self.dists[n])
-                        for dir in Etat.yxi_dirs:
-                            if self.isInBounds(win+dir):
-                                n2 = n+dir.i
-                                if not visits[n2]:
-                                    nexts2.add(n+dir.i)
-                                    visits[n2] = True
-                depth += 1
-                nexts = nexts2
 
 
 """
- -  getDistances:
-     -  ouverts
-     -  fermes
-     -  sommet de depart
-     -  parcours des fils (directions):
-         -  si collision:
-             -  marqué -1
-         -  sinon, si jamais parcouru:
-             -  ajouté à ouverts
+- ARBRE DES LOIS : 
+    recherche d'un etat avec WIN clair et geographiquement atteignable
+
+- quels mots peuvent bouger, quelles lois peuvent changer
+    - possible que pour la racine...
+
+- generer l'arbre des lois en largeur sans reevaluer de combinaison
+    - 
 """
