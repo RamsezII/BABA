@@ -20,6 +20,11 @@ class YXI():
 
     def iszero(self):
         return self.y == self.x == self.i == 0
+    
+    def __iter__(self):
+        yield self.y
+        yield self.x
+        yield self.i
 
 
 

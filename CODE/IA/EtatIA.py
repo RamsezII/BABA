@@ -7,7 +7,7 @@ class EtatIA(Etat):
         super().__init__(levelname)
         self.eur = math.inf
         self.cout = 0
-        self.getDistances()
+        self.m_get |= GETf.getPaths
 
 
     def __lt__(self, other):
@@ -37,28 +37,6 @@ class EtatIA(Etat):
     def logYousDistances(self):
         for you in self.yous:
             print(you, '|', self.dists[you.pos.i])
-
-
-    def getDistances(self):
-        self.m_get &= ~GETf.getPaths
-        self.dists = self.count*[math.inf]
-        depth = 0
-        nexts = self.wins.copy()
-        while len(nexts)!=0:
-            # ouverts
-            nexts2 = set()
-            # parcours des départs (wins)
-            for n in nexts:
-                if self.dists[n.i] == math.inf:
-                    self.dists[n.i] = depth
-                    # si pas de collision, parcours et ajout des voisins aux prochaines cases à parcourir dans un ensemble pour éviter duplicat
-                    if self.grid[n.i] & self.m_cols == 0:
-                        for dir in Etat.yxi_dirs:
-                            n2 = n+dir
-                            if self.isInBounds(n2) and self.dists[n2.i] == math.inf:
-                                nexts2.add(n2)
-            depth += 1
-            nexts = nexts2
     
 
     def getLawTree(self):

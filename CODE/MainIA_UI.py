@@ -1,4 +1,3 @@
-import math
 from sortedcontainers.sortedlist import SortedList
 import time
 
@@ -6,8 +5,6 @@ from CORE.Etat import *
 from CORE.Move import move
 from IA.EtatIA import EtatIA
 from IA.Heuristiques import Heuristique
-import IA.Heuristiques.WinClair
-import IA.Heuristiques.WinPresqueClair
 from IA.SaveIA import saveIA
 from UI.UI_pygame import *
 from UTIL.Path import *
@@ -25,7 +22,8 @@ if __name__ == "__main__":
     if "-level" in args:
         levelname = args["-level"]
     else:
-        levelname = input("level: ")
+        # levelname = input("level: ")
+        levelname = "level_IA_01.txt"
 
     etat = EtatIA(levelname)
     screen = Screen(etat)
@@ -63,8 +61,6 @@ if __name__ == "__main__":
                 etat.cout = 1 + courant.cout
                 move(etat, dir)
                 if etat.pullChange():
-                    if etat.m_get & GETf.getPaths:
-                        etat.getDistances()
                     if etat not in fermes and etat not in ouverts:
                         etat.dir = dir
                         # etat.eur = etat.cout
