@@ -5,6 +5,7 @@ import time
 from CORE.Etat import *
 from CORE.Move import move
 from IA.EtatIA import EtatIA
+from IA.Heuristiques import Heuristique
 import IA.Heuristiques.WinClair
 import IA.Heuristiques.WinPresqueClair
 from IA.SaveIA import saveIA
@@ -68,12 +69,7 @@ if __name__ == "__main__":
                         etat.dir = dir
                         # etat.eur = etat.cout
                         etat.eur = 0
-                        if len(etat.wins) != 0:
-                            etat.eur += IA.Heuristiques.WinClair.heuristique_moy(etat)
-                        elif IA.Heuristiques.WinPresqueClair.eligible(etat):
-                            etat.eur += IA.Heuristiques.WinPresqueClair.heuristique(etat)
-                        else:
-                            etat.eur += math.inf
+                        etat.eur += Heuristique.heuristique(etat)
                         etat.parent = courant
                         ouverts.add(etat)
 

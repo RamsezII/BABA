@@ -1,15 +1,14 @@
 import math
 
-from IA.EtatIA import EtatIA
-import IA.Heuristiques.WinClair
-import IA.Heuristiques.WinPresqueClair
+import IA.Heuristiques.WinClair as WinClair
+import IA.Heuristiques.WinPresqueClair as WinPresqueClair
     
 
-def heuristique(self:EtatIA):
+def heuristique(self):
     if len(self.wins) != 0:
-        self.eur = IA.Heuristiques.WinClair.heuristique_moy(self)
-    elif IA.Heuristiques.WinPresqueClair.eligible(self):
-        self.eur = IA.Heuristiques.WinPresqueClair.heuristique(self)
+        value = WinClair.heuristique_moy(self)
+    elif WinPresqueClair.eligible(self):
+        value = WinPresqueClair.heuristique(self)
     else:
-        self.eur = math.inf
-    return self.eur
+        value = math.inf
+    return value

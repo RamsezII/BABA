@@ -43,7 +43,7 @@ if __name__ == "__main__":
                 move(etat, dir)
                 if etat.pullChange():
                     if etat.m_get & GETf.getPaths:
-                        etat.getDistances()
+                        etat.updateDistances()
                     if etat not in ouverts and etat not in fermes:
                         etat.dir = dir
                         etat.eur = etat.heuristique()
