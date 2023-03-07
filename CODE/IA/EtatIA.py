@@ -7,7 +7,7 @@ class EtatIA(Etat):
         super().__init__(levelname)
         self.eur = math.inf
         self.cout = 0
-        self.m_get |= GETf.getPaths
+        self.refreshMask |= GETf.getPaths
 
 
     def __lt__(self, other):

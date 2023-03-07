@@ -37,7 +37,7 @@ class Etat():
         self.defeat = False
         self.parent: Etat = None
         self.m_cols = self.m_yous = BABAf.none
-        self.m_get = GETf.none
+        self.refreshMask = GETf.none
         self.grid = [BABAf.none]
 
         levelpath = os.path.join(rootpath(), "levels", levelname)
@@ -114,7 +114,7 @@ class Etat():
 
 
     def getRules(self):
-        self.m_get &= ~GETf.getRules
+        self.refreshMask &= ~GETf.getRules
         # un bitmask par objet (6 au total). si "BABA IS YOU" est visible dans le niveau, le flag 'YOU' dans le bitmask de 'baba' dans 'self.rules' sera à 1
         # dans le cas d'une transformation, par exemple "BABA IS ROCK", toutes les cases sont parcourues et chaque case où le flag 'baba' est à 1 est mis à 0 et le flag 'rock' est mis à 1
         oldrules = self.rules.copy()
@@ -151,7 +151,7 @@ class Etat():
 
 
     def checkWinDefeat(self):
-        self.m_get &= ~(GETf.getYous | GETf.getWins)
+        self.refreshMask &= ~(GETf.getYous | GETf.getWins)
         # on gagne si un des flags représentant les objets d'une case, a son correspondant dans 'self.rules' marqué comme 'YOU' et 'WIN'
         # on perd si aucune case n'a d'objet correspondant dans 'self.rules' marqué comme 'YOU'
         self.defeat = True

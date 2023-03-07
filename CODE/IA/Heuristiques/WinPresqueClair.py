@@ -5,6 +5,8 @@ from IA.EtatIA import EtatIA
 
 def eligible(self:EtatIA, dists:list[int]):
     words = set()
+    objs = set()
+    pairs = set()
     for yxi,flags in self:
         pass
     return False
