@@ -1,16 +1,24 @@
-import math
 
-from IA.EtatIA import EtatIA
+from IA.EtatIA import *
+import IA.Smart as Smart
+from UTIL.Util import *
+
+reachables = BABAf(0)
+
+def heuristique(etatIA:EtatIA):    
+    value = MAX_INT
+
+    if GETf.getDistYou in etatIA.refreshMask:
+        global reachables
+        etatIA.distances_you, reachables = Smart.getDistances(etatIA, etatIA.yous)
+
+    for pair in pairs:
+        if pair[0] in reachables and pair[1] in reachables:
+            # l'heuristique du win presque clair est envisagée
 
 
-def eligible(self:EtatIA, dists:list[int]):
-    words = set()
-    objs = set()
-    pairs = set()
-    for yxi,flags in self:
-        pass
-    return False
 
-
-def heuristique(self:EtatIA, dists:list[int]):
-    return math.inf
+            break
+        
+    etatIA.refreshMask &= ~GETf.getDistYou
+    return value

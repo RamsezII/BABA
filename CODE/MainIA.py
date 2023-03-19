@@ -42,7 +42,7 @@ if __name__ == "__main__":
                 etat = courant.clone()
                 move(etat, dir)
                 if etat.pullChange():
-                    if etat.refreshMask & GETf.getPaths:
+                    if etat.refreshMask & GETf.getDistWins:
                         etat.updateDistances()
                     if etat not in ouverts and etat not in fermes:
                         etat.dir = dir

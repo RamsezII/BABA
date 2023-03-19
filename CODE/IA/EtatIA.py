@@ -7,7 +7,9 @@ class EtatIA(Etat):
         super().__init__(levelname)
         self.eur = math.inf
         self.cout = 0
-        self.refreshMask |= GETf.getPaths
+        self.distances_wins:list[int]
+        self.distances_you:list[int]
+        self.refreshMask |= GETf.getDistWins | GETf.getDistYou
 
 
     def __lt__(self, other):

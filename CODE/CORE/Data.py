@@ -78,6 +78,13 @@ word2obj = {
     BABAf.BABA: 5,
 }
 
+pairs = [
+    (BABAf.BABA, BABAf.baba),
+    (BABAf.FLAG, BABAf.flag),
+    (BABAf.WALL, BABAf.wall),
+    (BABAf.ROCK, BABAf.rock),
+]
+
 
 if __name__ == "__main__":
 

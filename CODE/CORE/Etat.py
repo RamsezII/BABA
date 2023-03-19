@@ -1,5 +1,4 @@
 import copy
-from os.path import join as joinpath
 
 from CORE.Data import *
 from UTIL.Path import *
@@ -11,16 +10,8 @@ class GETf(IntFlag):
     getWins = 1 << 0
     getYous = 1 << 1
     getRules = 1 << 2
-    getPaths = 1 << 3
-    
-
-class You():
-    def __init__(self, pos, flag):
-        self.pos = pos
-        self.flag = flag
-    
-    def __repr__(self):
-        return "{} | {}".format(self.pos, self.flag)
+    getDistWins = 1 << 3
+    getDistYou = 1 << 4
 
 
 class Etat():
@@ -62,7 +53,7 @@ class Etat():
         self.rules = 6*[BABAf.none]    
         self.getRules()
         
-        self.yous = []
+        self.yous = []  # parcouru dans un sens ou dans l'autre selon direction
         self.wins = set()
         self.checkWinDefeat()
     
@@ -162,28 +153,25 @@ class Etat():
             you = False
             win = False
             pos = i2yxi(k)
-            for i,flag in flags.flags(BABAb.first_obj, BABAb.last_obj):
+            for i,_ in flags.flags(BABAb.first_obj, BABAb.last_obj):
                 rule = self.rules[i-BABAb.first_obj]
-                if rule & BABAf.YOU:
+                if BABAf.YOU in rule:
                     you = True
                     self.defeat = False
-                    self.yous.append(You(pos,flag))
-                if rule & BABAf.WIN:
+                    self.yous.append(pos)
+                if BABAf.WIN in rule:
                     win = True
                     self.wins.add(pos)
             if you and win:
                 self.win = True
                 break
-    
+
 
     def getYous(self):
         self.yous.clear()
         for k,flags in enumerate(self.grid):
-            if flags & self.m_yous:
-                for i,flag in flags.flags(BABAb.first_obj, BABAb.last_obj):
-                    self.yous.append(You(i2yxi(k),flag))
-
-
+            if flags in self.m_yous:
+                self.yous.append(i2yxi(k))
 
 
 def i2yxi(i):

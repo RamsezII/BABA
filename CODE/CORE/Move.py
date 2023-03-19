@@ -1,23 +1,23 @@
 from CORE.Data import *
-from CORE.Etat import GETf
+from CORE.Etat import *
 
 
-def deplace(self, flag, k, dir_i):
+def deplace(self:Etat, flag, k, dir_i):
     self.grid[k] &= ~flag
     self.grid[k+dir_i] |= flag
     self.changed = True
 
 
-def push(self, pos, dir):
+def push(self:Etat, pos, dir):
     flags = self.grid[pos.i]
     if flags != 0:
-        self.m_get |= GETf.getPaths
+        self.refreshMask |= GETf.getDistWins | GETf.getDistYou
         obstacles = False
         # détecter obstacle non déplaçable
         for i,_ in flags.flags(0, BABAb.last_all):
             if i < BABAb.first_obj:  # words
                 obstacles = True
-                self.m_get |= GETf.getRules
+                self.refreshMask |= GETf.getRules
             else:  # objects
                 rule = self.rules[i-BABAb.first_obj]
                 if rule & BABAf.PUSH:
@@ -35,8 +35,7 @@ def push(self, pos, dir):
     return True
 
 
-def move(self, dir):
-    self.m_get = GETf.none
+def move(self:Etat, dir):
     self.dir = dir
     count = len(self.yous)
     for k in range(count):
@@ -45,12 +44,17 @@ def move(self, dir):
             you = self.yous[count-k-1]
         else:
             you = self.yous[k]
-        if self.isInBounds(you.pos+dir) and push(self, you.pos+dir, dir):
-            deplace(self, you.flag, you.pos.i, dir.i)
-            self.m_get |= GETf.getYous | GETf.getWins
-    if self.m_get & GETf.getRules:
+        if self.isInBounds(you+dir) and push(self, you+dir, dir):
+            for flag in self.grid[you.i]:
+                if flag in self.m_yous:
+                    deplace(self, flag, you.i, dir.i)
+                    self.refreshMask |= GETf.getYous | GETf.getWins
+    if self.refreshMask & GETf.getRules:
+        self.refreshMask &= ~GETf.getRules
         self.getRules()
-    if self.m_get & GETf.getWins:
+    if self.refreshMask & GETf.getWins:
+        self.refreshMask &= ~(GETf.getWins | GETf.getYous)
         self.checkWinDefeat()
-    if self.m_get & GETf.getYous:
+    if self.refreshMask & GETf.getYous:
+        self.refreshMask &= ~GETf.getYous
         self.getYous()

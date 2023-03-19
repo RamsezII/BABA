@@ -18,14 +18,3 @@ L'euristique donne la distance de Manhattan entre le couple YOU/WIN le plus proc
         -   explorer leurs combinaisons possibles sous formes d'abre dont aucune branche ne contient
             de moment où personne n'est 'YOU' -> au moins un controllable
         -   les noter selon les hypothénuses successives des déplacements qu'ils nécessitent
-
-
-
-
--- A faire:
-    - squeezer le nombre d'itérations partout où c'est possible
-    - utiliser 2A* pour détecter l'isolement
-    - test basiques de collision les plus évidentes permet de connaître au moins une partie des lois immutables d'un état:
-        - dans un coin de map
-        - en longement d'un mur sans virage?
-    - un code pour générer des solutions, un autre pour les tester

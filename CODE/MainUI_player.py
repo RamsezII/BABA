@@ -19,7 +19,8 @@ if __name__ == "__main__":
     if "-level" in args:
         levelname = args["-level"]
     else:
-        levelname = input("level: ")
+        # levelname = input("level: ")
+        levelname = "level_WPC1.txt"
 
     etat = EtatIA(levelname)
     screen = Screen(etat)
