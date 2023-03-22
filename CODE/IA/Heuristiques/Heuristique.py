@@ -3,8 +3,8 @@ import math
 from CORE.Etat import *
 from IA.EtatIA import *
 import IA.Heuristiques.WinClair as WinClair
-import IA.Heuristiques.WinPresqueClair as WinPresqueClair
-import IA.Smart as Smart
+# import IA.Heuristiques.WinPresqueClair as WinPresqueClair
+import IA.Heuristiques.WPC_test as WinPresqueClair
 from UTIL.Util import *
 
 def heuristique(etatIA:EtatIA):
