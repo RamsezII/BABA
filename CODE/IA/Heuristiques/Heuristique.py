@@ -1,4 +1,3 @@
-import math
 
 from CORE.Etat import *
 from IA.EtatIA import *
@@ -28,6 +27,5 @@ def heuristique(etatIA:EtatIA):
 
         # enfermé avec une seule loi?
 
-        # sinon impossible de jauger état
-        else:
-            return math.inf
+    # sinon impossible de jauger état    
+    return value

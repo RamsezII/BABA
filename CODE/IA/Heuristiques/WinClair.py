@@ -1,4 +1,3 @@
-import math
 
 import sortedcontainers.sortedset
 
@@ -16,7 +15,7 @@ def heuristique(etatIA:EtatIA):
 
 
 def heuristique_min(yous, distances:list):
-    dist = math.inf
+    dist = MAX_INT
     for you in yous:
         dist = min(dist, distances[you.i])
     return dist

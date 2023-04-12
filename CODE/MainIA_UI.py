@@ -9,6 +9,7 @@ from IA.SaveIA import saveIA
 from UI.UI_pygame import *
 from UTIL.Path import *
 from UTIL.SysArgs import sysArgs
+from UTIL.Util import MAX_INT
 
 
 if __name__ == "__main__":
@@ -59,16 +60,16 @@ if __name__ == "__main__":
         else:
             for dir in Etat.yxi_dirs:
                 etat = courant.copy()
-                etat.cout = 1 + courant.cout
                 move(etat, dir)
                 if etat.pullChange():
                     if etat not in fermes and etat not in ouverts:
-                        etat.dir = dir
-                        # etat.eur = etat.cout
-                        etat.eur = 0
-                        etat.eur += Heuristique.heuristique(etat)
-                        etat.parent = courant
-                        ouverts.add(etat)
+                        heur = etat.heur = Heuristique.heuristique(etat)
+                        if heur < MAX_INT:
+                            etat.parent = courant
+                            ouverts.add(etat)
+                        # else:
+                            # ouverts.clear()
+                            # break
 
     t1 = time.time()
     print("finish time: " + str(t1-t0))

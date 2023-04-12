@@ -46,7 +46,7 @@ if __name__ == "__main__":
                         etat.updateDistances()
                     if etat not in ouverts and etat not in fermes:
                         etat.dir = dir
-                        etat.eur = etat.heuristique()
+                        etat.heur = etat.heuristique()
                         etat.parent = courant
                         ouverts.add(etat)
         iterations += 1

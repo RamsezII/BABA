@@ -14,6 +14,7 @@ def push(self:Etat, pos, dir):
     if flags != 0:
         if self.distances:
             self.distances = {}
+            self.distYous = None
         obstacles = False
         # détecter obstacle non déplaçable
         for i,_ in flags.flags(0, BABAb.last_all):

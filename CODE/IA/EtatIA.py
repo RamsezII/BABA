@@ -1,30 +1,30 @@
-import math
 
 from CORE.Etat import *
+from UTIL.Util import *
 
 class EtatIA(Etat):
     def __init__(self, levelname):
         super().__init__(levelname)
-        self.eur = math.inf
-        self.cout = 0
+        self.heur = MAX_INT
         self.reachables:dict = {}
         self.distances:dict = {}
+        self.distYous:list
 
 
     def __lt__(self, other):
-        return self.eur < other.eur
+        return self.heur < other.heur
 
     def __le__(self, other):
-        return self.eur <= other.eur
+        return self.heur <= other.heur
 
     def __gt__(self, other):
-        return self.eur > other.eur
+        return self.heur > other.heur
 
     def __ge__(self, other):
-        return self.eur >= other.eur
+        return self.heur >= other.heur
 
     def __ne__(self, other):
-        return self.eur != other.eur
+        return self.heur != other.heur
     
 
     def getLawTree(self):

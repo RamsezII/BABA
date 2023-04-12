@@ -26,7 +26,7 @@ def smartDistances(etatIA:EtatIA):
         return etatIA.distances[BABAf.YOU]
     
     etatIA.reachables = {}
-    distances = etatIA.distances[BABAf.YOU] = etatIA.count*[MAX_INT]
+    distances = etatIA.distYous = etatIA.distances[BABAf.YOU] = etatIA.count*[MAX_INT]
     depth = 0
     courants = etatIA.yous
     while len(courants) != 0:
@@ -56,7 +56,7 @@ def smartDistances(etatIA:EtatIA):
 def calculDistances(etatIA:EtatIA, targets):
     distances = etatIA.distances[targets] = etatIA.count*[MAX_INT]
     depth = 0
-    
+
     if isinstance(targets, int):
         courants = [targets]
     else:

@@ -65,6 +65,15 @@ class BABAf(IntFlag):
                 return f"{i:02d}"
         return "??"
 
+class DIRf(IntFlag):
+    none = 0
+    up = 1 << 0
+    down = 1 << 1
+    left = 1 << 2
+    right = 1 << 3
+    up_down = up | down
+    left_right = left | right    
+
 
 words_mask = BABAf((1<<BABAb.first_obj)-1)
 objects_mask = words_mask ^ BABAf((1<<BABAb.last_all)-1)

@@ -13,10 +13,10 @@ class GETf(IntFlag):
 
 
 class Etat():
-    yxi_left = YXI(0,-1,-1)
-    yxi_right = YXI(0,1,1)
     yxi_up: YXI = YXI(0,0,0)
     yxi_down: YXI = YXI(0,0,0)
+    yxi_left = YXI(0,-1,-1)
+    yxi_right = YXI(0,1,1)
     yxi_dirs = (YXI(0,0,0))
     h = w = count = 0
 
