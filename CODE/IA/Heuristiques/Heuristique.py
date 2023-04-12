@@ -4,7 +4,8 @@ from CORE.Etat import *
 from IA.EtatIA import *
 import IA.Distances as Distances
 import IA.Heuristiques.WinClair as WinClair
-import IA.Heuristiques.WPC_test as WinPresqueClair
+import IA.Heuristiques.WinPresqueClair as WinPresqueClair
+# import IA.Heuristiques.WPC_test as WinPresqueClair
 from UTIL.Util import *
 
 def heuristique(etatIA:EtatIA):

@@ -156,7 +156,7 @@ class Etat():
                     self.yous.append(pos)
                 if BABAf.WIN in rule:
                     win = True
-                    self.wins.append(pos)
+                    self.wins.append(pos.i)
             if you and win:
                 self.win = True
                 break

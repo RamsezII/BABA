@@ -1,23 +1,26 @@
 
+from CORE.Data import *
 from IA.EtatIA import *
-import IA.Smart as Smart
+import IA.Distances as Distances
 from UTIL.Util import *
-
-reachables = BABAf(0)
 
 
 def heuristique(etatIA:EtatIA):    
     value = MAX_INT
 
-    if GETf.getDistYou in etatIA.refreshMask:
-        global reachables
-        etatIA.distances_you, reachables = Smart.getDistances(etatIA, etatIA.yous)
+    # test 1, pousser FLAG vers flag, deux objets qui sont présents dans le niveau IA_lvl_01.txt
 
-    for pair in pairs:
-        if pair[0] in reachables and pair[1] in reachables:
-            # you->WIN + WIN->IS + 2 * IS->win
+    if BABAf.FLAG in etatIA.reachables and BABAf.flag in etatIA.reachables:
+        pos_target = etatIA.reachables[BABAf.flag][0]
+        dists_target = Distances.getDistances(etatIA, pos_target.i)
+        pos_pushed = etatIA.reachables[BABAf.FLAG][0]
+        dist_pushed = Distances.getDistances(etatIA, pos_pushed.i)
 
-            break
+        dist_yous = MAX_INT
+        for you in etatIA.yous:
+            dist_yous = min(dist_yous, Distances.getDistance(dist_pushed, you))
         
-    etatIA.refreshMask &= ~GETf.getDistYou
+        value = dist_yous + Distances.getDistance(dists_target, pos_pushed)
+        
     return value
+

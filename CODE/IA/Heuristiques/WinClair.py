@@ -15,14 +15,14 @@ def heuristique(etatIA:EtatIA):
     return MAX_INT
 
 
-def heuristique_min(yous, distances):
+def heuristique_min(yous, distances:list):
     dist = math.inf
     for you in yous:
-        dist = minIndex(dist, distances[you.i])
+        dist = min(dist, distances[you.i])
     return dist
 
 
-def heuristique_moy(yous, distances):
+def heuristique_moy(yous, distances:list):
     dists = sortedcontainers.sortedset.SortedSet()
     for you in yous:
         dists.add(distances[you.i])
