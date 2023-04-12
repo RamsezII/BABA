@@ -4,32 +4,28 @@ import sortedcontainers.sortedset
 
 from CORE.Etat import *
 from IA.EtatIA import *
+import IA.Distances as Distances
 from UTIL.Util import *
-import IA.Smart as Smart
 
 
 def heuristique(etatIA:EtatIA):
-    if GETf.getDistWins in etatIA.refreshMask:
-        etatIA.refreshMask &= ~GETf.getDistWins
-        etatIA.distances_wins = Smart.getDistances(etatIA, etatIA.wins)
-    
-    for you in etatIA.yous:
-        if etatIA.distances_wins[you.i] < MAX_INT:
-            return heuristique_moy(etatIA)
+    if len(etatIA.wins) > 0:
+        distances = Distances.getDistances(etatIA, etatIA.wins)
+        return heuristique_min(etatIA.yous, distances)
     return MAX_INT
 
 
-def heuristique_min(etatIA:EtatIA):
+def heuristique_min(yous, distances):
     dist = math.inf
-    for you in etatIA.yous:
-        dist = min(dist, etatIA.distances_wins[you.pos.i])
+    for you in yous:
+        dist = minIndex(dist, distances[you.i])
     return dist
 
 
-def heuristique_moy(etatIA:EtatIA):
+def heuristique_moy(yous, distances):
     dists = sortedcontainers.sortedset.SortedSet()
-    for you in etatIA.yous:
-        dists.add(etatIA.distances_wins[you.i])
+    for you in yous:
+        dists.add(distances[you.i])
     count = len(dists)    
     man = 0
     for i,dist in enumerate(dists):

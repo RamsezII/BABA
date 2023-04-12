@@ -70,6 +70,13 @@ words_mask = BABAf((1<<BABAb.first_obj)-1)
 objects_mask = words_mask ^ BABAf((1<<BABAb.last_all)-1)
 
 word2obj = {
+    BABAf.BABA : BABAf.baba,
+    BABAf.WALL : BABAf.wall,
+    BABAf.ROCK : BABAf.rock,
+    BABAf.FLAG : BABAf.flag,
+}
+
+word2rule = {
     BABAf.WALL: 0,
     BABAf.LAVA: 1,
     BABAf.WATER: 2,

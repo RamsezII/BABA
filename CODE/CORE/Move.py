@@ -1,5 +1,6 @@
 from CORE.Data import *
 from CORE.Etat import *
+import CORE.Etat
 
 
 def deplace(self:Etat, flag, k, dir_i):
@@ -11,7 +12,8 @@ def deplace(self:Etat, flag, k, dir_i):
 def push(self:Etat, pos, dir):
     flags = self.grid[pos.i]
     if flags != 0:
-        self.refreshMask |= GETf.getDistWins | GETf.getDistYou
+        if self.distances:
+            self.distances = {}
         obstacles = False
         # détecter obstacle non déplaçable
         for i,_ in flags.flags(0, BABAb.last_all):
@@ -27,7 +29,7 @@ def push(self:Etat, pos, dir):
         if obstacles:                                        
             # récursivité pour éviter piétinement (push des cases suivantes avant push immédiat)
             pos2 = pos+dir
-            if not self.isInBounds(pos2) or not push(self, pos2, dir):
+            if not CORE.Etat.isInBounds(pos2) or not push(self, pos2, dir):
                 return False                
             # pousser cette case (donc recalcul des chemins)
             for _,flag in flags.flags(0, BABAb.last_all):
@@ -44,7 +46,7 @@ def move(self:Etat, dir):
             you = self.yous[count-k-1]
         else:
             you = self.yous[k]
-        if self.isInBounds(you+dir) and push(self, you+dir, dir):
+        if CORE.Etat.isInBounds(you+dir) and push(self, you+dir, dir):
             for flag in self.grid[you.i]:
                 if flag in self.m_yous:
                     deplace(self, flag, you.i, dir.i)

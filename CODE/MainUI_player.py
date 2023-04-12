@@ -52,7 +52,7 @@ if __name__ == "__main__":
         
         if running:
             if not (etat.win or etat.defeat or dir_yxi.iszero()):
-                clone = etat.clone()
+                clone = etat.copy()
                 move(clone, dir_yxi)
                 if clone.changed:
                     clone.parent = etat

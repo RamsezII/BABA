@@ -7,9 +7,8 @@ class EtatIA(Etat):
         super().__init__(levelname)
         self.eur = math.inf
         self.cout = 0
-        self.distances_wins:list[int]
-        self.distances_you:list[int]
-        self.refreshMask |= GETf.getDistWins | GETf.getDistYou
+        self.reachables:dict = {}
+        self.distances:dict = {}
 
 
     def __lt__(self, other):
@@ -26,19 +25,6 @@ class EtatIA(Etat):
 
     def __ne__(self, other):
         return self.eur != other.eur
-    
-
-    def logDistances(self):
-        for j in range(Etat.h):
-            log = ""
-            for i in range(Etat.w):
-                log += "{:^5}".format(self.dists[yx2yxi(j,i).i])
-            print(log)
-    
-
-    def logYousDistances(self):
-        for you in self.yous:
-            print(you, '|', self.dists[you.pos.i])
     
 
     def getLawTree(self):

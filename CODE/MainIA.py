@@ -39,7 +39,7 @@ if __name__ == "__main__":
             break
         else:
             for dir in Etat.yxi_dirs:
-                etat = courant.clone()
+                etat = courant.copy()
                 move(etat, dir)
                 if etat.pullChange():
                     if etat.refreshMask & GETf.getDistWins:
