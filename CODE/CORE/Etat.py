@@ -54,6 +54,7 @@ class Etat():
         self.yous = []  # l'ordre est important pour les YOU
         self.wins = set()
         self.checkWinDefeat()
+        self.distances:dict = None
     
 
     def __iter__(self):

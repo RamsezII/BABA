@@ -48,7 +48,7 @@ def move(self:Etat, dir):
         else:
             you = self.yous[k]
         if CORE.Etat.isInBounds(you+dir) and push(self, you+dir, dir):
-            for flag in self.grid[you.i]:
+            for _,flag in self.grid[you.i].flags(0, BABAb.last_all):
                 if flag in self.m_yous:
                     deplace(self, flag, you.i, dir.i)
                     self.refreshMask |= GETf.getYous | GETf.getWins

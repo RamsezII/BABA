@@ -5,6 +5,7 @@ import IA.Distances as Distances
 import IA.Heuristiques.WinClair as WinClair
 import IA.Heuristiques.WinPresqueClair as WinPresqueClair
 # import IA.Heuristiques.WPC_test as WinPresqueClair
+import IA.Heuristiques.Enfermement as Enfermement
 from UTIL.Util import *
 
 def heuristique(etatIA:EtatIA):
@@ -26,6 +27,9 @@ def heuristique(etatIA:EtatIA):
             return value
 
         # enfermé avec une seule loi?
+        value = Enfermement.heuristique(etatIA)
+        if value < MAX_INT:
+            return value
 
     # sinon impossible de jauger état    
     return value
