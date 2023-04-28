@@ -6,9 +6,7 @@ import IA.Distances as Distances
 from UTIL.Util import *
 
 
-def heuristique(etatIA:EtatIA):    
-
-    value = MAX_INT
+def heuristique(etatIA:EtatIA)->int:
 
     if BABAf.WIN in etatIA.reachables and BABAf.IS in etatIA.reachables:
         pos_win = etatIA.reachables[BABAf.WIN][0]
@@ -76,7 +74,6 @@ def heuristique(etatIA:EtatIA):
                         heur += Distances.getDistance(dists_winClair, IS_pos)
                             
                         return heur
-                        value = min(value, heur)
         
-    return value
+    return MAX_INT
 

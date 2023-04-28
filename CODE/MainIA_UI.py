@@ -26,6 +26,7 @@ if __name__ == "__main__":
         # levelname = input("level: ")
         # levelname = "level_IA_01.txt"
         levelname = "level_WPC1.txt"
+        # levelname = "mithian_test.txt"
 
     etat = EtatIA(levelname)
     screen = Screen(etat)
@@ -37,13 +38,16 @@ if __name__ == "__main__":
     print("start...")
     t0 = time.time()
     iterations = 0
-    courant: EtatIA = None
+    courant: EtatIA
+    cout = 0
 
     while len(ouverts) != 0:
         if fps != 0:
             screen.deltatime(fps)
         
         courant = ouverts.pop(0)
+        courant.cout = cout = cout + 1
+                
         fermes.append(courant)
         iterations += 1
         screen.refresh(courant)
@@ -63,8 +67,9 @@ if __name__ == "__main__":
                 move(etat, dir)
                 if etat.pullChange():
                     if etat not in fermes and etat not in ouverts:
-                        heur = etat.heur = Heuristique.heuristique(etat)
-                        if heur < MAX_INT:
+                        # etat.heur = int(courant.cout/4) + 4*Heuristique.heuristique(etat)
+                        etat.heur = Heuristique.heuristique(etat)
+                        if etat.heur < MAX_INT:
                             etat.parent = courant
                             ouverts.add(etat)
                         # else:

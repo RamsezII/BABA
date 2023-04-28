@@ -6,7 +6,7 @@ class YXI():
         self.x = x
         self.i = i
     
-    def __repr__(self) -> str:
+    def __repr__(self):
         return "{: } {: }".format(self.y, self.x)
         
     def __add__(self, o):
@@ -17,6 +17,12 @@ class YXI():
 
     def __neg__(self):
         return YXI(-self.y,-self.x,-self.i)
+    
+    def __eq__(self, o):
+        return self.i == o.i
+    
+    def __ne__(self, o):
+        return not self.__eq__(o)
 
     def iszero(self):
         return self.y == self.x == self.i == 0

@@ -14,6 +14,7 @@ def push(self:Etat, pos, dir):
     if flags != 0:
         if self.distances:
             self.distances = {}
+            self.reachables = {}
             self.distYous = None
         obstacles = False
         # détecter obstacle non déplaçable

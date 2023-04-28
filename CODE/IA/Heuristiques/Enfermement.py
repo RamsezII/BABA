@@ -1,17 +1,15 @@
 
 from UTIL.Util import *
 from IA.EtatIA import *
+from IA.Distances import *
 
 
-def heuristique(etatIA:EtatIA):
-    value = MAX_INT
-    
+def heuristique(etatIA:EtatIA)->int:
     # si un IS et deux mots
     if BABAf.IS in etatIA.reachables:
-        print("enfermement?")
         w1, w2 = BABAf(0), BABAf(0)
         for w in etatIA.reachables:
-            if w != BABAf.IS and w in word2obj:
+            if w != BABAf.IS and w in words_mask:
                 if w1 == BABAf(0):
                     w1 = w
                 elif w2 == BABAf(0):
@@ -19,7 +17,21 @@ def heuristique(etatIA:EtatIA):
                 else:
                     print("enfermement: plus de 2 mots")
                     break
-        print("enferemment: w1=", w1, "w2=", w2)
-        
+        if w1 != 0 and w2 != 0:
+            # trois situations :
+            #  - loi non formée
+            #  - formée dans un sens
+            #  - et dans l'autre sens
+            
+            cell_IS = etatIA.reachables[BABAf.IS][0]
+            cell_pref = etatIA.reachables[w1][0]
+            cell_suf = etatIA.reachables[w2][0]
+
+            if cell_suf - cell_IS == cell_IS - cell_pref:
+                # loi formée
+                dists = getDistances(etatIA, (cell_pref.i, cell_suf.i))
+                return int(MAX_INT/2) + getMinDistance(dists, etatIA.yous)
+            else:
+                pass
     
-    return value
+    return MAX_INT

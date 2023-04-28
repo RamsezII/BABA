@@ -11,6 +11,13 @@ def getDistance(distances:list, pos:YXI):
     if CORE.Etat.isInBounds(pos):
         return distances[pos.i]
     return MAX_INT
+
+
+def getMinDistance(distances:list, pos):
+    dist = MAX_INT
+    for p in pos:
+        dist = min(dist, getDistance(distances, p))
+    return dist
     
 
 def getDistances(etatIA:EtatIA, targets):

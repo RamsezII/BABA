@@ -5,6 +5,7 @@ from UTIL.Util import *
 class EtatIA(Etat):
     def __init__(self, levelname):
         super().__init__(levelname)
+        self.cout = 0
         self.heur = MAX_INT
         self.reachables:dict = {}
         self.distances:dict = {}

@@ -132,9 +132,9 @@ class Etat():
                 if rule & BABAf.SOLID:
                     self.m_cols |= BABAf(1 << (i+BABAb.first_obj))
                 if rule & BABAf.YOU:
-                    self.m_yous |= (1 << (i+BABAb.first_obj))
+                    self.m_yous |= BABAf(1 << (i+BABAb.first_obj))
                 if rule & BABAf.WIN:
-                    self.m_wins |= (1 << (i+BABAb.first_obj))
+                    self.m_wins |= BABAf(1 << (i+BABAb.first_obj))
 
 
     def checkWinDefeat(self):
