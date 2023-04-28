@@ -29,35 +29,32 @@ def getDistances(etatIA:EtatIA, targets):
 
 
 def smartDistances(etatIA:EtatIA):
-    if BABAf.YOU in etatIA.distances:
-        return etatIA.distances[BABAf.YOU]
-    
-    etatIA.reachables = {}
-    distances = etatIA.distYous = etatIA.distances[BABAf.YOU] = etatIA.count*[MAX_INT]
-    depth = 0
-    courants = etatIA.yous
-    while len(courants) != 0:
-        # ouverts
-        suivants = []
-        # parcours des départs (wins)
-        for ouvert in courants:
-            if distances[ouvert.i] == MAX_INT:
-                distances[ouvert.i] = depth
-                # si pas de collision, parcours et ajout des voisins aux prochaines cases à parcourir dans un ensemble pour éviter duplicat
-                flags = etatIA.grid[ouvert.i]
-                if flags & etatIA.m_cols == 0:
-                    for dir in Etat.yxi_dirs:
-                        suivant = ouvert+dir
-                        if CORE.Etat.isInBounds(suivant) and distances[suivant.i] == MAX_INT:
-                            suivants.append(suivant)
-                    for _,f in flags.flags(0, BABAb.last_all):
-                        if f in etatIA.reachables:
-                            etatIA.reachables[f].append(ouvert)
-                        else:
-                            etatIA.reachables[f] = [ouvert]
-        depth += 1
-        courants = suivants
-    return distances
+    if BABAf.YOU not in etatIA.distances:
+        etatIA.reachables = {}
+        distances = etatIA.distYous = etatIA.distances[BABAf.YOU] = etatIA.count*[MAX_INT]
+        depth = 0
+        courants = etatIA.yous
+        while len(courants) != 0:
+            # ouverts
+            suivants = []
+            # parcours des départs (wins)
+            for ouvert in courants:
+                if distances[ouvert.i] == MAX_INT:
+                    distances[ouvert.i] = depth
+                    # si pas de collision, parcours et ajout des voisins aux prochaines cases à parcourir dans un ensemble pour éviter duplicat
+                    flags = etatIA.grid[ouvert.i]
+                    if BABAf.SOLID not in etatIA.rules or not flags & etatIA.rules[BABAf.SOLID]:
+                        for dir in Etat.yxi_dirs:
+                            suivant = ouvert+dir
+                            if CORE.Etat.isInBounds(suivant) and distances[suivant.i] == MAX_INT:
+                                suivants.append(suivant)
+                        for _,f in flags.flags(0, BABAb.last_all):
+                            if f in etatIA.reachables:
+                                etatIA.reachables[f].append(ouvert)
+                            else:
+                                etatIA.reachables[f] = [ouvert]
+            depth += 1
+            courants = suivants
 
 
 def calculDistances(etatIA:EtatIA, targets):
@@ -78,7 +75,7 @@ def calculDistances(etatIA:EtatIA, targets):
                 distances[ouvert] = depth
                 # si pas de collision, parcours et ajout des voisins aux prochaines cases à parcourir dans un ensemble pour éviter duplicat
                 flags = etatIA.grid[ouvert]
-                if flags & etatIA.m_cols == 0:
+                if BABAf.SOLID not in etatIA.rules or flags & etatIA.rules[BABAf.SOLID] == 0:
                     for dir in Etat.yxi_dirs:
                         suivant = CORE.Etat.i2yxi(ouvert)+dir
                         if CORE.Etat.isInBounds(suivant) and distances[suivant.i] == MAX_INT:

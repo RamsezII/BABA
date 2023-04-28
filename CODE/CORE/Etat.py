@@ -10,6 +10,7 @@ class GETf(IntFlag):
     getWins = 1 << 0
     getYous = 1 << 1
     getRules = 1 << 2
+    getAll = getWins | getYous | getRules
 
 
 class Etat():
@@ -25,9 +26,9 @@ class Etat():
         self.win = False
         self.defeat = False
         self.parent: Etat = None
-        self.m_cols = self.m_yous = self.m_wins = BABAf.none
         self.refreshMask = GETf.none
-        self.grid = [BABAf.none]
+        self.rules:dict
+        self.dir:YXI
 
         levelpath = os.path.join(rootpath(), "levels", levelname)
         lines = getlines(levelpath)
@@ -47,14 +48,12 @@ class Etat():
         Etat.yxi_up = YXI(-1,0,-Etat.w)
         Etat.yxi_down = YXI(1,0,Etat.w)
         Etat.yxi_dirs = (Etat.yxi_up, Etat.yxi_down, Etat.yxi_left, Etat.yxi_right)
-
-        self.rules = 6*[BABAf.none]    
-        self.getRules()
         
         self.yous = []  # l'ordre est important pour les YOU
         self.wins = set()
+        self.distances:dict
+        self.getRules()
         self.checkWinDefeat()
-        self.distances:dict = None
     
 
     def __iter__(self):
@@ -82,8 +81,8 @@ class Etat():
     
 
     def logRules(self):
-        for i,rule in enumerate(self.rules):
-            print(BABAf(1<<(i+BABAb.first_obj)).name, ":", rule)
+        for f in self.rules:
+            print(BABAf(f).name, ":", self.rules[f])
 
 
     def logEtat(self):
@@ -102,39 +101,34 @@ class Etat():
         self.refreshMask &= ~GETf.getRules
         # un bitmask par objet (6 au total). si "BABA IS YOU" est visible dans le niveau, le flag 'YOU' dans le bitmask de 'baba' dans 'self.rules' sera à 1
         # dans le cas d'une transformation, par exemple "BABA IS ROCK", toutes les cases sont parcourues et chaque case où le flag 'baba' est à 1 est mis à 0 et le flag 'rock' est mis à 1
-        rules = 6*[BABAf.none]
+        self.rules = {
+            BABAf.PUSH: words_mask,
+        }
         for k in range(self.count):
-            if self.grid[k] & BABAf.IS:
-                pos_k = i2yxi(k)
+            if BABAf.IS in self.grid[k]:
+                pos = i2yxi(k)
                 for dir in (Etat.yxi_right, Etat.yxi_down):
-                    pos_a = pos_k + -dir
-                    pos_b = pos_k + dir
-                    if isInBounds(pos_a) and isInBounds(pos_b):
-                        prefs = self.grid[pos_a.i]
-                        suffs = self.grid[pos_b.i]
+                    pos_pref = pos + -dir
+                    pos_suff = pos + dir
+                    if isInBounds(pos_pref) and isInBounds(pos_suff):
+                        prefs = self.grid[pos_pref.i]
+                        suffs = self.grid[pos_suff.i]
                         if prefs * suffs != 0 and prefs & words_mask and suffs & words_mask:
-                            for pref in word2rule:
-                                if prefs & pref:
-                                    for _,suf in suffs.flags(BABAb.first_word, BABAb.last_word):
-                                        rules[word2rule[pref]] |= suf
-                                        # si suffixe désigne un objet, il y a probablement transformation
-                                        if suf != pref and suf in word2rule:
-                                            pref_obj = BABAf(1 << (word2rule[pref]+BABAb.first_obj))
-                                            suf_obj = BABAf(1 << (word2rule[suf]+BABAb.first_obj))
+                            for _,pref_f in prefs.flags(BABAb.first_word, BABAb.last_word):
+                                for _,suff_f in suffs.flags(BABAb.first_word, BABAb.last_word):
+                                    if pref_f in word2obj:
+                                        pref_obj = word2obj[pref_f]
+                                        if suff_f in self.rules:
+                                            self.rules[suff_f] |= pref_obj
+                                        else:
+                                            self.rules[suff_f] = pref_obj
+                                        # si suffixe aussi désigne un objet, on applique la transformation
+                                        if suff_f in word2obj:
+                                            suff_obj = word2obj[suff_f]
                                             for k2 in range(self.count):
-                                                if self.grid[k2] & pref_obj:
+                                                if pref_f in self.grid[k2]:
                                                     self.grid[k2] &= ~pref_obj
-                                                    self.grid[k2] |= suf_obj
-        if self.rules != rules:
-            self.rules = rules
-            self.m_cols = self.m_yous = BABAf.none
-            for i,rule in enumerate(rules):
-                if rule & BABAf.SOLID:
-                    self.m_cols |= BABAf(1 << (i+BABAb.first_obj))
-                if rule & BABAf.YOU:
-                    self.m_yous |= BABAf(1 << (i+BABAb.first_obj))
-                if rule & BABAf.WIN:
-                    self.m_wins |= BABAf(1 << (i+BABAb.first_obj))
+                                                    self.grid[k2] |= suff_obj
 
 
     def checkWinDefeat(self):
@@ -143,31 +137,38 @@ class Etat():
         # on perd si aucune case n'a d'objet correspondant dans 'self.rules' marqué comme 'YOU'
         self.defeat = True
         self.win = False
+
+        if BABAf.YOU not in self.rules:
+            return
+
         self.yous = []
-        self.wins = []
-        for k,flags in enumerate(self.grid):
+        self.wins = set()
+            
+        for cell_i,cell_f in enumerate(self.grid):
             you = False
             win = False
-            pos = i2yxi(k)
-            for i,_ in flags.flags(BABAb.first_obj, BABAb.last_obj):
-                rule = self.rules[i-BABAb.first_obj]
-                if BABAf.YOU in rule:
-                    you = True
-                    self.defeat = False
-                    self.yous.append(pos)
-                if BABAf.WIN in rule:
-                    win = True
-                    self.wins.append(pos.i)
+            pos = i2yxi(cell_i)
+
+            if cell_f & self.rules[BABAf.YOU]:
+                you = True
+                self.defeat = False
+                self.yous.append(pos)
+            
+            if BABAf.WIN in self.rules and cell_f & self.rules[BABAf.WIN]:
+                win = True
+                self.wins.add(pos.i)
+                
             if you and win:
                 self.win = True
                 break
 
 
     def getYous(self):
-        self.yous.clear()
-        for k,flags in enumerate(self.grid):
-            if flags in self.m_yous:
-                self.yous.append(i2yxi(k))
+        self.yous = []
+        if BABAf.YOU in self.rules:
+            for cell_i,cell_f in enumerate(self.grid):
+                if cell_f & self.rules[BABAf.YOU]:
+                    self.yous.append(i2yxi(cell_i))
 
 
 def i2yxi(i):

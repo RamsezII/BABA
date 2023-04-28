@@ -4,7 +4,6 @@ from IA.EtatIA import *
 import IA.Distances as Distances
 import IA.Heuristiques.WinClair as WinClair
 import IA.Heuristiques.WinPresqueClair as WinPresqueClair
-# import IA.Heuristiques.WPC_test as WinPresqueClair
 import IA.Heuristiques.Enfermement as Enfermement
 from UTIL.Util import *
 
@@ -14,17 +13,16 @@ def heuristique(etatIA:EtatIA)->int:
     global currentHeuristique
     
     Distances.smartDistances(etatIA)
-    # if len(etatIA.yous) == 0:
-        # return MAX_INT
+    if len(etatIA.yous) == 0:
+        return MAX_INT
 
     # wins clairs
-    if len(etatIA.wins) != 0:
-        value = WinClair.heuristique(etatIA)
-        if value < MAX_INT:
-            if currentHeuristique != 1:
-                print("win clair")
-            currentHeuristique = 1
-            return value
+    value = WinClair.heuristique(etatIA)
+    if value < MAX_INT:
+        if currentHeuristique != 1:
+            print("win clair")
+        currentHeuristique = 1
+        return value
 
     else:
         # wins presque clairs

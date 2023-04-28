@@ -72,7 +72,8 @@ class DIRf(IntFlag):
     left = 1 << 2
     right = 1 << 3
     up_down = up | down
-    left_right = left | right    
+    left_right = left | right
+    all = up_down | left_right
 
 
 words_mask = BABAf((1<<BABAb.first_obj)-1)
@@ -84,22 +85,6 @@ word2obj = {
     BABAf.ROCK : BABAf.rock,
     BABAf.FLAG : BABAf.flag,
 }
-
-word2rule = {
-    BABAf.WALL: 0,
-    BABAf.LAVA: 1,
-    BABAf.WATER: 2,
-    BABAf.ROCK: 3,
-    BABAf.FLAG: 4,
-    BABAf.BABA: 5,
-}
-
-pairs = [
-    (BABAf.BABA, BABAf.baba),
-    (BABAf.FLAG, BABAf.flag),
-    (BABAf.WALL, BABAf.wall),
-    (BABAf.ROCK, BABAf.rock),
-]
 
 
 if __name__ == "__main__":

@@ -9,7 +9,6 @@ class EtatIA(Etat):
         self.heur = MAX_INT
         self.reachables:dict = {}
         self.distances:dict = {}
-        self.distYous:list
 
 
     def __lt__(self, other):

@@ -9,50 +9,47 @@ def deplace(self:Etat, flag, k, dir_i):
     self.changed = True
 
 
-def push(self:Etat, pos, dir):
-    flags = self.grid[pos.i]
-    if flags != 0:
+def push(self:Etat, cell_pos, push_dir):
+    cell_f = self.grid[cell_pos.i]
+    if cell_f != 0:
         if self.distances:
             self.distances = {}
             self.reachables = {}
             self.distYous = None
+            self.refreshMask |= GETf.getWins | GETf.getRules
         obstacles = False
+
         # détecter obstacle non déplaçable
-        for i,_ in flags.flags(0, BABAb.last_all):
-            if i < BABAb.first_obj:  # words
+        for _,f in cell_f.flags(0, BABAb.last_all):
+            if f in self.rules[BABAf.PUSH]:
                 obstacles = True
-                self.refreshMask |= GETf.getRules
-            else:  # objects
-                rule = self.rules[i-BABAb.first_obj]
-                if rule & BABAf.PUSH:
-                    obstacles = True
-                elif rule & BABAf.SOLID:
-                    return False                                                                                        
-        if obstacles:                                        
+            elif BABAf.SOLID in self.rules and f in self.rules[BABAf.SOLID]:
+                return False
+                                                                                                  
+        if obstacles:
             # récursivité pour éviter piétinement (push des cases suivantes avant push immédiat)
-            pos2 = pos+dir
-            if not CORE.Etat.isInBounds(pos2) or not push(self, pos2, dir):
+            pos2 = cell_pos+push_dir
+            if not CORE.Etat.isInBounds(pos2) or not push(self, pos2, push_dir):
                 return False                
             # pousser cette case (donc recalcul des chemins)
-            for _,flag in flags.flags(0, BABAb.last_all):
-                deplace(self, flag, pos.i, dir.i)
+            for _,flag in cell_f.flags(0, BABAb.last_all):
+                deplace(self, flag, cell_pos.i, push_dir.i)
     return True
 
 
-def move(self:Etat, dir):
+def move(self:Etat, dir:YXI):
     self.dir = dir
-    count = len(self.yous)
-    for k in range(count):
+    for you_i in range(len(self.yous)):
         # inverser ordre de parcours selon sens de deplacement
         if dir.i > 0:
-            you = self.yous[count-k-1]
+            you = self.yous[-you_i-1]
         else:
-            you = self.yous[k]
+            you = self.yous[you_i]
         if CORE.Etat.isInBounds(you+dir) and push(self, you+dir, dir):
             for _,flag in self.grid[you.i].flags(0, BABAb.last_all):
-                if flag in self.m_yous:
+                if flag in self.rules[BABAf.YOU]:
                     deplace(self, flag, you.i, dir.i)
-                    self.refreshMask |= GETf.getYous | GETf.getWins
+                    self.refreshMask |= GETf.getYous
     if self.refreshMask & GETf.getRules:
         self.refreshMask &= ~GETf.getRules
         self.getRules()

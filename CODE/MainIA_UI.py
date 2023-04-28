@@ -25,7 +25,7 @@ if __name__ == "__main__":
     else:
         # levelname = input("level: ")
         # levelname = "level_IA_01.txt"
-        levelname = "level_WPC1.txt"
+        levelname = "level_WPC3.txt"
         # levelname = "mithian_test.txt"
 
     etat = EtatIA(levelname)
@@ -62,9 +62,9 @@ if __name__ == "__main__":
             print("DEFEAT")
             break
         else:
-            for dir in Etat.yxi_dirs:
+            for push_dir in Etat.yxi_dirs:
                 etat = courant.copy()
-                move(etat, dir)
+                move(etat, push_dir)
                 if etat.pullChange():
                     if etat not in fermes and etat not in ouverts:
                         # etat.heur = int(courant.cout/4) + 4*Heuristique.heuristique(etat)
