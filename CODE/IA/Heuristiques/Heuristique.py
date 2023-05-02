@@ -42,7 +42,7 @@ def heuristique(etatIA:EtatIA)->int:
             return value
 
     if currentHeuristique != 0:
-        print("nope")
+        print("aucune heuristique")
     currentHeuristique = 0
 
     # sinon impossible de jauger état    
