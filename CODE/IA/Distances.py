@@ -75,7 +75,7 @@ def calculDistances(etatIA:EtatIA, targets):
                 distances[ouvert] = depth
                 # si pas de collision, parcours et ajout des voisins aux prochaines cases à parcourir dans un ensemble pour éviter duplicat
                 flags = etatIA.grid[ouvert]
-                if BABAf.SOLID not in etatIA.rules or flags & etatIA.rules[BABAf.SOLID] == 0:
+                if BABAf.SOLID not in etatIA.rules or not flags & etatIA.rules[BABAf.SOLID]:
                     for dir in Etat.yxi_dirs:
                         suivant = CORE.Etat.i2yxi(ouvert)+dir
                         if CORE.Etat.isInBounds(suivant) and distances[suivant.i] == MAX_INT:

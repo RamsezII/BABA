@@ -30,8 +30,11 @@ def heuristique(etatIA:EtatIA)->int:
             if cell_suf - cell_IS == cell_IS - cell_pref:
                 # loi formée
                 dists = getDistances(etatIA, (cell_pref.i, cell_suf.i))
-                return int(MAX_INT/2) + getMinDistance(dists, etatIA.yous)
+                heur = getMinDistance(dists, etatIA.yous)
+                heur += int(MAX_INT/2)
+                return heur
             else:
+                print("error enfermement: loi non formée")
                 pass
     
     return MAX_INT

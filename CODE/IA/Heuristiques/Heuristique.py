@@ -11,7 +11,7 @@ currentHeuristique = 0
 
 def heuristique(etatIA:EtatIA)->int:
     global currentHeuristique
-    
+
     Distances.smartDistances(etatIA)
     if len(etatIA.yous) == 0:
         return MAX_INT
