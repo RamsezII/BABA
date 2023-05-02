@@ -16,7 +16,7 @@ def push(self:Etat, cell_pos, push_dir):
             self.distances = {}
             self.reachables = {}
             self.distYous = None
-            self.refreshMask |= GETf.getWins | GETf.getRules
+        self.refreshMask |= GETf.getWins | GETf.getRules
         obstacles = False
 
         # détecter obstacle non déplaçable
