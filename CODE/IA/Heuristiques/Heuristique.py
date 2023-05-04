@@ -24,22 +24,21 @@ def heuristique(etatIA:EtatIA)->int:
         currentHeuristique = 1
         return value
 
-    else:
-        # wins presque clairs
-        value = WinPresqueClair.heuristique(etatIA)
-        if value < MAX_INT:
-            if currentHeuristique != 2:
-                print("win presque clair")
-            currentHeuristique = 2
-            return value
+    # wins presque clairs
+    value = WinPresqueClair.heuristique(etatIA)
+    if value < MAX_INT:
+        if currentHeuristique != 2:
+            print("win presque clair")
+        currentHeuristique = 2
+        return value
 
-        # enfermé avec une seule loi?
-        value = Enfermement.heuristique(etatIA)
-        if value < MAX_INT:
-            if currentHeuristique != 3:
-                print("enfermement")
-            currentHeuristique = 3
-            return value
+    # enfermé avec une seule loi?
+    value = Enfermement.heuristique(etatIA)
+    if value < MAX_INT:
+        if currentHeuristique != 3:
+            print("enfermement")
+        currentHeuristique = 3
+        return value
 
     if currentHeuristique != 0:
         print("aucune heuristique")

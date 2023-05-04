@@ -31,7 +31,7 @@ def getDistances(etatIA:EtatIA, targets):
 def smartDistances(etatIA:EtatIA):
     if BABAf.YOU not in etatIA.distances:
         etatIA.reachables = {}
-        distances = etatIA.distYous = etatIA.distances[BABAf.YOU] = etatIA.count*[MAX_INT]
+        distances = etatIA.distances[BABAf.YOU] = etatIA.count*[MAX_INT]
         depth = 0
         courants = etatIA.yous
         while len(courants) != 0:
@@ -55,6 +55,11 @@ def smartDistances(etatIA:EtatIA):
                                 etatIA.reachables[f] = [ouvert]
             depth += 1
             courants = suivants
+        if False:
+            etatIA.yous = []
+            for you1 in etatIA.rules[BABAf.YOU]:
+                for you2 in etatIA.reachables[you1]:
+                    etatIA.yous.append(you2)
 
 
 def calculDistances(etatIA:EtatIA, targets):

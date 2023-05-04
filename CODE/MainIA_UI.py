@@ -68,7 +68,7 @@ if __name__ == "__main__":
                 if etat.pullChange():
                     if etat not in fermes and etat not in ouverts:
                         # etat.heur = int(courant.cout/4) + 4*Heuristique.heuristique(etat)
-                        # screen.refresh(etat)
+                        screen.refresh(etat)
                         etat.heur = Heuristique.heuristique(etat)
                         if etat.heur < MAX_INT:
                             etat.parent = courant
