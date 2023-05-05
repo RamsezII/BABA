@@ -18,14 +18,14 @@ if __name__ == "__main__":
     if "-fps" in args:
         fps = int(args["-fps"])
     else:
-        fps = 0
+        fps = 10
     
     if "-level" in args:
         levelname = args["-level"]
     else:
         # levelname = input("level: ")
         # levelname = "level_IA_01.txt"
-        levelname = "level_WPC3.txt"
+        levelname = "level_WPC2.txt"
         # levelname = "mithian_test.txt"
 
     etat = EtatIA(levelname)
@@ -68,7 +68,7 @@ if __name__ == "__main__":
                 if etat.pullChange():
                     if etat not in fermes and etat not in ouverts:
                         # etat.heur = int(courant.cout/4) + 4*Heuristique.heuristique(etat)
-                        screen.refresh(etat)
+                        # screen.refresh(etat)
                         etat.heur = Heuristique.heuristique(etat)
                         if etat.heur < MAX_INT:
                             etat.parent = courant

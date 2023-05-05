@@ -6,16 +6,12 @@ import IA.Distances as Distances
 from UTIL.Util import *
 
 
-IS_pos:YXI = YXI(-1,-1,-1)
-
-
 def heuristique(etatIA:EtatIA)->int:
-    global IS_pos
 
     if BABAf.WIN in etatIA.reachables and BABAf.IS in etatIA.reachables:
         pos_win = etatIA.reachables[BABAf.WIN][0]
 
-        for IS_pos in etatIA.reachables[BABAf.IS]:
+        for IS_pos in sorted(etatIA.reachables[BABAf.IS], key=lambda pos: pos.i):
             dirf = DIRf.none
             for i in range(4):
                 pos = IS_pos + Etat.yxi_dirs[i]
@@ -54,20 +50,8 @@ def heuristique(etatIA:EtatIA)->int:
                         dist_winIS = Distances.getDistance(dists_suf, pos_win)
                         heur = dist_winIS
 
-                        # si WIN n'est pas encore en suffixe
-                        if heur != 0:
-                            # distance de you à WIN
-                            dists_win = Distances.getDistances(etatIA, pos_win.i)
-                            dist_youWin = MAX_INT
-                            for you in etatIA.yous:
-                                dist_youWin = min(dist_youWin, Distances.getDistance(dists_win, you))
-                            heur += dist_youWin
-
-                            # distances restantes, donc you(partant de IS) au mot, puis le mot à IS, donc 2*dist(IS, mot)
-                            dist_word2suff = Distances.getDistance(dists_pref, pos_word)
-                            heur += 2 * dist_word2suff
-
-                        else:
+                        # si WIN est déjà en suffixe
+                        if heur == 0:
                             # aller vers le mot
                             dists_mot = Distances.getDistances(etatIA, pos_word.i)
                             dist_youMot = MAX_INT
@@ -78,10 +62,24 @@ def heuristique(etatIA:EtatIA)->int:
                             # pousser le mot en IS
                             heur += Distances.getDistance(dists_pref, pos_word)
 
+                        else:
+                            # distance de you à WIN
+                            dists_win = Distances.getDistances(etatIA, pos_win.i)
+                            dist_youWin = MAX_INT
+                            for you in etatIA.yous:
+                                dist_youWin = min(dist_youWin, Distances.getDistance(dists_win, you))
+                            heur += dist_youWin
+
+                            # distances restantes, donc you(partant de IS) au mot, puis le mot à IS, donc 2*dist(IS, mot)
+                            dist_word2pref = Distances.getDistance(dists_pref, pos_word)
+                            heur += 2 * dist_word2pref
+
                         # aller vers le WIN CLAIR
                         dists_winClair = Distances.getDistances(etatIA, (pos.i for pos in etatIA.reachables[objf]))
                         dist_winClair = Distances.getDistance(dists_winClair, IS_pos)
                         heur += dist_winClair
+
+                        print("obj:", objf.name, "dist_winIS:", dist_winIS, "heur:", heur)
                             
                         return heur
         
