@@ -39,7 +39,7 @@ if __name__ == "__main__":
     t0 = time.time()
     iterations = 0
     courant: EtatIA
-    cout = 0
+    cout = 10
 
     while len(ouverts) != 0:
         if fps != 0:

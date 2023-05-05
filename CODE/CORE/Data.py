@@ -76,7 +76,7 @@ class DIRf(IntFlag):
     all = up_down | left_right
 
 
-words_mask = BABAf((1<<BABAb.first_obj)-1)
+words_mask = BABAf((1<<BABAb.last_word)-1)
 objects_mask = words_mask ^ BABAf((1<<BABAb.last_all)-1)
 
 word2obj = {
