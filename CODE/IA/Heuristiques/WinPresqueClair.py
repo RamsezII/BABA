@@ -11,7 +11,7 @@ def heuristique(etatIA:EtatIA)->int:
     if BABAf.WIN in etatIA.reachables and BABAf.IS in etatIA.reachables:
         pos_win = etatIA.reachables[BABAf.WIN][0]
 
-        for IS_pos in sorted(etatIA.reachables[BABAf.IS], key=lambda pos: pos.i):
+        for IS_pos in etatIA.reachables[BABAf.IS]:
             dirf = DIRf.none
             for i in range(4):
                 pos = IS_pos + Etat.yxi_dirs[i]
@@ -78,8 +78,6 @@ def heuristique(etatIA:EtatIA)->int:
                         dists_winClair = Distances.getDistances(etatIA, (pos.i for pos in etatIA.reachables[objf]))
                         dist_winClair = Distances.getDistance(dists_winClair, IS_pos)
                         heur += dist_winClair
-
-                        print("obj:", objf.name, "dist_winIS:", dist_winIS, "heur:", heur)
                             
                         return heur
         

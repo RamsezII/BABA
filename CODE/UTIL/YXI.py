@@ -20,9 +20,21 @@ class YXI():
     
     def __eq__(self, o):
         return self.i == o.i
-    
-    def __ne__(self, o):
-        return not self.__eq__(o)
+
+    def __ne__(self, other):
+        return self.i != other.i
+
+    def __lt__(self, other):
+        return self.i < other.i
+
+    def __le__(self, other):
+        return self.i <= other.i
+
+    def __gt__(self, other):
+        return self.i > other.i
+
+    def __ge__(self, other):
+        return self.i >= other.i
 
     def iszero(self):
         return self.y == self.x == self.i == 0

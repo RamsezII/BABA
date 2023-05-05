@@ -1,4 +1,5 @@
 
+from sortedcontainers.sortedlist import SortedList
 from CORE.Data import *
 import CORE.Etat
 from CORE.Etat import Etat
@@ -49,17 +50,11 @@ def smartDistances(etatIA:EtatIA):
                             if CORE.Etat.isInBounds(suivant) and distances[suivant.i] == MAX_INT:
                                 suivants.append(suivant)
                         for _,f in flags.flags(0, BABAb.last_all):
-                            if f in etatIA.reachables:
-                                etatIA.reachables[f].append(ouvert)
-                            else:
-                                etatIA.reachables[f] = [ouvert]
+                            if f not in etatIA.reachables:
+                                etatIA.reachables[f] = SortedList()
+                            etatIA.reachables[f].add(ouvert)
             depth += 1
             courants = suivants
-        if False:
-            etatIA.yous = []
-            for you1 in etatIA.rules[BABAf.YOU]:
-                for you2 in etatIA.reachables[you1]:
-                    etatIA.yous.append(you2)
 
 
 def calculDistances(etatIA:EtatIA, targets):

@@ -18,7 +18,7 @@ if __name__ == "__main__":
     if "-fps" in args:
         fps = int(args["-fps"])
     else:
-        fps = 10
+        fps = 0
     
     if "-level" in args:
         levelname = args["-level"]
