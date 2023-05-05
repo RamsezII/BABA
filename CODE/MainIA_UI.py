@@ -25,7 +25,7 @@ if __name__ == "__main__":
     else:
         # levelname = input("level: ")
         # levelname = "level_IA_01.txt"
-        levelname = "level_WPC2.txt"
+        levelname = "level_WPC3.txt"
         # levelname = "mithian_test.txt"
 
     etat = EtatIA(levelname)

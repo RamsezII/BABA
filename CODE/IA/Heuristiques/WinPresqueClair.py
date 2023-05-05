@@ -6,7 +6,11 @@ import IA.Distances as Distances
 from UTIL.Util import *
 
 
+IS_pos:YXI = YXI(-1,-1,-1)
+
+
 def heuristique(etatIA:EtatIA)->int:
+    global IS_pos
 
     if BABAf.WIN in etatIA.reachables and BABAf.IS in etatIA.reachables:
         pos_win = etatIA.reachables[BABAf.WIN][0]
