@@ -25,7 +25,9 @@ if __name__ == "__main__":
     else:
         # levelname = input("level: ")
         # levelname = "level_IA_01.txt"
-        levelname = "level_WPC2.txt"
+        # levelname = "level_2.txt"
+        # levelname = "level_WPC1.txt"
+        levelname = "level_ENF.txt"
         # levelname = "mithian_test.txt"
 
     etat = EtatIA(levelname)
@@ -57,9 +59,6 @@ if __name__ == "__main__":
             break
         elif courant.win:
             print("WIN!")
-            break
-        elif courant.defeat:
-            print("DEFEAT")
             break
         else:
             for push_dir in Etat.yxi_dirs:

@@ -17,7 +17,7 @@ def heuristique(etatIA:EtatIA):
 def heuristique_min(yous, distances:list):
     dist = MAX_INT
     for you in yous:
-        dist = min(dist, distances[you.i])
+        dist = min(dist, distances[you])
     return dist
 
 

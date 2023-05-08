@@ -21,7 +21,8 @@ if __name__ == "__main__":
     else:
         # levelname = input("level: ")
         # levelname = "small.txt"
-        levelname = "level_WPC2.txt"
+        # levelname = "level_WPC1.txt"
+        levelname = "level_ENF.txt"
 
     etat = EtatIA(levelname)
     screen = Screen(etat)

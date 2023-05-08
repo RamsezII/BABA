@@ -42,9 +42,9 @@ def move(self:Etat, dir:YXI):
     for you_i in range(len(self.yous)):
         # inverser ordre de parcours selon sens de deplacement
         if dir.i > 0:
-            you = self.yous[-you_i-1]
+            you = i2yxi(self.yous[-you_i-1])
         else:
-            you = self.yous[you_i]
+            you = i2yxi(self.yous[you_i])
         if CORE.Etat.isInBounds(you+dir) and push(self, you+dir, dir):
             for _,flag in self.grid[you.i].flags(0, BABAb.last_all):
                 if flag in self.rules[BABAf.YOU]:

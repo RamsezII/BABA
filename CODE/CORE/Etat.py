@@ -147,16 +147,15 @@ class Etat():
         for cell_i,cell_f in enumerate(self.grid):
             you = False
             win = False
-            pos = i2yxi(cell_i)
 
             if cell_f & self.rules[BABAf.YOU]:
                 you = True
                 self.defeat = False
-                self.yous.append(pos)
+                self.yous.append(cell_i)
             
             if BABAf.WIN in self.rules and cell_f & self.rules[BABAf.WIN]:
                 win = True
-                self.wins.add(pos.i)
+                self.wins.add(cell_i)
                 
             if you and win:
                 self.win = True
@@ -168,7 +167,7 @@ class Etat():
         if BABAf.YOU in self.rules:
             for cell_i,cell_f in enumerate(self.grid):
                 if cell_f & self.rules[BABAf.YOU]:
-                    self.yous.append(i2yxi(cell_i))
+                    self.yous.append(cell_i)
 
 
 def i2yxi(i):

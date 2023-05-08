@@ -2,22 +2,17 @@
 from sortedcontainers.sortedlist import SortedList
 from CORE.Data import *
 import CORE.Etat
-from CORE.Etat import Etat
+from CORE.Etat import *
 from IA.EtatIA import EtatIA
 from UTIL.Util import *
 from UTIL.YXI import *
 
 
-def getDistance(distances:list, pos:YXI):
-    if CORE.Etat.isInBounds(pos):
-        return distances[pos.i]
-    return MAX_INT
-
 
 def getMinDistance(distances:list, pos):
     dist = MAX_INT
     for p in pos:
-        dist = min(dist, getDistance(distances, p))
+        dist = min(dist, distances[p])
     return dist
     
 
@@ -40,19 +35,20 @@ def smartDistances(etatIA:EtatIA):
             suivants = []
             # parcours des départs (wins)
             for ouvert in courants:
-                if distances[ouvert.i] == MAX_INT:
-                    distances[ouvert.i] = depth
+                if distances[ouvert] == MAX_INT:
+                    distances[ouvert] = depth
                     # si pas de collision, parcours et ajout des voisins aux prochaines cases à parcourir dans un ensemble pour éviter duplicat
-                    flags = etatIA.grid[ouvert.i]
+                    flags = etatIA.grid[ouvert]
                     if BABAf.SOLID not in etatIA.rules or not flags & etatIA.rules[BABAf.SOLID]:
                         for dir in Etat.yxi_dirs:
-                            suivant = ouvert+dir
+                            ouvert_yxi = CORE.Etat.i2yxi(ouvert)
+                            suivant = ouvert_yxi+dir
                             if CORE.Etat.isInBounds(suivant) and distances[suivant.i] == MAX_INT:
-                                suivants.append(suivant)
+                                suivants.append(suivant.i)
                         for _,f in flags.flags(0, BABAb.last_all):
                             if f not in etatIA.reachables:
                                 etatIA.reachables[f] = SortedList()
-                            etatIA.reachables[f].add(ouvert)
+                            etatIA.reachables[f].add(ouvert_yxi)
             depth += 1
             courants = suivants
 
