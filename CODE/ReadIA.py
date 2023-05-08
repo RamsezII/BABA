@@ -44,7 +44,7 @@ if __name__ == "__main__":
         levelname = args["-level"]
     else:
         # levelname = input("level: ")
-        levelname = "level_WPC1.txt"
+        levelname = "level_ENF.txt"
         
     readIA(levelname, fps)    
     print("FIN")

@@ -51,7 +51,7 @@ class Etat():
         
         self.yous = []  # l'ordre est important pour les YOU
         self.wins = set()
-        self.distances:dict
+        self.distances:dict = None
         self.getRules()
         self.checkWinDefeat()
     

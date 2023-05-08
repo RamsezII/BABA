@@ -41,14 +41,13 @@ def smartDistances(etatIA:EtatIA):
                     flags = etatIA.grid[ouvert]
                     if BABAf.SOLID not in etatIA.rules or not flags & etatIA.rules[BABAf.SOLID]:
                         for dir in Etat.yxi_dirs:
-                            ouvert_yxi = CORE.Etat.i2yxi(ouvert)
-                            suivant = ouvert_yxi+dir
+                            suivant = CORE.Etat.i2yxi(ouvert)+dir
                             if CORE.Etat.isInBounds(suivant) and distances[suivant.i] == MAX_INT:
                                 suivants.append(suivant.i)
                         for _,f in flags.flags(0, BABAb.last_all):
                             if f not in etatIA.reachables:
                                 etatIA.reachables[f] = SortedList()
-                            etatIA.reachables[f].add(ouvert_yxi)
+                            etatIA.reachables[f].add(ouvert)
             depth += 1
             courants = suivants
 
